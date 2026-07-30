@@ -27,13 +27,14 @@ from analyze_technical import analyze_technical
 from parse_html import parse_html
 from seo_pipeline_utils import (
     build_session,
+    cache_root,
     detect_business_type,
     domain_slug,
-    ensure_cache_gitignore,
     extract_language_country,
     extract_visible_text,
     normalize_site_root,
     now_iso,
+    reports_root,
     severity_for_issue,
     url_slug,
     validate_public_url,
@@ -597,10 +598,9 @@ def run_audit_with_output_root(
     language, country = extract_language_country(og_locale, urlparse(response.url).netloc)
 
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    output_parent = output_root.resolve() if output_root else (ROOT / "output").resolve()
+    output_parent = output_root.resolve() if output_root else reports_root()
     output_dir = output_parent / f"{domain_slug(response.url)}-audit-{timestamp}"
     output_dir.mkdir(parents=True, exist_ok=True)
-    ensure_cache_gitignore(ROOT)
 
     site_meta = {
         "cache_type": "site-meta",
@@ -613,7 +613,7 @@ def run_audit_with_output_root(
         "country": country,
         "notes": [],
     }
-    write_json(ROOT / ".ctk-seo-cache" / "site-meta.json", site_meta)
+    write_json(cache_root() / "site-meta.json", site_meta)
 
     technical = analyze_technical(response.url, timeout=timeout)
     content = analyze_content(response.url, timeout=timeout)
@@ -704,9 +704,9 @@ def run_audit_with_output_root(
         "category_scores": category_scores,
         "priority_issues": priority_issues,
     }
-    write_json(ROOT / ".ctk-seo-cache" / "audit-scores.json", audit_scores)
+    write_json(cache_root() / "audit-scores.json", audit_scores)
 
-    cache_page_dir = ROOT / ".ctk-seo-cache" / "pages" / url_slug(response.url)
+    cache_page_dir = cache_root() / "pages" / url_slug(response.url)
     write_json(cache_page_dir / "technical.json", technical)
     write_json(cache_page_dir / "content.json", content)
     write_json(cache_page_dir / "schema.json", schema)

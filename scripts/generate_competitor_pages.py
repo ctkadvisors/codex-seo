@@ -26,8 +26,10 @@ from seo_pipeline_utils import build_session, validate_public_site_root
 
 
 DEFAULT_TIMEOUT = 20
+from seo_pipeline_utils import cache_root, reports_root
+
 ROOT = Path(__file__).resolve().parent.parent
-CACHE_ROOT = ROOT / ".ctk-seo-cache"
+CACHE_ROOT = cache_root()
 
 
 def now_iso() -> str:

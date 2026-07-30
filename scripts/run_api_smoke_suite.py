@@ -8,6 +8,8 @@ Usage:
 
 from __future__ import annotations
 
+from seo_pipeline_utils import cache_root, reports_root
+
 import argparse
 import json
 import subprocess
@@ -52,7 +54,7 @@ DEFAULT_SKILLS = [
 def suite_dir(target: str) -> Path:
     """Resolve the suite output directory."""
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    return ROOT / "output" / f"api-smoke-{domain_slug(target)}-{stamp}"
+    return reports_root() / f"api-smoke-{domain_slug(target)}-{stamp}"
 
 
 def run_command(skill: str, target: str, out_dir: Path) -> dict:

@@ -10,6 +10,8 @@ Usage:
 
 from __future__ import annotations
 
+from seo_pipeline_utils import cache_root, reports_root
+
 import argparse
 import base64
 import json
@@ -262,7 +264,7 @@ def dataforseo_live_serp(settings: dict[str, Any], keyword: str) -> dict[str, An
 
 def workflow_check(skill: str, target: str) -> dict[str, Any]:
     """Run one deterministic workflow and keep only demo-safe summary fields."""
-    out_root = ROOT / "output" / "demo-readiness"
+    out_root = reports_root() / "demo-readiness"
     cmd = [
         sys.executable,
         str(ROOT / "scripts" / "run_skill_workflow.py"),

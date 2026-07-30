@@ -31,9 +31,10 @@ from parse_html import parse_html
 from run_headless_audit import compute_on_page_score, maybe_capture_screenshots, maybe_run_visual, run_audit_with_output_root
 from seo_pipeline_utils import (
     build_session,
+    cache_root,
     domain_slug,
-    ensure_cache_gitignore,
     now_iso,
+    reports_root,
     url_slug,
     validate_public_url,
     write_json,
@@ -106,7 +107,7 @@ def simple_report(title: str, score: int | None, summary: list[str], issues: lis
 
 def output_dir_for(skill: str, target: str, output_root: Path | None = None) -> Path:
     """Resolve the output directory for a skill run."""
-    root = (output_root.resolve() if output_root else (ROOT / "output").resolve())
+    root = output_root.resolve() if output_root else reports_root()
     return root / f"{skill.replace('seo-', '')}-{domain_slug(target)}-{timestamp_slug()}"
 
 
@@ -121,7 +122,6 @@ def write_specialist_artifacts(
 ) -> dict[str, Any]:
     """Write standard artifacts for a specialist run."""
     output_dir.mkdir(parents=True, exist_ok=True)
-    ensure_cache_gitignore(ROOT)
     verification = verify_environment(target=target)
 
     report_path = output_dir / report_name
@@ -182,7 +182,7 @@ def run_capability_summary(
         output_dir,
         f"{cache_name.upper()}-SUMMARY.md",
         report,
-        ROOT / ".ctk-seo-cache" / f"{cache_name}.json",
+        cache_root() / f"{cache_name}.json",
     )
 
 
@@ -190,8 +190,8 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
     """Run a specialist skill and write deterministic artifacts."""
     target = validate_public_url(target)
     output_dir = output_dir_for(skill, target, output_root=output_root)
-    page_cache = ROOT / ".ctk-seo-cache" / "pages" / url_slug(target)
-    root_cache = ROOT / ".ctk-seo-cache"
+    page_cache = cache_root() / "pages" / url_slug(target)
+    root_cache = cache_root()
 
     if skill == "ctk-seo-technical":
         result = analyze_technical(target)
@@ -330,7 +330,7 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
         issues = [] if result.get("baselines") else ["No drift baseline exists for this URL."]
         recommendations = ["Run `scripts/drift_baseline.py <url> --skip-cwv` before deployment, then compare after changes."]
         report = simple_report("SEO Drift Summary", None, summary, issues, recommendations)
-        return write_specialist_artifacts(skill, target, result, output_dir_for(skill, target, output_root), "DRIFT-SUMMARY.md", report, ROOT / ".ctk-seo-cache" / "drift.json")
+        return write_specialist_artifacts(skill, target, result, output_dir_for(skill, target, output_root), "DRIFT-SUMMARY.md", report, cache_root() / "drift.json")
 
     if skill in {"ctk-seo-dataforseo", "ctk-seo-firecrawl", "ctk-seo-image-gen", "ctk-seo-maps"}:
         setup = {
@@ -393,10 +393,9 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
     if skill == "ctk-seo-plan":
         result = build_plan(target)
         output_dir.mkdir(parents=True, exist_ok=True)
-        ensure_cache_gitignore(ROOT)
         write_markdown_files(result, output_dir)
         write_json(output_dir / "SUMMARY.json", result)
-        write_json(ROOT / ".ctk-seo-cache" / "plan.json", {
+        write_json(cache_root() / "plan.json", {
             "cache_type": result["cache_type"],
             "analyzed_at": result["analyzed_at"],
             "domain": result["domain"],
@@ -419,7 +418,7 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
                 "roadmap": str(output_dir / "IMPLEMENTATION-ROADMAP.md"),
                 "site_structure": str(output_dir / "SITE-STRUCTURE.md"),
             },
-            "cache_path": str(ROOT / ".ctk-seo-cache" / "plan.json"),
+            "cache_path": str(cache_root() / "plan.json"),
             "result": result,
         }
 
@@ -456,7 +455,6 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
             },
         }
         output_dir.mkdir(parents=True, exist_ok=True)
-        ensure_cache_gitignore(ROOT)
         write_json(page_cache / "technical.json", technical)
         write_json(page_cache / "content.json", content)
         write_json(page_cache / "schema.json", schema)
@@ -490,7 +488,7 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
             "target": target,
             "output_dir": result["output_dir"],
             "artifacts": result["artifacts"],
-            "cache_path": str(ROOT / ".ctk-seo-cache" / "audit-scores.json"),
+            "cache_path": str(cache_root() / "audit-scores.json"),
             "result": result,
         }
 

@@ -13,15 +13,17 @@ import analyze_hreflang  # noqa: E402
 import analyze_programmatic  # noqa: E402
 import generate_competitor_pages  # noqa: E402
 import run_skill_workflow  # noqa: E402
+from seo_pipeline_utils import cache_root  # noqa: E402
 
 
-def test_cache_roots_are_repo_relative():
-    expected = analyze_content.ROOT / ".ctk-seo-cache"
+def test_cache_roots_are_outside_the_repository():
+    expected = cache_root()
     assert analyze_content.CACHE_ROOT == expected
     assert analyze_geo.CACHE_ROOT == expected
     assert analyze_hreflang.CACHE_ROOT == expected
     assert analyze_programmatic.CACHE_ROOT == expected
     assert generate_competitor_pages.CACHE_ROOT == expected
+    assert analyze_content.ROOT not in expected.parents
 
 
 def test_seo_audit_wrapper_honors_output_root(monkeypatch, tmp_path: Path):
