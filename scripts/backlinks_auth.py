@@ -45,9 +45,9 @@ except ImportError:
             return False
         return True
 
-CONFIG_PATH = os.path.expanduser("~/.config/codex-seo/backlinks-api.json")
+CONFIG_PATH = os.path.expanduser("~/.config/ctk-codex-seo/backlinks-api.json")
 LEGACY_CONFIG_PATH = os.path.expanduser("~/.config/claude-seo/backlinks-api.json")
-CACHE_DIR = os.path.expanduser("~/.cache/codex-seo/commoncrawl")
+CACHE_DIR = os.path.expanduser("~/.cache/ctk-codex-seo/commoncrawl")
 LEGACY_CACHE_DIR = os.path.expanduser("~/.cache/claude-seo/commoncrawl")
 
 # Which services need which auth type
@@ -79,7 +79,7 @@ def load_config() -> dict:
     """
     Load configuration from config file with environment variable fallbacks.
 
-    Reads ~/.config/codex-seo/backlinks-api.json first. Any missing fields
+    Reads ~/.config/ctk-codex-seo/backlinks-api.json first. Any missing fields
     are filled from environment variables.
 
     Returns:

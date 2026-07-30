@@ -24,7 +24,7 @@ from seo_pipeline_utils import build_session, validate_public_url
 
 DEFAULT_TIMEOUT = 20
 ROOT = Path(__file__).resolve().parent.parent
-CACHE_ROOT = ROOT / ".seo-cache"
+CACHE_ROOT = ROOT / ".ctk-seo-cache"
 
 
 def now_iso() -> str:

@@ -1,5 +1,5 @@
 ---
-name: seo-image-gen
+name: ctk-seo-image-gen
 description: SEO image analyst. Audits existing OG/social preview images, identifies missing or low-quality images, and creates an image generation plan with prompts for key pages. Does NOT auto-generate images.
 tools: Read, Bash, Glob, Grep
 ---

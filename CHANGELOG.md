@@ -23,9 +23,9 @@
 
 ### Changed
 
-- Canonical skill tree is now `skills/`; `skills/seo/SKILL.md` is the main orchestrator.
+- Canonical skill tree is now `skills/`; `skills/ctk-seo/SKILL.md` is the main orchestrator.
 - Installers default to `https://github.com/AgriciDaniel/codex-seo`.
-- New credentials and runtime caches use `~/.config/codex-seo/` and `~/.cache/codex-seo/`.
+- New credentials and runtime caches use `~/.config/ctk-codex-seo/` and `~/.cache/ctk-codex-seo/`.
 - Legacy `~/.config/claude-seo/` and `~/.cache/claude-seo/` files are read only as migration fallback.
 - Community footer is config-gated and disabled by default for Codex/API/client deliverables.
 

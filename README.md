@@ -49,7 +49,7 @@ It covers technical SEO, on-page analysis, content quality, E-E-A-T, schema mark
 - Installer default ref: `v1.9.6-codex.5`.
 - Latest local validation: 52 tests passing, full installed smoke suite passing, demo readiness passing.
 - Runtime credentials stay outside the repo under Codex/local config paths.
-- Discovery topics: `codex`, `codex-cli`, `codex-skills`, `seo`, `ai-seo`, `ai-search`, `technical-seo`, `generative-engine-optimization`, `core-web-vitals`, `schema-markup`, `local-seo`, `ecommerce-seo`, `content-strategy`, `google-search-console`, `dataforseo`, `mcp`, `python`, `automation`, `marketing-automation`, `open-source`.
+- Discovery topics: `codex`, `codex-cli`, `codex-skills`, `ctk-seo`, `ai-seo`, `ai-search`, `technical-seo`, `generative-engine-optimization`, `core-web-vitals`, `schema-markup`, `local-seo`, `ecommerce-seo`, `content-strategy`, `google-search-console`, `dataforseo`, `mcp`, `python`, `automation`, `marketing-automation`, `open-source`.
 
 ## Install
 
@@ -81,7 +81,7 @@ cd codex-seo
 powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
-The installer copies the skill suite into `~/.codex/skills/`, installs TOML agents into `~/.codex/agents/`, creates a Python virtualenv at `~/.codex/skills/seo/.venv/`, installs core runtime dependencies, attempts optional capability groups, and verifies the runtime.
+The installer copies the skill suite into `~/.codex/skills/`, installs TOML agents into `~/.codex/agents/`, creates a Python virtualenv at `~/.codex/skills/ctk-seo/.venv/`, installs core runtime dependencies, attempts optional capability groups, and verifies the runtime.
 
 ### Installer Overrides
 
@@ -102,7 +102,7 @@ bash install.sh
 
 ## Quick Start
 
-Restart Codex after installation. Then ask naturally; a `/seo` command is not required:
+Restart Codex after installation. Then ask naturally; a `/ctk-seo` command is not required:
 
 ```text
 Do a full SEO check on https://example.com following best practices.
@@ -132,8 +132,8 @@ Codex SEO is designed as a Codex-first routing layer: the user can ask naturally
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#05080d","primaryColor":"#07131c","primaryTextColor":"#f5fbff","primaryBorderColor":"#00d7e6","lineColor":"#00d7e6","secondaryColor":"#06222a","tertiaryColor":"#ff9f1c","edgeLabelBackground":"#05080d","fontFamily":"Inter, ui-sans-serif, system-ui, sans-serif"}}}%%
 flowchart LR
-  user["User prompt<br/>natural language or /seo"] --> orchestrator["skills/seo/SKILL.md<br/>main orchestrator"]
-  orchestrator --> cache[".seo-cache<br/>shared evidence"]
+  user["User prompt<br/>natural language or /ctk-seo"] --> orchestrator["skills/ctk-seo/SKILL.md<br/>main orchestrator"]
+  orchestrator --> cache[".ctk-seo-cache<br/>shared evidence"]
   orchestrator --> skills["26 specialist<br/>SEO workflows"]
   skills --> agents["24 TOML agents<br/>parallel analysis slices"]
   skills --> scripts["scripts/<br/>deterministic runners"]
@@ -269,7 +269,7 @@ sequenceDiagram
   participant Before as Baseline
   participant Runner as Drift runner
   participant After as Current page
-  participant Cache as .seo-cache
+  participant Cache as .ctk-seo-cache
   participant Report as Drift report
   Before->>Runner: Capture titles, metas, canonicals, schema, headings
   Runner->>Cache: Store baseline snapshot
@@ -288,10 +288,10 @@ sequenceDiagram
 
 | Extension | Skill | Setup | Notes |
 |---|---|---|---|
-| DataForSEO | `seo-dataforseo`, `seo-maps`, `seo-ecommerce`, `seo-cluster` | `./extensions/dataforseo/install.sh` | Live SERP, keyword, backlinks, on-page, content, business data, AI visibility |
-| Google APIs | `seo-google`, `seo-performance` | `python scripts/google_auth.py --setup` | PageSpeed, CrUX, GSC, URL Inspection, Indexing API, GA4 |
-| Firecrawl | `seo-firecrawl` | `./extensions/firecrawl/install.sh` | JS-rendered crawl, scrape, site map |
-| Banana / Gemini | `seo-image-gen` | `./extensions/banana/install.sh` | AI image generation through `nanobanana-mcp` |
+| DataForSEO | `ctk-seo-dataforseo`, `ctk-seo-maps`, `ctk-seo-ecommerce`, `ctk-seo-cluster` | `./extensions/dataforseo/install.sh` | Live SERP, keyword, backlinks, on-page, content, business data, AI visibility |
+| Google APIs | `ctk-seo-google`, `ctk-seo-performance` | `python scripts/google_auth.py --setup` | PageSpeed, CrUX, GSC, URL Inspection, Indexing API, GA4 |
+| Firecrawl | `ctk-seo-firecrawl` | `./extensions/firecrawl/install.sh` | JS-rendered crawl, scrape, site map |
+| Banana / Gemini | `ctk-seo-image-gen` | `./extensions/banana/install.sh` | AI image generation through `nanobanana-mcp` |
 
 Optional integrations enrich the same workflow surface. If credentials or MCP servers are missing, wrappers return `setup_required` or `mcp_configured` states with no fabricated live data.
 
@@ -303,7 +303,7 @@ flowchart LR
   codex --> google["Google APIs<br/>GSC, PageSpeed, CrUX, GA4"]
   codex --> firecrawl["Firecrawl MCP<br/>JS crawl and site maps"]
   codex --> banana["Gemini / nanobanana<br/>SEO image assets"]
-  local --> artifacts["Reports and .seo-cache"]
+  local --> artifacts["Reports and .ctk-seo-cache"]
   dfs --> artifacts
   google --> artifacts
   firecrawl --> artifacts
@@ -334,9 +334,9 @@ python scripts/demo_readiness.py --target https://example.com --live-apis --live
 Run a single workflow:
 
 ```bash
-python scripts/run_skill_workflow.py --skill seo-technical https://example.com --json
-python scripts/run_skill_workflow.py --skill seo-google https://example.com --json
-python scripts/run_skill_workflow.py --skill seo-dataforseo https://example.com --json
+python scripts/run_skill_workflow.py --skill ctk-seo-technical https://example.com --json
+python scripts/run_skill_workflow.py --skill ctk-seo-google https://example.com --json
+python scripts/run_skill_workflow.py --skill ctk-seo-dataforseo https://example.com --json
 ```
 
 Run the full smoke suite:
@@ -357,20 +357,20 @@ Bootstrap a clean runtime:
 python scripts/bootstrap_environment.py --venv .venv --json
 ```
 
-Artifacts are written to `output/`. Shared project cache is written to `.seo-cache/`. Both are ignored by git.
+Artifacts are written to `output/`. Shared project cache is written to `.ctk-seo-cache/`. Both are ignored by git.
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#05080d","primaryColor":"#07131c","primaryTextColor":"#f5fbff","primaryBorderColor":"#00d7e6","lineColor":"#00d7e6","secondaryColor":"#06222a","tertiaryColor":"#ff9f1c","edgeLabelBackground":"#05080d","fontFamily":"Inter, ui-sans-serif, system-ui, sans-serif"}}}%%
 flowchart LR
   cli["run_skill_workflow.py<br/>single workflow"] --> json["JSON result"]
   cli --> markdown["Markdown report"]
-  cli --> cacheWrite[".seo-cache update"]
+  cli --> cacheWrite[".ctk-seo-cache update"]
   suite["run_api_smoke_suite.py<br/>all workflows"] --> json
   suite --> outputRoot["output/api-smoke-*"]
   verify["verify_environment.py"] --> readiness["ready / setup_required<br/>capability status"]
   markdown --> outputRoot
   json --> outputRoot
-  cacheWrite --> cache[".seo-cache"]
+  cacheWrite --> cache[".ctk-seo-cache"]
   class cli,suite,verify accent
   class cacheWrite,readiness data
   class json,markdown,outputRoot,cache output
@@ -388,13 +388,13 @@ The repository separates Codex-facing instructions, deterministic runtime code, 
 %%{init: {"theme":"base","themeVariables":{"background":"#05080d","primaryColor":"#07131c","primaryTextColor":"#f5fbff","primaryBorderColor":"#00d7e6","lineColor":"#00d7e6","secondaryColor":"#06222a","tertiaryColor":"#ff9f1c","edgeLabelBackground":"#05080d","fontFamily":"Inter, ui-sans-serif, system-ui, sans-serif"}}}%%
 flowchart TB
   manifest[".codex-plugin/plugin.json"] --> skillsRoot["skills/"]
-  skillsRoot --> orchestrator["seo/SKILL.md<br/>routing and orchestration"]
+  skillsRoot --> orchestrator["ctk-seo/SKILL.md<br/>routing and orchestration"]
   skillsRoot --> specialists["seo-*/SKILL.md<br/>specialist workflows"]
   agentsDir["agents/seo-*.toml"] --> specialists
   scriptsDir["scripts/<br/>deterministic runners"] --> specialists
   extensionsDir["extensions/<br/>optional MCP setup"] --> specialists
-  references["skills/seo/references/<br/>thresholds and shared contracts"] --> specialists
-  specialists --> cacheDir[".seo-cache/<br/>cross-skill memory"]
+  references["skills/ctk-seo/references/<br/>thresholds and shared contracts"] --> specialists
+  specialists --> cacheDir[".ctk-seo-cache/<br/>cross-skill memory"]
   specialists --> outputDir["output/<br/>reports and artifacts"]
   testsDir["tests/<br/>contract and smoke coverage"] --> manifest
   testsDir --> skillsRoot
@@ -409,10 +409,10 @@ flowchart TB
 ```
 
 ```text
-codex-seo/
+ctk-codex-seo/
 ├── .codex-plugin/plugin.json        # Codex plugin manifest
 ├── skills/
-│   ├── seo/SKILL.md                 # Main orchestrator
+│   ├── ctk-seo/SKILL.md                 # Main orchestrator
 │   └── seo-*/SKILL.md               # 26 specialist workflows
 ├── agents/                          # 24 Codex TOML agent profiles
 ├── scripts/                         # Deterministic runners and API helpers
@@ -429,9 +429,9 @@ codex-seo/
 Design principles:
 
 - `skills/` is the source of truth.
-- `skills/seo/SKILL.md` routes natural-language SEO requests.
+- `skills/ctk-seo/SKILL.md` routes natural-language SEO requests.
 - TOML agents are Codex-native and mirror specialist workflows.
-- Runtime credentials stay in `~/.config/codex-seo/` or `~/.codex/settings.json`.
+- Runtime credentials stay in `~/.config/ctk-codex-seo/` or `~/.codex/settings.json`.
 - Legacy `claude-seo` config/cache paths are read only as migration fallback.
 
 More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
@@ -484,11 +484,11 @@ Current GitHub CI runs:
 Codex SEO writes new local credentials and state to Codex-specific paths:
 
 - `~/.codex/settings.json` for MCP server configuration
-- `~/.config/codex-seo/` for API configs and cost ledgers
-- `~/.cache/codex-seo/` for runtime caches
-- `.seo-cache/` inside the active project for cross-skill summaries
+- `~/.config/ctk-codex-seo/` for API configs and cost ledgers
+- `~/.cache/ctk-codex-seo/` for runtime caches
+- `.ctk-seo-cache/` inside the active project for cross-skill summaries
 
-Legacy `~/.config/claude-seo/` and `~/.cache/claude-seo/` paths are read only as migration fallback. Do not commit `.seo-cache/`, `output/`, `.mcp.json`, `.env`, OAuth tokens, service accounts, or provider keys.
+Legacy `~/.config/claude-seo/` and `~/.cache/claude-seo/` paths are read only as migration fallback. Do not commit `.ctk-seo-cache/`, `output/`, `.mcp.json`, `.env`, OAuth tokens, service accounts, or provider keys.
 
 ## Security
 

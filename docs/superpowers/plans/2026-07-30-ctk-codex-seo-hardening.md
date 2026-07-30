@@ -62,11 +62,11 @@ def test_all_installed_resources_are_namespaced(repo_root):
 - [ ] **Step 2: Run the test and confirm it fails**
 
 Run: `python -m pytest tests/test_ctk_namespace.py -q`
-Expected: failures naming the upstream `seo` resources.
+Expected: failures naming the upstream `ctk-seo` resources.
 
 - [ ] **Step 3: Add deterministic namespace migration**
 
-Implement a repository migration that maps `seo` to `ctk-seo` and
+Implement a repository migration that maps `ctk-seo` to `ctk-seo` and
 `seo-*` to `ctk-seo-*`, rewrites skill frontmatter, agent references, command
 examples, script routing tables, plugin metadata, and test fixtures. It must
 reject a dirty worktree and support `--check`.
@@ -292,7 +292,7 @@ artifacts default beneath the XDG cache/state roots and project output requires
 - [ ] **Step 2: Run tests and confirm failures**
 
 Run: `python -m pytest tests/test_ctk_repo_immutability.py -q`
-Expected: failure where `.seo-cache` or `.gitignore` is written locally.
+Expected: failure where `.ctk-seo-cache` or `.gitignore` is written locally.
 
 - [ ] **Step 3: Implement isolated storage roots**
 

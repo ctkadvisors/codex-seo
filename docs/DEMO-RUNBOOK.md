@@ -22,7 +22,7 @@ python scripts/demo_readiness.py --target https://example.com --live-apis --live
 
 - Codex MCP settings: `~/.codex/settings.json`
 - Required MCP servers: `dataforseo`, `nanobanana-mcp`
-- Required local file: `~/.codex/skills/seo/dataforseo-field-config.json`
+- Required local file: `~/.codex/skills/ctk-seo/dataforseo-field-config.json`
 - Required npm packages: `dataforseo-mcp-server`, `@ycse/nanobanana-mcp@latest`
 - Generated image output: `~/Documents/nanobanana_generated/`
 
@@ -45,15 +45,15 @@ Restart Codex after changing MCP settings so a demo session loads the configured
 3. Show a premium audit artifact:
 
    ```bash
-   python scripts/run_skill_workflow.py --skill seo-audit https://example.com --json
+   python scripts/run_skill_workflow.py --skill ctk-seo-audit https://example.com --json
    ```
 
 4. Show provider-aware extension readiness:
 
    ```bash
-   python scripts/run_skill_workflow.py --skill seo-dataforseo https://example.com --json
-   python scripts/run_skill_workflow.py --skill seo-image-gen https://example.com --json
-   python scripts/run_skill_workflow.py --skill seo-maps https://example.com --json
+   python scripts/run_skill_workflow.py --skill ctk-seo-dataforseo https://example.com --json
+   python scripts/run_skill_workflow.py --skill ctk-seo-image-gen https://example.com --json
+   python scripts/run_skill_workflow.py --skill ctk-seo-maps https://example.com --json
    ```
 
 5. In a restarted Codex session, demonstrate natural-language routing:

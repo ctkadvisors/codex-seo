@@ -180,39 +180,39 @@ if ($null -eq $gitCmd) {
 $codexRoot = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME ".codex" }
 $skillsRoot = Join-Path $codexRoot "skills"
 $agentDir = Join-Path $codexRoot "agents"
-$skillDir = Join-Path $skillsRoot "seo"
+$skillDir = Join-Path $skillsRoot "ctk-seo"
 $repoUrl = if ($env:CODEX_SEO_REPO) { $env:CODEX_SEO_REPO } else { "https://github.com/AgriciDaniel/codex-seo" }
 $repoRef = if ($env:CODEX_SEO_REF) { $env:CODEX_SEO_REF } else { "v1.9.6-codex.5" }
 $skipPlaywrightBrowser = Test-Truthy $env:CODEX_SEO_SKIP_PLAYWRIGHT_BROWSER
 $playwrightWithDeps = Test-Truthy $env:CODEX_SEO_PLAYWRIGHT_WITH_DEPS
 $suiteSkillDirs = @(
-    "seo",
-    "seo-audit",
-    "seo-backlinks",
-    "seo-cluster",
-    "seo-competitor-pages",
-    "seo-content",
-    "seo-dataforseo",
-    "seo-drift",
-    "seo-ecommerce",
-    "seo-flow",
-    "seo-firecrawl",
-    "seo-geo",
-    "seo-google",
-    "seo-hreflang",
-    "seo-image-gen",
-    "seo-images",
-    "seo-local",
-    "seo-maps",
-    "seo-page",
-    "seo-performance",
-    "seo-plan",
-    "seo-programmatic",
-    "seo-schema",
-    "seo-sitemap",
-    "seo-sxo",
-    "seo-technical",
-    "seo-visual"
+    "ctk-seo",
+    "ctk-seo-audit",
+    "ctk-seo-backlinks",
+    "ctk-seo-cluster",
+    "ctk-seo-competitor-pages",
+    "ctk-seo-content",
+    "ctk-seo-dataforseo",
+    "ctk-seo-drift",
+    "ctk-seo-ecommerce",
+    "ctk-seo-flow",
+    "ctk-seo-firecrawl",
+    "ctk-seo-geo",
+    "ctk-seo-google",
+    "ctk-seo-hreflang",
+    "ctk-seo-image-gen",
+    "ctk-seo-images",
+    "ctk-seo-local",
+    "ctk-seo-maps",
+    "ctk-seo-page",
+    "ctk-seo-performance",
+    "ctk-seo-plan",
+    "ctk-seo-programmatic",
+    "ctk-seo-schema",
+    "ctk-seo-sitemap",
+    "ctk-seo-sxo",
+    "ctk-seo-technical",
+    "ctk-seo-visual"
 )
 
 New-Item -ItemType Directory -Force -Path $skillsRoot | Out-Null
@@ -221,7 +221,7 @@ New-Item -ItemType Directory -Force -Path $agentDir | Out-Null
 $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $tempDir | Out-Null
 try {
-    $checkoutDir = Join-Path $tempDir "codex-seo"
+    $checkoutDir = Join-Path $tempDir "ctk-codex-seo"
 
     Write-Host "[INFO] Downloading Codex SEO ($repoRef)..." -ForegroundColor Yellow
     $cloneResult = Invoke-External -Exe "git" -Args @("clone", "--depth", "1", "--branch", $repoRef, $repoUrl, $checkoutDir)

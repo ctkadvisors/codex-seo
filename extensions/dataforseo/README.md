@@ -132,7 +132,7 @@ When installed, other Codex SEO skills automatically detect DataForSEO availabil
 
 ### MCP server not connecting
 
-1. Check sanitized MCP config: `python scripts/run_skill_workflow.py --skill seo-dataforseo --json https://example.com`
+1. Check sanitized MCP config: `python scripts/run_skill_workflow.py --skill ctk-seo-dataforseo --json https://example.com`
 2. Test manually: `npx -y dataforseo-mcp-server`
 3. Re-run installer: `./extensions/dataforseo/install.sh`
 

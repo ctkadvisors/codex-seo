@@ -7,7 +7,7 @@
 - Repository: https://github.com/AgriciDaniel/codex-seo
 - License: MIT
 - Current version: 1.9.6+codex.1
-- Canonical skill entrypoint: skills/seo/SKILL.md
+- Canonical skill entrypoint: skills/ctk-seo/SKILL.md
 - Plugin manifest: .codex-plugin/plugin.json
 - Credits: CREDITS.md
 - Initial Codex SEO conversion: https://github.com/avalonreset
@@ -32,9 +32,9 @@
 
 ## Runtime Notes
 
-- New config path: `~/.config/codex-seo/`
-- New cache path: `~/.cache/codex-seo/`
-- Project cache path: `.seo-cache/`
+- New config path: `~/.config/ctk-codex-seo/`
+- New cache path: `~/.cache/ctk-codex-seo/`
+- Project cache path: `.ctk-seo-cache/`
 - Credentials must stay outside the repository.
 - Optional live-data providers return setup-required states when credentials or MCP servers are unavailable.
 

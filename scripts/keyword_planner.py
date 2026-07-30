@@ -15,7 +15,7 @@ Prerequisites:
     - Developer Token (apply at Google Ads API Center)
     - OAuth credentials or service account
     - google-ads Python library: pip install google-ads
-    - Config: ~/.config/codex-seo/google-api.json with:
+    - Config: ~/.config/ctk-codex-seo/google-api.json with:
       {
         "ads_developer_token": "YOUR_DEV_TOKEN",
         "ads_customer_id": "123-456-7890",
@@ -64,7 +64,7 @@ def _build_ads_client() -> Optional[object]:
     if not dev_token:
         print(
             "Error: No Google Ads developer token configured. "
-            "Add 'ads_developer_token' to ~/.config/codex-seo/google-api.json. "
+            "Add 'ads_developer_token' to ~/.config/ctk-codex-seo/google-api.json. "
             "Get a token at: https://ads.google.com/aw/apicenter",
             file=sys.stderr,
         )
@@ -88,7 +88,7 @@ def _build_ads_client() -> Optional[object]:
             ads_config["login_customer_id"] = login_customer_id
 
         # Try to use OAuth token if available
-        token_path = os.path.expanduser("~/.config/codex-seo/oauth-token.json")
+        token_path = os.path.expanduser("~/.config/ctk-codex-seo/oauth-token.json")
         legacy_token_path = os.path.expanduser("~/.config/claude-seo/oauth-token.json")
         if not os.path.exists(token_path) and os.path.exists(legacy_token_path):
             token_path = legacy_token_path

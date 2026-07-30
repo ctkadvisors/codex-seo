@@ -9,7 +9,7 @@ Usage:
     python drift_baseline.py <url> [--skip-cwv]
 
 Output: JSON with baseline ID, timestamp, and captured elements.
-Storage: ~/.cache/codex-seo/drift/baselines.db
+Storage: ~/.cache/ctk-codex-seo/drift/baselines.db
 """
 
 import argparse
@@ -31,7 +31,7 @@ sys.path.insert(0, SCRIPTS_DIR)
 
 from google_auth import validate_url  # noqa: E402
 
-DB_DIR = os.path.expanduser("~/.cache/codex-seo/drift")
+DB_DIR = os.path.expanduser("~/.cache/ctk-codex-seo/drift")
 LEGACY_DB_DIR = os.path.expanduser("~/.cache/claude-seo/drift")
 DB_PATH = os.path.join(DB_DIR, "baselines.db")
 LEGACY_DB_PATH = os.path.join(LEGACY_DB_DIR, "baselines.db")

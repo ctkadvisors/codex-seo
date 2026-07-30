@@ -15,7 +15,7 @@ def test_url_slug_homepage():
 
 
 def test_url_slug_nested_path():
-    assert url_slug("https://example.com/blog/seo-guide/?x=1") == "blog--seo-guide"
+    assert url_slug("https://example.com/blog/ctk-seo-guide/?x=1") == "blog--ctk-seo-guide"
 
 
 def test_detect_business_type_saas():

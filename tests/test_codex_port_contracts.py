@@ -10,77 +10,77 @@ AGENTS = ROOT / "agents"
 
 
 EXPECTED_SKILLS = {
-    "seo",
-    "seo-audit",
-    "seo-backlinks",
-    "seo-cluster",
-    "seo-competitor-pages",
-    "seo-content",
-    "seo-dataforseo",
-    "seo-drift",
-    "seo-ecommerce",
-    "seo-flow",
-    "seo-firecrawl",
-    "seo-geo",
-    "seo-google",
-    "seo-hreflang",
-    "seo-image-gen",
-    "seo-images",
-    "seo-local",
-    "seo-maps",
-    "seo-page",
-    "seo-performance",
-    "seo-plan",
-    "seo-programmatic",
-    "seo-schema",
-    "seo-sitemap",
-    "seo-sxo",
-    "seo-technical",
-    "seo-visual",
+    "ctk-seo",
+    "ctk-seo-audit",
+    "ctk-seo-backlinks",
+    "ctk-seo-cluster",
+    "ctk-seo-competitor-pages",
+    "ctk-seo-content",
+    "ctk-seo-dataforseo",
+    "ctk-seo-drift",
+    "ctk-seo-ecommerce",
+    "ctk-seo-flow",
+    "ctk-seo-firecrawl",
+    "ctk-seo-geo",
+    "ctk-seo-google",
+    "ctk-seo-hreflang",
+    "ctk-seo-image-gen",
+    "ctk-seo-images",
+    "ctk-seo-local",
+    "ctk-seo-maps",
+    "ctk-seo-page",
+    "ctk-seo-performance",
+    "ctk-seo-plan",
+    "ctk-seo-programmatic",
+    "ctk-seo-schema",
+    "ctk-seo-sitemap",
+    "ctk-seo-sxo",
+    "ctk-seo-technical",
+    "ctk-seo-visual",
 }
 
 
 EXPECTED_AGENTS = {
-    "seo-backlinks",
-    "seo-cluster",
-    "seo-competitor-pages",
-    "seo-content",
-    "seo-dataforseo",
-    "seo-drift",
-    "seo-ecommerce",
-    "seo-flow",
-    "seo-firecrawl",
-    "seo-geo",
-    "seo-google",
-    "seo-hreflang",
-    "seo-image-gen",
-    "seo-images",
-    "seo-local",
-    "seo-maps",
-    "seo-performance",
-    "seo-plan",
-    "seo-programmatic",
-    "seo-schema",
-    "seo-sitemap",
-    "seo-sxo",
-    "seo-technical",
-    "seo-visual",
+    "ctk-seo-backlinks",
+    "ctk-seo-cluster",
+    "ctk-seo-competitor-pages",
+    "ctk-seo-content",
+    "ctk-seo-dataforseo",
+    "ctk-seo-drift",
+    "ctk-seo-ecommerce",
+    "ctk-seo-flow",
+    "ctk-seo-firecrawl",
+    "ctk-seo-geo",
+    "ctk-seo-google",
+    "ctk-seo-hreflang",
+    "ctk-seo-image-gen",
+    "ctk-seo-images",
+    "ctk-seo-local",
+    "ctk-seo-maps",
+    "ctk-seo-performance",
+    "ctk-seo-plan",
+    "ctk-seo-programmatic",
+    "ctk-seo-schema",
+    "ctk-seo-sitemap",
+    "ctk-seo-sxo",
+    "ctk-seo-technical",
+    "ctk-seo-visual",
 }
 
 
 def test_codex_plugin_manifest_is_valid():
     manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
-    assert manifest["name"] == "codex-seo"
-    assert manifest["version"] == "1.9.6+codex.5"
+    assert manifest["name"] == "ctk-codex-seo"
+    assert manifest["version"] == "2.0.0"
     assert manifest["skills"] == "./skills/"
-    assert manifest["hooks"] == "./hooks/hooks.json"
-    assert manifest["repository"] == "https://github.com/AgriciDaniel/codex-seo"
-    assert manifest["interface"]["displayName"] == "Codex SEO"
+    assert "hooks" not in manifest
+    assert manifest["repository"] == "https://github.com/ctkadvisors/codex-seo"
+    assert manifest["interface"]["displayName"] == "CTK Codex SEO"
 
 
 def test_expected_skills_and_agents_exist():
     skill_dirs = {path.name for path in SKILLS.iterdir() if path.is_dir()}
-    agent_names = {path.stem for path in AGENTS.glob("seo-*.toml")}
+    agent_names = {path.stem for path in AGENTS.glob("ctk-seo-*.toml")}
     assert EXPECTED_SKILLS <= skill_dirs
     assert EXPECTED_AGENTS <= agent_names
 
@@ -96,8 +96,8 @@ def test_skill_metadata_and_cache_contracts():
         assert text.startswith("---\n"), f"{skill_file} missing frontmatter"
         assert re.search(r"^name:\s*", text, re.MULTILINE), f"{skill_file} missing name"
         assert re.search(r"^description:\s*", text, re.MULTILINE), f"{skill_file} missing description"
-        if skill_dir.name != "seo":
-            assert ".seo-cache" in text, f"{skill_file} missing shared cache guidance"
+        if skill_dir.name != "ctk-seo":
+            assert ".ctk-seo-cache" in text, f"{skill_file} missing shared cache guidance"
 
 
 def test_shared_reference_links_exist():
@@ -151,7 +151,7 @@ def test_extension_installers_are_codex_first():
 
 
 def test_packaged_license_links_point_to_codex_repo():
-    for path in list(SKILLS.glob("seo*/LICENSE.txt")) + list((ROOT / "extensions").glob("*/skills/seo*/LICENSE.txt")):
+    for path in list(SKILLS.glob("ctk-seo*/LICENSE.txt")) + list((ROOT / "extensions").glob("*/skills/ctk-seo*/LICENSE.txt")):
         text = path.read_text(encoding="utf-8")
         assert "AgriciDaniel/codex-seo" in text
         assert "AgriciDaniel/claude-seo" not in text
@@ -208,9 +208,9 @@ def test_api_readiness_matrix_covers_smoke_suite():
 
 def test_extension_fallback_skills_match_canonical_skills():
     mirrors = {
-        "seo-dataforseo": ROOT / "extensions" / "dataforseo" / "skills" / "seo-dataforseo" / "SKILL.md",
-        "seo-firecrawl": ROOT / "extensions" / "firecrawl" / "skills" / "seo-firecrawl" / "SKILL.md",
-        "seo-image-gen": ROOT / "extensions" / "banana" / "skills" / "seo-image-gen" / "SKILL.md",
+        "ctk-seo-dataforseo": ROOT / "extensions" / "dataforseo" / "skills" / "ctk-seo-dataforseo" / "SKILL.md",
+        "ctk-seo-firecrawl": ROOT / "extensions" / "firecrawl" / "skills" / "ctk-seo-firecrawl" / "SKILL.md",
+        "ctk-seo-image-gen": ROOT / "extensions" / "banana" / "skills" / "ctk-seo-image-gen" / "SKILL.md",
     }
     for skill, fallback in mirrors.items():
         canonical = SKILLS / skill / "SKILL.md"

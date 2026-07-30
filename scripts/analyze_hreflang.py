@@ -24,7 +24,7 @@ from seo_pipeline_utils import build_session, validate_public_site_root
 
 DEFAULT_TIMEOUT = 20
 ROOT = Path(__file__).resolve().parent.parent
-CACHE_ROOT = ROOT / ".seo-cache"
+CACHE_ROOT = ROOT / ".ctk-seo-cache"
 SITEMAP_NS = {
     "sm": "http://www.sitemaps.org/schemas/sitemap/0.9",
     "xhtml": "http://www.w3.org/1999/xhtml",

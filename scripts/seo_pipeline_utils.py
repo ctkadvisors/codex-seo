@@ -154,16 +154,16 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 
 
 def ensure_cache_gitignore(repo_root: Path) -> None:
-    """Ensure .seo-cache is ignored in git."""
+    """Ensure .ctk-seo-cache is ignored in git."""
     gitignore_path = repo_root / ".gitignore"
     try:
         current = gitignore_path.read_text(encoding="utf-8") if gitignore_path.exists() else ""
     except OSError:
         return
-    if ".seo-cache/" in current:
+    if ".ctk-seo-cache/" in current:
         return
     prefix = "" if not current or current.endswith("\n") else "\n"
-    gitignore_path.write_text(f"{current}{prefix}.seo-cache/\n", encoding="utf-8")
+    gitignore_path.write_text(f"{current}{prefix}.ctk-seo-cache/\n", encoding="utf-8")
 
 
 class PublicURLSession(requests.Session):

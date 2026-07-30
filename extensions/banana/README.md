@@ -9,7 +9,7 @@ banana Creative Director pipeline.
 > This extension wraps the Banana image-generation pipeline for SEO-specific use cases.
 > Install the standalone image-generation skill separately for general-purpose image generation.
 
-- **Codex SEO** installed (`~/.codex/skills/seo/`)
+- **Codex SEO** installed (`~/.codex/skills/ctk-seo/`)
 - **Node.js 18+** with npx
 - **Google AI API key** (free at [aistudio.google.com/apikey](https://aistudio.google.com/apikey))
 - **ImageMagick** (optional, for post-processing)
@@ -23,7 +23,7 @@ banana Creative Director pipeline.
 The installer will:
 1. Verify Codex SEO is installed
 2. Prompt for your Google AI API key (if nanobanana-mcp not already configured)
-3. Install the `seo-image-gen` skill and agent
+3. Install the `ctk-seo-image-gen` skill and agent
 4. Configure the MCP server in `~/.codex/settings.json`
 
 ## Commands

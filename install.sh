@@ -75,38 +75,38 @@ main() {
     CODEX_ROOT="${CODEX_HOME:-${HOME}/.codex}"
     SKILLS_ROOT="${CODEX_ROOT}/skills"
     AGENT_DIR="${CODEX_ROOT}/agents"
-    SKILL_DIR="${SKILLS_ROOT}/seo"
+    SKILL_DIR="${SKILLS_ROOT}/ctk-seo"
     REPO_URL="${CODEX_SEO_REPO:-https://github.com/AgriciDaniel/codex-seo}"
     REPO_REF="${CODEX_SEO_REF:-v1.9.6-codex.5}"
     PYTHON_BIN="$(resolve_python)" || { echo "[ERROR] Python 3 is required but not installed."; exit 1; }
     SUITE_SKILL_DIRS=(
         seo
-        seo-audit
-        seo-backlinks
-        seo-cluster
-        seo-competitor-pages
-        seo-content
-        seo-dataforseo
-        seo-drift
-        seo-ecommerce
-        seo-flow
-        seo-firecrawl
-        seo-geo
-        seo-google
-        seo-hreflang
-        seo-image-gen
-        seo-images
-        seo-local
-        seo-maps
-        seo-page
-        seo-performance
-        seo-plan
-        seo-programmatic
-        seo-schema
-        seo-sitemap
-        seo-sxo
-        seo-technical
-        seo-visual
+        ctk-seo-audit
+        ctk-seo-backlinks
+        ctk-seo-cluster
+        ctk-seo-competitor-pages
+        ctk-seo-content
+        ctk-seo-dataforseo
+        ctk-seo-drift
+        ctk-seo-ecommerce
+        ctk-seo-flow
+        ctk-seo-firecrawl
+        ctk-seo-geo
+        ctk-seo-google
+        ctk-seo-hreflang
+        ctk-seo-image-gen
+        ctk-seo-images
+        ctk-seo-local
+        ctk-seo-maps
+        ctk-seo-page
+        ctk-seo-performance
+        ctk-seo-plan
+        ctk-seo-programmatic
+        ctk-seo-schema
+        ctk-seo-sitemap
+        ctk-seo-sxo
+        ctk-seo-technical
+        ctk-seo-visual
     )
 
     echo "========================================"
@@ -131,12 +131,12 @@ main() {
     trap 'rm -rf "${TEMP_DIR}"' EXIT
 
     echo "[INFO] Downloading Codex SEO (${REPO_REF})..."
-    if ! git clone --depth 1 --branch "${REPO_REF}" "${REPO_URL}" "${TEMP_DIR}/codex-seo" 2>/dev/null; then
+    if ! git clone --depth 1 --branch "${REPO_REF}" "${REPO_URL}" "${TEMP_DIR}/ctk-codex-seo" 2>/dev/null; then
         echo "[ERROR] Unable to download ref ${REPO_REF}. Confirm the branch/tag exists and your Git credentials can access ${REPO_URL}."
         exit 1
     fi
 
-    INSTALLED_COMMIT="$(git -C "${TEMP_DIR}/codex-seo" rev-parse HEAD)"
+    INSTALLED_COMMIT="$(git -C "${TEMP_DIR}/ctk-codex-seo" rev-parse HEAD)"
 
     echo "[INFO] Resetting existing Codex SEO install..."
     for skill_name in "${SUITE_SKILL_DIRS[@]}"; do
@@ -145,8 +145,8 @@ main() {
     rm -f "${AGENT_DIR}/seo-"*.md "${AGENT_DIR}/seo-"*.toml 2>/dev/null || true
 
     echo "[INFO] Installing skill files..."
-    if [ -d "${TEMP_DIR}/codex-seo/skills" ]; then
-        for skill_dir in "${TEMP_DIR}/codex-seo/skills"/*/; do
+    if [ -d "${TEMP_DIR}/ctk-codex-seo/skills" ]; then
+        for skill_dir in "${TEMP_DIR}/ctk-codex-seo/skills"/*/; do
             [ -d "${skill_dir}" ] || continue
             skill_name="$(basename "${skill_dir}")"
             target="${SKILLS_ROOT}/${skill_name}"
@@ -156,26 +156,26 @@ main() {
     fi
 
     for dir_name in scripts schema pdf hooks extensions; do
-        if [ -d "${TEMP_DIR}/codex-seo/${dir_name}" ]; then
+        if [ -d "${TEMP_DIR}/ctk-codex-seo/${dir_name}" ]; then
             mkdir -p "${SKILL_DIR}/${dir_name}"
-            cp -r "${TEMP_DIR}/codex-seo/${dir_name}/." "${SKILL_DIR}/${dir_name}/"
+            cp -r "${TEMP_DIR}/ctk-codex-seo/${dir_name}/." "${SKILL_DIR}/${dir_name}/"
         fi
     done
 
-    for requirements_file in "${TEMP_DIR}/codex-seo"/requirements*.txt; do
+    for requirements_file in "${TEMP_DIR}/ctk-codex-seo"/requirements*.txt; do
         [ -f "${requirements_file}" ] || continue
         cp "${requirements_file}" "${SKILL_DIR}/$(basename "${requirements_file}")"
     done
 
     for doc_name in CHANGELOG.md README.md; do
-        if [ -f "${TEMP_DIR}/codex-seo/${doc_name}" ]; then
-            cp "${TEMP_DIR}/codex-seo/${doc_name}" "${SKILL_DIR}/${doc_name}"
+        if [ -f "${TEMP_DIR}/ctk-codex-seo/${doc_name}" ]; then
+            cp "${TEMP_DIR}/ctk-codex-seo/${doc_name}" "${SKILL_DIR}/${doc_name}"
         fi
     done
 
     echo "[INFO] Installing agent profiles..."
-    if [ -d "${TEMP_DIR}/codex-seo/agents" ]; then
-        cp "${TEMP_DIR}/codex-seo/agents/"*.toml "${AGENT_DIR}/"
+    if [ -d "${TEMP_DIR}/ctk-codex-seo/agents" ]; then
+        cp "${TEMP_DIR}/ctk-codex-seo/agents/"*.toml "${AGENT_DIR}/"
     fi
 
     BOOTSTRAP_SCRIPT="${SKILL_DIR}/scripts/bootstrap_environment.py"

@@ -613,7 +613,7 @@ def run_audit_with_output_root(
         "country": country,
         "notes": [],
     }
-    write_json(ROOT / ".seo-cache" / "site-meta.json", site_meta)
+    write_json(ROOT / ".ctk-seo-cache" / "site-meta.json", site_meta)
 
     technical = analyze_technical(response.url, timeout=timeout)
     content = analyze_content(response.url, timeout=timeout)
@@ -704,9 +704,9 @@ def run_audit_with_output_root(
         "category_scores": category_scores,
         "priority_issues": priority_issues,
     }
-    write_json(ROOT / ".seo-cache" / "audit-scores.json", audit_scores)
+    write_json(ROOT / ".ctk-seo-cache" / "audit-scores.json", audit_scores)
 
-    cache_page_dir = ROOT / ".seo-cache" / "pages" / url_slug(response.url)
+    cache_page_dir = ROOT / ".ctk-seo-cache" / "pages" / url_slug(response.url)
     write_json(cache_page_dir / "technical.json", technical)
     write_json(cache_page_dir / "content.json", content)
     write_json(cache_page_dir / "schema.json", schema)

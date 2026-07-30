@@ -32,10 +32,10 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 
 ## What Gets Installed
 
-- `~/.codex/skills/seo`
+- `~/.codex/skills/ctk-seo`
 - `~/.codex/skills/seo-*`
 - `~/.codex/agents/seo-*.toml`
-- Python runtime at `~/.codex/skills/seo/.venv`
+- Python runtime at `~/.codex/skills/ctk-seo/.venv`
 - Core Python dependencies, with optional visual/report/Google/OCR groups attempted best-effort
 
 ## Overrides
@@ -49,7 +49,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 ## Verify
 
 ```bash
-~/.codex/skills/seo/.venv/bin/python ~/.codex/skills/seo/scripts/verify_environment.py
+~/.codex/skills/ctk-seo/.venv/bin/python ~/.codex/skills/ctk-seo/scripts/verify_environment.py
 ```
 
 Windows:

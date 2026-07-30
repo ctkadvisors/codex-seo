@@ -32,31 +32,31 @@ class ProbeCase:
 
 
 DEFAULT_CASES = [
-    ProbeCase("seo_page", "Analyze this page for SEO: https://www.python.org", "seo-page"),
+    ProbeCase("seo_page", "Analyze this page for SEO: https://www.python.org", "ctk-seo-page"),
     ProbeCase(
         "seo_audit",
         "Run a full SEO audit for https://www.python.org and produce the normal report artifacts.",
-        "seo-audit",
+        "ctk-seo-audit",
     ),
-    ProbeCase("seo_plan", "Create an SEO strategy and roadmap for https://www.python.org", "seo-plan"),
-    ProbeCase("seo_geo", "Assess AI search / GEO readiness for https://www.python.org", "seo-geo"),
+    ProbeCase("seo_plan", "Create an SEO strategy and roadmap for https://www.python.org", "ctk-seo-plan"),
+    ProbeCase("seo_geo", "Assess AI search / GEO readiness for https://www.python.org", "ctk-seo-geo"),
 ]
 
 ALLOWED_SKILLS = {
-    "seo-audit",
-    "seo-competitor-pages",
-    "seo-content",
-    "seo-geo",
-    "seo-hreflang",
-    "seo-images",
-    "seo-page",
-    "seo-performance",
-    "seo-plan",
-    "seo-programmatic",
-    "seo-schema",
-    "seo-sitemap",
-    "seo-technical",
-    "seo-visual",
+    "ctk-seo-audit",
+    "ctk-seo-competitor-pages",
+    "ctk-seo-content",
+    "ctk-seo-geo",
+    "ctk-seo-hreflang",
+    "ctk-seo-images",
+    "ctk-seo-page",
+    "ctk-seo-performance",
+    "ctk-seo-plan",
+    "ctk-seo-programmatic",
+    "ctk-seo-schema",
+    "ctk-seo-sitemap",
+    "ctk-seo-technical",
+    "ctk-seo-visual",
 }
 PYTHON_COMMANDS = {"python", "python3", "py", Path(sys.executable).name}
 
@@ -105,9 +105,9 @@ def build_prompt(request: str) -> str:
         "for individual skills and "
         "\"python scripts/run_headless_audit.py <url> --json\" "
         "for the full audit pipeline. "
-        "Valid skill names include seo-page, seo-content, seo-geo, seo-plan, "
-        "seo-competitor-pages, seo-hreflang, seo-images, seo-programmatic, "
-        "seo-schema, seo-sitemap, seo-technical, seo-performance, seo-visual, seo-audit. "
+        "Valid skill names include ctk-seo-page, ctk-seo-content, ctk-seo-geo, ctk-seo-plan, "
+        "ctk-seo-competitor-pages, ctk-seo-hreflang, ctk-seo-images, ctk-seo-programmatic, "
+        "ctk-seo-schema, ctk-seo-sitemap, ctk-seo-technical, ctk-seo-performance, ctk-seo-visual, ctk-seo-audit. "
         "Return ONLY a JSON object with keys: command, rationale, expected_artifact. "
         "Do not use markdown fences. "
         f"User request: {request}"

@@ -3,7 +3,7 @@
 Run a Codex SEO skill deterministically and write standard artifacts.
 
 Usage:
-    python scripts/run_skill_workflow.py --skill seo-content https://example.com --json
+    python scripts/run_skill_workflow.py --skill ctk-seo-content https://example.com --json
 """
 
 from __future__ import annotations
@@ -182,7 +182,7 @@ def run_capability_summary(
         output_dir,
         f"{cache_name.upper()}-SUMMARY.md",
         report,
-        ROOT / ".seo-cache" / f"{cache_name}.json",
+        ROOT / ".ctk-seo-cache" / f"{cache_name}.json",
     )
 
 
@@ -190,20 +190,20 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
     """Run a specialist skill and write deterministic artifacts."""
     target = validate_public_url(target)
     output_dir = output_dir_for(skill, target, output_root=output_root)
-    page_cache = ROOT / ".seo-cache" / "pages" / url_slug(target)
-    root_cache = ROOT / ".seo-cache"
+    page_cache = ROOT / ".ctk-seo-cache" / "pages" / url_slug(target)
+    root_cache = ROOT / ".ctk-seo-cache"
 
-    if skill == "seo-technical":
+    if skill == "ctk-seo-technical":
         result = analyze_technical(target)
         report = simple_report("Technical SEO Report", result["score"], [f"Indexability: {result['findings']['indexability']}", f"CWV: {result['findings']['cwv']}"], result["issues"], result["recommendations"])
         return write_specialist_artifacts(skill, target, result, output_dir, "TECHNICAL-AUDIT-REPORT.md", report, page_cache / "technical.json")
 
-    if skill == "seo-content":
+    if skill == "ctk-seo-content":
         result = analyze_content(target)
         report = simple_report("Content Quality Report", result["score"], [result["eeat_summary"], f"AI citation readiness: {result['ai_citation_readiness']}"], result["issues"], result["recommendations"])
         return write_specialist_artifacts(skill, target, result, output_dir, "CONTENT-AUDIT-REPORT.md", report, page_cache / "content.json")
 
-    if skill == "seo-schema":
+    if skill == "ctk-seo-schema":
         result = analyze_schema(target)
         summary = [f"Validation: {result['validation']}", f"Detected types: {', '.join(result['detected_types']) or 'None'}"]
         report = simple_report("Schema Report", result["score"], summary, result["issues"], result["recommendations"])
@@ -212,13 +212,13 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
         bundle["artifacts"]["generated_schema"] = str(output_dir / "generated-schema.json")
         return bundle
 
-    if skill == "seo-images":
+    if skill == "ctk-seo-images":
         result = analyze_images(target)
         summary = [f"Total images: {result['image_summary']['total_images']}", f"Missing alt: {result['image_summary']['missing_alt']}"]
         report = simple_report("Image Audit Report", result["score"], summary, result["issues"], result["recommendations"])
         return write_specialist_artifacts(skill, target, result, output_dir, "IMAGES-AUDIT-REPORT.md", report, page_cache / "images.json")
 
-    if skill == "seo-sitemap":
+    if skill == "ctk-seo-sitemap":
         result = analyze_sitemap(target, timeout=20, check_limit=500)
         summary = [
             f"Sitemaps discovered: {len(result.get('sitemap_urls', []))}",
@@ -227,13 +227,13 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
         report = simple_report("Sitemap Report", result["score"], summary, result["issues"], result["recommendations"])
         return write_specialist_artifacts(skill, target, result, output_dir, "SITEMAP-REPORT.md", report, root_cache / "sitemap.json")
 
-    if skill == "seo-geo":
+    if skill == "ctk-seo-geo":
         result = analyze_geo(target)
         summary = [f"AI crawler access: {result['ai_crawler_access']}", f"Platform scores: {result.get('platform_breakdown', {})}"]
         report = simple_report("GEO Analysis Report", result["score"], summary, result["issues"], result["recommendations"])
         return write_specialist_artifacts(skill, target, result, output_dir, "GEO-ANALYSIS.md", report, page_cache / "geo.json")
 
-    if skill == "seo-performance":
+    if skill == "ctk-seo-performance":
         result = analyze_performance(target)
         summary = [
             f"LCP: {result['core_web_vitals']['lcp']}",
@@ -247,7 +247,7 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
         bundle["artifacts"]["lighthouse"] = str(output_dir / "lighthouse.json")
         return bundle
 
-    if skill == "seo-visual":
+    if skill == "ctk-seo-visual":
         result = maybe_run_visual(target)
         output_dir.mkdir(parents=True, exist_ok=True)
         screenshots = maybe_capture_screenshots(target, output_dir)
@@ -258,19 +258,19 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
         bundle["artifacts"]["screenshots_dir"] = str(output_dir / "screenshots")
         return bundle
 
-    if skill == "seo-hreflang":
+    if skill == "ctk-seo-hreflang":
         result = analyze_hreflang(target)
         summary = [f"Implementation status: {result['implementation_status']}", f"Language targets: {', '.join(result['language_targets']) or 'None'}"]
         report = simple_report("Hreflang Report", result["score"], summary, result["issues"], result["recommendations"])
         return write_specialist_artifacts(skill, target, result, output_dir, "HREFLANG-REPORT.md", report, root_cache / "hreflang.json")
 
-    if skill == "seo-programmatic":
+    if skill == "ctk-seo-programmatic":
         result = analyze_programmatic(target)
         summary = [f"Footprint: {result['programmatic_footprint']}", f"Templates: {', '.join(result['templates'])}"]
         report = simple_report("Programmatic SEO Report", result["score"], summary, result["issues"], result["recommendations"])
         return write_specialist_artifacts(skill, target, result, output_dir, "PROGRAMMATIC-REPORT.md", report, root_cache / "programmatic.json")
 
-    if skill == "seo-competitor-pages":
+    if skill == "ctk-seo-competitor-pages":
         result = generate_competitor_assets(target)
         summary = [
             f"Primary opportunity: {result['opportunities']['primary_page']['title']}",
@@ -282,7 +282,7 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
         bundle["artifacts"]["comparison_schema"] = str(output_dir / "comparison-schema.json")
         return bundle
 
-    if skill == "seo-backlinks":
+    if skill == "ctk-seo-backlinks":
         from backlinks_auth import detect_tier as detect_backlink_tier
 
         tier = detect_backlink_tier()
@@ -299,7 +299,7 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
         ]
         return run_capability_summary(skill, target, status, summary, issues, recommendations, ["backlinks_auth"], output_root)
 
-    if skill == "seo-google":
+    if skill == "ctk-seo-google":
         from google_auth import detect_tier as detect_google_tier
 
         tier = detect_google_tier()
@@ -310,10 +310,10 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
             "PageSpeed/CrUX, Search Console, Indexing, GA4, and Ads features depend on configured Google credentials.",
         ]
         issues = [] if status == "ready" else ["Google API credentials were not detected."]
-        recommendations = ["Create `~/.config/codex-seo/google-api.json` or set the documented environment variables."]
+        recommendations = ["Create `~/.config/ctk-codex-seo/google-api.json` or set the documented environment variables."]
         return run_capability_summary(skill, target, status, summary, issues, recommendations, ["google_auth"], output_root)
 
-    if skill == "seo-drift":
+    if skill == "ctk-seo-drift":
         from drift_history import get_history
 
         result = get_history(target)
@@ -330,20 +330,20 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
         issues = [] if result.get("baselines") else ["No drift baseline exists for this URL."]
         recommendations = ["Run `scripts/drift_baseline.py <url> --skip-cwv` before deployment, then compare after changes."]
         report = simple_report("SEO Drift Summary", None, summary, issues, recommendations)
-        return write_specialist_artifacts(skill, target, result, output_dir_for(skill, target, output_root), "DRIFT-SUMMARY.md", report, ROOT / ".seo-cache" / "drift.json")
+        return write_specialist_artifacts(skill, target, result, output_dir_for(skill, target, output_root), "DRIFT-SUMMARY.md", report, ROOT / ".ctk-seo-cache" / "drift.json")
 
-    if skill in {"seo-dataforseo", "seo-firecrawl", "seo-image-gen", "seo-maps"}:
+    if skill in {"ctk-seo-dataforseo", "ctk-seo-firecrawl", "ctk-seo-image-gen", "ctk-seo-maps"}:
         setup = {
-            "seo-dataforseo": "DataForSEO MCP server is required for live SERP, keyword, backlink, and AI visibility data.",
-            "seo-firecrawl": "Firecrawl MCP server is required for full-site JS-rendered crawling.",
-            "seo-image-gen": "Image generation MCP tooling is required for generation/editing workflows.",
-            "seo-maps": "Maps intelligence runs in a limited free tier unless DataForSEO and Google Maps credentials are configured.",
+            "ctk-seo-dataforseo": "DataForSEO MCP server is required for live SERP, keyword, backlink, and AI visibility data.",
+            "ctk-seo-firecrawl": "Firecrawl MCP server is required for full-site JS-rendered crawling.",
+            "ctk-seo-image-gen": "Image generation MCP tooling is required for generation/editing workflows.",
+            "ctk-seo-maps": "Maps intelligence runs in a limited free tier unless DataForSEO and Google Maps credentials are configured.",
         }
         server_requirements = {
-            "seo-dataforseo": ("dataforseo", ["DATAFORSEO_USERNAME", "DATAFORSEO_PASSWORD"]),
-            "seo-firecrawl": ("firecrawl-mcp", ["FIRECRAWL_API_KEY"]),
-            "seo-image-gen": ("nanobanana-mcp", ["GOOGLE_AI_API_KEY"]),
-            "seo-maps": ("dataforseo", ["DATAFORSEO_USERNAME", "DATAFORSEO_PASSWORD"]),
+            "ctk-seo-dataforseo": ("dataforseo", ["DATAFORSEO_USERNAME", "DATAFORSEO_PASSWORD"]),
+            "ctk-seo-firecrawl": ("firecrawl-mcp", ["FIRECRAWL_API_KEY"]),
+            "ctk-seo-image-gen": ("nanobanana-mcp", ["GOOGLE_AI_API_KEY"]),
+            "ctk-seo-maps": ("dataforseo", ["DATAFORSEO_USERNAME", "DATAFORSEO_PASSWORD"]),
         }
         server_name, required_env = server_requirements[skill]
         mcp_status = configured_mcp_server(server_name, required_env)
@@ -352,7 +352,7 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
             issues = []
             recommendations = ["Restart Codex CLI so the configured MCP server is loaded before requesting live data."]
         else:
-            status = "setup_required" if skill != "seo-maps" else "limited_free_tier"
+            status = "setup_required" if skill != "ctk-seo-maps" else "limited_free_tier"
             issues = [setup[skill]]
             recommendations = ["Install/configure the related extension or MCP server before requesting live data."]
         summary = [setup[skill]]
@@ -371,13 +371,13 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
             output_root,
         )
 
-    if skill in {"seo-local", "seo-cluster", "seo-sxo", "seo-ecommerce", "seo-flow"}:
+    if skill in {"ctk-seo-local", "ctk-seo-cluster", "ctk-seo-sxo", "ctk-seo-ecommerce", "ctk-seo-flow"}:
         labels = {
-            "seo-local": "Local SEO analysis is available through the Codex skill workflow; live GBP/map data requires optional integrations.",
-            "seo-cluster": "Semantic clustering requires live SERP evidence from WebSearch or DataForSEO; this wrapper records the requested plan context.",
-            "seo-sxo": "SXO analysis requires SERP intent review plus page parsing; this wrapper records the requested analysis context.",
-            "seo-ecommerce": "E-commerce SEO can analyze product pages statically; marketplace intelligence requires DataForSEO Merchant data.",
-            "seo-flow": "FLOW prompt application is instruction-led; use the skill directly for stage-specific prompt execution.",
+            "ctk-seo-local": "Local SEO analysis is available through the Codex skill workflow; live GBP/map data requires optional integrations.",
+            "ctk-seo-cluster": "Semantic clustering requires live SERP evidence from WebSearch or DataForSEO; this wrapper records the requested plan context.",
+            "ctk-seo-sxo": "SXO analysis requires SERP intent review plus page parsing; this wrapper records the requested analysis context.",
+            "ctk-seo-ecommerce": "E-commerce SEO can analyze product pages statically; marketplace intelligence requires DataForSEO Merchant data.",
+            "ctk-seo-flow": "FLOW prompt application is instruction-led; use the skill directly for stage-specific prompt execution.",
         }
         return run_capability_summary(
             skill,
@@ -390,13 +390,13 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
             output_root,
         )
 
-    if skill == "seo-plan":
+    if skill == "ctk-seo-plan":
         result = build_plan(target)
         output_dir.mkdir(parents=True, exist_ok=True)
         ensure_cache_gitignore(ROOT)
         write_markdown_files(result, output_dir)
         write_json(output_dir / "SUMMARY.json", result)
-        write_json(ROOT / ".seo-cache" / "plan.json", {
+        write_json(ROOT / ".ctk-seo-cache" / "plan.json", {
             "cache_type": result["cache_type"],
             "analyzed_at": result["analyzed_at"],
             "domain": result["domain"],
@@ -419,11 +419,11 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
                 "roadmap": str(output_dir / "IMPLEMENTATION-ROADMAP.md"),
                 "site_structure": str(output_dir / "SITE-STRUCTURE.md"),
             },
-            "cache_path": str(ROOT / ".seo-cache" / "plan.json"),
+            "cache_path": str(ROOT / ".ctk-seo-cache" / "plan.json"),
             "result": result,
         }
 
-    if skill == "seo-page":
+    if skill == "ctk-seo-page":
         session = build_session()
         response = session.get(target, timeout=20, allow_redirects=True)
         parse_data = parse_html(response.text, response.url)
@@ -483,14 +483,14 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
             bundle["artifacts"][f"{name}_json"] = str(output_dir / f"{name}.json")
         return bundle
 
-    if skill == "seo-audit":
+    if skill == "ctk-seo-audit":
         result = run_audit_with_output_root(target, premium_report="auto", output_root=output_root)
         return {
             "skill": skill,
             "target": target,
             "output_dir": result["output_dir"],
             "artifacts": result["artifacts"],
-            "cache_path": str(ROOT / ".seo-cache" / "audit-scores.json"),
+            "cache_path": str(ROOT / ".ctk-seo-cache" / "audit-scores.json"),
             "result": result,
         }
 
@@ -500,7 +500,7 @@ def run_specialist(skill: str, target: str, output_root: Path | None = None) -> 
 def main() -> int:
     """CLI entry point."""
     parser = argparse.ArgumentParser(description="Run a Codex SEO skill deterministically")
-    parser.add_argument("--skill", required=True, help="Skill name, such as seo-content or seo-page")
+    parser.add_argument("--skill", required=True, help="Skill name, such as ctk-seo-content or ctk-seo-page")
     parser.add_argument("target", help="Target URL or domain")
     parser.add_argument("--output-root", help="Optional root directory for output artifacts")
     parser.add_argument("--json", action="store_true", help="Output JSON")

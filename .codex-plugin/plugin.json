@@ -1,19 +1,19 @@
 {
-  "name": "codex-seo",
-  "version": "1.9.6+codex.5",
-  "description": "Comprehensive SEO analysis skill suite for Codex. Includes technical SEO, content quality, schema markup, image optimization, sitemap architecture, GEO/AEO, backlinks, local SEO, maps intelligence, semantic clustering, SXO, drift monitoring, e-commerce SEO, Google APIs, and deterministic reporting workflows.",
+  "name": "ctk-codex-seo",
+  "version": "2.0.0",
+  "description": "Security-hardened, non-destructive SEO analysis suite maintained by CTK Advisors.",
   "author": {
-    "name": "AgriciDaniel",
-    "url": "https://github.com/AgriciDaniel"
+    "name": "CTK Advisors",
+    "url": "https://github.com/ctkadvisors"
   },
-  "homepage": "https://github.com/AgriciDaniel/codex-seo",
-  "repository": "https://github.com/AgriciDaniel/codex-seo",
+  "homepage": "https://github.com/ctkadvisors/codex-seo",
+  "repository": "https://github.com/ctkadvisors/codex-seo",
   "license": "MIT",
   "keywords": [
     "codex",
     "codex-cli",
     "codex-skills",
-    "seo",
+    "ctk-seo",
     "ai-seo",
     "technical-seo",
     "content-quality",
@@ -38,18 +38,17 @@
     "marketing-automation"
   ],
   "skills": "./skills/",
-  "hooks": "./hooks/hooks.json",
   "interface": {
-    "displayName": "Codex SEO",
+    "displayName": "CTK Codex SEO",
     "shortDescription": "Run SEO audits, schema checks, GEO analysis, and reports in Codex.",
     "longDescription": "Codex SEO is a local SEO analysis suite with 1 orchestrator, 26 specialist workflows, 24 Codex agent profiles, shared cache artifacts, optional API integrations, and deterministic headless wrappers for repeatable audits and reports.",
-    "developerName": "AgriciDaniel",
+    "developerName": "CTK Advisors",
     "category": "Productivity",
     "capabilities": [
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://github.com/AgriciDaniel/codex-seo",
+    "websiteURL": "https://github.com/ctkadvisors/codex-seo",
     "defaultPrompt": [
       "Audit this website for SEO issues.",
       "Check schema and Core Web Vitals for this URL.",

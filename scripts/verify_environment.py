@@ -112,7 +112,7 @@ def check_writable(path: Path) -> dict[str, Any]:
     """Check whether a directory exists or can be created and written."""
     try:
         path.mkdir(parents=True, exist_ok=True)
-        probe = path / ".codex-seo-write-test"
+        probe = path / ".ctk-codex-seo-write-test"
         probe.write_text("ok", encoding="utf-8")
         probe.unlink()
         return {"ok": True, "path": str(path)}
@@ -139,7 +139,7 @@ def verify_environment(target: str | None = None) -> dict[str, Any]:
     """Run the environment verification suite."""
     dependency_checks = [check_dependency(module_name, package_name) for module_name, package_name in DEPENDENCIES]
     writable_checks = {
-        "cache": check_writable(ROOT / ".seo-cache"),
+        "cache": check_writable(ROOT / ".ctk-seo-cache"),
         "output": check_writable(ROOT / "output"),
     }
     playwright_browser = check_playwright_browser()

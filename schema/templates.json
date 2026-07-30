@@ -211,7 +211,7 @@
     },
     {
       "type": "Product (Full E-commerce)",
-      "description": "Complete e-commerce product page with pricing, availability, reviews, brand, and offers. Enables product rich results in Google Search. Added in v1.9.0 for seo-ecommerce.",
+      "description": "Complete e-commerce product page with pricing, availability, reviews, brand, and offers. Enables product rich results in Google Search. Added in v1.9.0 for ctk-seo-ecommerce.",
       "template": {
         "@context": "https://schema.org",
         "@type": "Product",
@@ -253,7 +253,7 @@
     },
     {
       "type": "ItemList",
-      "description": "Hub/pillar pages listing related content items. Used for content cluster landing pages, resource directories, and top-N lists. Added in v1.9.0 for seo-cluster.",
+      "description": "Hub/pillar pages listing related content items. Used for content cluster landing pages, resource directories, and top-N lists. Added in v1.9.0 for ctk-seo-cluster.",
       "template": {
         "@context": "https://schema.org",
         "@type": "ItemList",

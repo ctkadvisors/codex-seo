@@ -18,7 +18,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {".json", ".md", ".py", ".sh", ".ps1", ".toml", ".txt", ".yml", ".yaml"}
-SKILL_TOKEN = re.compile(r"(?<!ctk-)\bseo(?=-[a-z0-9]|[/'\"`])")
+# Rewrite only standalone routing/path identifiers such as `seo-audit` or
+# `skills/seo/`.  Do not rewrite ordinary compound words such as
+# `technical-seo`, repository names such as `codex-seo`, or prose.
+SKILL_TOKEN = re.compile(r"(?<![\w-])seo(?=-[a-z0-9]|[/'\"`])")
 
 
 def git_status() -> str:
@@ -38,12 +41,21 @@ def mappings() -> list[tuple[Path, Path]]:
         pairs.append((source, source.with_name(f"ctk-{source.name}")))
     for source in sorted((ROOT / "agents").glob("seo-*.toml")):
         pairs.append((source, source.with_name(f"ctk-{source.name}")))
+    for source in sorted((ROOT / "extensions").glob("*/skills/seo*")):
+        pairs.append((source, source.with_name(f"ctk-{source.name}")))
     return pairs
 
 
 def rewritten_text(path: Path) -> str:
     text = path.read_text(encoding="utf-8")
     text = SKILL_TOKEN.sub("ctk-seo", text)
+    if path.name == "SKILL.md" and path.parent.name.startswith("ctk-seo"):
+        text = re.sub(
+            r"(?m)^name:\s*\S+\s*$",
+            f"name: {path.parent.name}",
+            text,
+            count=1,
+        )
     if path == ROOT / ".codex-plugin" / "plugin.json":
         data = json.loads(text)
         data["name"] = "ctk-codex-seo"
@@ -71,6 +83,9 @@ def text_files() -> list[Path]:
         if path.is_file()
         and path.suffix in TEXT_SUFFIXES
         and not any(part in ignored for part in path.parts)
+        and path != Path(__file__).resolve()
+        and "tests" not in path.parts
+        and not {"docs", "superpowers"}.issubset(path.parts)
     ]
 
 

@@ -13,7 +13,7 @@ Hook configuration in ~/.codex/settings.json:
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ~/.codex/skills/seo/hooks/validate-schema.py \"$FILE_PATH\"",
+            "command": "python3 ~/.codex/skills/ctk-seo/hooks/validate-schema.py \"$FILE_PATH\"",
             "exitCodes": { "2": "block" }
           }
         ]

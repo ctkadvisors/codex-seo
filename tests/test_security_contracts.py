@@ -15,7 +15,7 @@ import test_openai_responses_provider  # noqa: E402
 
 def test_specialist_workflow_blocks_loopback_targets(tmp_path: Path):
     try:
-        run_skill_workflow.run_specialist("seo-content", "http://127.0.0.1", output_root=tmp_path)
+        run_skill_workflow.run_specialist("ctk-seo-content", "http://127.0.0.1", output_root=tmp_path)
     except ValueError as exc:
         assert "Blocked URL host" in str(exc)
     else:

@@ -1,4 +1,4 @@
-"""Sync Flow operational references from GitHub into the seo-flow skill."""
+"""Sync Flow operational references from GitHub into the ctk-seo-flow skill."""
 
 import argparse
 import base64
@@ -33,7 +33,7 @@ STATIC_FILES = [
     ("docs/01-framework/flow-framework.md", "flow-framework.md"),
     ("docs/10-references/bibliography.md", "bibliography.md"),
 ]
-LOCK_REL = pathlib.Path("skills") / "seo-flow" / "references" / "flow-prompts.lock"
+LOCK_REL = pathlib.Path("skills") / "ctk-seo-flow" / "references" / "flow-prompts.lock"
 
 
 def script_root():
@@ -47,7 +47,7 @@ def parse_args():
         "without writing; --ref <sha> syncs from a specific Flow commit."
     )
     parser = argparse.ArgumentParser(
-        description="Sync Flow references into skills/seo-flow/references/.",
+        description="Sync Flow references into skills/ctk-seo-flow/references/.",
         epilog=epilog,
     )
     parser.add_argument("--dry-run", action="store_true", help="Report changes without writing files.")
@@ -228,7 +228,7 @@ def record_write(root, path, content, dry_run, changes):
 
 def sync(args):
     root = script_root()
-    refs = root / "skills" / "seo-flow" / "references"
+    refs = root / "skills" / "ctk-seo-flow" / "references"
     today = datetime.date.today().isoformat()
     headers = _base_headers()
     changes = {"added": [], "updated": [], "unchanged": [], "hashes": {}}

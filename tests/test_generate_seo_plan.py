@@ -12,7 +12,7 @@ import generate_seo_plan  # noqa: E402
 
 def test_resolve_plan_assets_supports_repo_layout(tmp_path, monkeypatch):
     root = tmp_path / "repo"
-    assets = root / "skills" / "seo-plan" / "assets"
+    assets = root / "skills" / "ctk-seo-plan" / "assets"
     assets.mkdir(parents=True)
     (assets / "generic.md").write_text("generic", encoding="utf-8")
 
@@ -23,8 +23,8 @@ def test_resolve_plan_assets_supports_repo_layout(tmp_path, monkeypatch):
 
 
 def test_resolve_plan_assets_supports_installed_codex_layout(tmp_path, monkeypatch):
-    installed_main = tmp_path / "skills" / "seo"
-    assets = tmp_path / "skills" / "seo-plan" / "assets"
+    installed_main = tmp_path / "skills" / "ctk-seo"
+    assets = tmp_path / "skills" / "ctk-seo-plan" / "assets"
     installed_main.mkdir(parents=True)
     assets.mkdir(parents=True)
     (assets / "generic.md").write_text("generic", encoding="utf-8")

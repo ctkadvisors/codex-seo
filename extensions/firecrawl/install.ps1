@@ -9,9 +9,9 @@ Write-Host ""
 
 $CodexRoot = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME ".codex" }
 $SkillsRoot = Join-Path $CodexRoot "skills"
-$SkillDir = Join-Path $SkillsRoot "seo-firecrawl"
+$SkillDir = Join-Path $SkillsRoot "ctk-seo-firecrawl"
 $AgentDir = Join-Path $CodexRoot "agents"
-$SeoSkillDir = Join-Path $SkillsRoot "seo"
+$SeoSkillDir = Join-Path $SkillsRoot "ctk-seo"
 $SettingsFile = Join-Path $CodexRoot "settings.json"
 
 # Check prerequisites
@@ -52,16 +52,16 @@ if ([string]::IsNullOrWhiteSpace($apiKeyPlain)) {
 # Determine source directory
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRootCandidate = Resolve-Path (Join-Path $ScriptDir "..\..") -ErrorAction SilentlyContinue
-$InstalledSkillCandidate = Resolve-Path (Join-Path $ScriptDir "..\..\..\seo-firecrawl\SKILL.md") -ErrorAction SilentlyContinue
-if ($RepoRootCandidate -and (Test-Path (Join-Path $RepoRootCandidate.Path "skills\seo-firecrawl\SKILL.md"))) {
-    $SkillSource = Join-Path $RepoRootCandidate.Path "skills\seo-firecrawl\SKILL.md"
-    $AgentSource = Join-Path $RepoRootCandidate.Path "agents\seo-firecrawl.toml"
+$InstalledSkillCandidate = Resolve-Path (Join-Path $ScriptDir "..\..\..\ctk-seo-firecrawl\SKILL.md") -ErrorAction SilentlyContinue
+if ($RepoRootCandidate -and (Test-Path (Join-Path $RepoRootCandidate.Path "skills\ctk-seo-firecrawl\SKILL.md"))) {
+    $SkillSource = Join-Path $RepoRootCandidate.Path "skills\ctk-seo-firecrawl\SKILL.md"
+    $AgentSource = Join-Path $RepoRootCandidate.Path "agents\ctk-seo-firecrawl.toml"
 } elseif ($InstalledSkillCandidate) {
     $SkillSource = $InstalledSkillCandidate.Path
-    $AgentSource = Join-Path $AgentDir "seo-firecrawl.toml"
-} elseif (Test-Path "$ScriptDir\skills\seo-firecrawl\SKILL.md") {
-    $SkillSource = "$ScriptDir\skills\seo-firecrawl\SKILL.md"
-    $AgentSource = "$ScriptDir\agents\seo-firecrawl.toml"
+    $AgentSource = Join-Path $AgentDir "ctk-seo-firecrawl.toml"
+} elseif (Test-Path "$ScriptDir\skills\ctk-seo-firecrawl\SKILL.md") {
+    $SkillSource = "$ScriptDir\skills\ctk-seo-firecrawl\SKILL.md"
+    $AgentSource = "$ScriptDir\agents\ctk-seo-firecrawl.toml"
 } else {
     Write-Host "x Cannot find extension source files." -ForegroundColor Red
     exit 1
@@ -75,7 +75,7 @@ Copy-Item $SkillSource "$SkillDir\SKILL.md" -Force
 
 Write-Host "=> Installing Firecrawl agent..." -ForegroundColor Yellow
 New-Item -ItemType Directory -Force -Path $AgentDir | Out-Null
-$AgentTarget = Join-Path $AgentDir "seo-firecrawl.toml"
+$AgentTarget = Join-Path $AgentDir "ctk-seo-firecrawl.toml"
 if ($AgentSource -and (Test-Path $AgentSource) -and ((Resolve-Path $AgentSource).Path -ne $AgentTarget)) {
     Copy-Item $AgentSource $AgentTarget -Force
 } elseif (Test-Path $AgentTarget) {

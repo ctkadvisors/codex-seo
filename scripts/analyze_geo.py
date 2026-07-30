@@ -23,7 +23,7 @@ from seo_pipeline_utils import build_session, validate_public_url
 
 DEFAULT_TIMEOUT = 20
 ROOT = Path(__file__).resolve().parent.parent
-CACHE_ROOT = ROOT / ".seo-cache"
+CACHE_ROOT = ROOT / ".ctk-seo-cache"
 AI_SEARCH_CRAWLERS = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot", "Claude-User", "PerplexityBot"]
 AI_TRAINING_CRAWLERS = ["anthropic-ai", "CCBot", "Bytespider", "cohere-ai", "Google-Extended"]
 

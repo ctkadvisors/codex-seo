@@ -4,7 +4,7 @@ Bootstrap a Codex SEO runtime for headless CLI/API execution.
 
 Usage:
     python scripts/bootstrap_environment.py --json
-    python scripts/bootstrap_environment.py --venv .codex-seo-venv --json
+    python scripts/bootstrap_environment.py --venv .ctk-codex-seo-venv --json
     python scripts/bootstrap_environment.py --skip-playwright-browser --json
 """
 
@@ -22,7 +22,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_VENV = ROOT / ".codex-seo-venv"
+DEFAULT_VENV = ROOT / ".ctk-codex-seo-venv"
 OUTPUT_LIMIT = 12000
 CORE_REQUIREMENTS = ROOT / "requirements-core.txt"
 OPTIONAL_REQUIREMENT_GROUPS = [

@@ -43,7 +43,7 @@ else:
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PREMIUM_STANDARD = REPO_ROOT / "seo" / "references" / "premium-report-standard.md"
+PREMIUM_STANDARD = REPO_ROOT / "ctk-seo" / "references" / "premium-report-standard.md"
 
 
 @dataclass
@@ -94,7 +94,7 @@ def derive_report_filenames(audit_dir: Path, canonical_url: str, report_md: str)
     domain = re.sub(r"^https?://", "", canonical_url).rstrip("/")
     domain_slug = slugify(domain.replace(".", " "))
     date_slug = extract_audit_date_slug(audit_dir, report_md)
-    base_name = f"codex-seo-audit-{domain_slug}-{date_slug}"
+    base_name = f"ctk-codex-seo-audit-{domain_slug}-{date_slug}"
     return f"_internal/{base_name}.html", f"{base_name}.pdf"
 
 
@@ -431,7 +431,7 @@ def build_html(audit_dir: Path) -> tuple[str, int, str, str]:
                 "performance": {"score": 0},
                 "accessibility": {"score": 0},
                 "best-practices": {"score": 0},
-                "seo": {"score": 0},
+                "ctk-seo": {"score": 0},
             },
             "audits": {
                 "largest-contentful-paint": {"numericValue": 0},
@@ -468,7 +468,7 @@ def build_html(audit_dir: Path) -> tuple[str, int, str, str]:
             ("Performance", safe_category_score(lighthouse, "performance", 0)),
             ("Accessibility", safe_category_score(lighthouse, "accessibility", 0)),
             ("Best Practices", safe_category_score(lighthouse, "best-practices", 0)),
-            ("SEO", safe_category_score(lighthouse, "seo", 0)),
+            ("SEO", safe_category_score(lighthouse, "ctk-seo", 0)),
         ],
         100,
         "#34d399",

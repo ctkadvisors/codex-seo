@@ -243,7 +243,7 @@ def run_pagespeed(
     result["failed_audits"].sort(key=lambda x: x.get("score", 1))
 
     # SEO audits from the SEO category
-    seo_cat = lr.get("categories", {}).get("seo", {})
+    seo_cat = lr.get("categories", {}).get("ctk-seo", {})
     for ref in seo_cat.get("auditRefs", []):
         audit = audits.get(ref.get("id"), {})
         if audit and audit.get("score") is not None:

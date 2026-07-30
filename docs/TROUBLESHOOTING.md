@@ -5,8 +5,8 @@
 Verify the canonical skill exists:
 
 ```bash
-ls ~/.codex/skills/seo/SKILL.md
-ls ~/.codex/agents/seo-technical.toml
+ls ~/.codex/skills/ctk-seo/SKILL.md
+ls ~/.codex/agents/ctk-seo-technical.toml
 ```
 
 Restart Codex after reinstalling.
@@ -14,7 +14,7 @@ Restart Codex after reinstalling.
 ## Runtime Not Ready
 
 ```bash
-~/.codex/skills/seo/.venv/bin/python ~/.codex/skills/seo/scripts/verify_environment.py
+~/.codex/skills/ctk-seo/.venv/bin/python ~/.codex/skills/ctk-seo/scripts/verify_environment.py
 ```
 
 If Playwright Chromium fails, core workflows can still run. Visual and PDF workflows remain limited until browser installation succeeds.
@@ -25,9 +25,9 @@ On Python 3.14 macOS, some optional packages can lag wheel support. The installe
 
 Use Codex paths for new setup:
 
-- Google: `~/.config/codex-seo/google-api.json`
-- Backlinks: `~/.config/codex-seo/backlinks-api.json`
-- DataForSEO budgets: `~/.config/codex-seo/dataforseo-costs.json`
+- Google: `~/.config/ctk-codex-seo/google-api.json`
+- Backlinks: `~/.config/ctk-codex-seo/backlinks-api.json`
+- DataForSEO budgets: `~/.config/ctk-codex-seo/dataforseo-costs.json`
 
 Legacy `~/.config/claude-seo/` files are read as fallback only.
 
@@ -36,7 +36,7 @@ Legacy `~/.config/claude-seo/` files are read as fallback only.
 Run a narrow workflow first:
 
 ```bash
-python scripts/run_skill_workflow.py --skill seo-technical https://example.com --json
+python scripts/run_skill_workflow.py --skill ctk-seo-technical https://example.com --json
 ```
 
 For optional MCP/API workflows, `setup_required` is a valid result when credentials or MCP servers are absent.
