@@ -20,10 +20,16 @@ import json
 import os
 import sys
 import time
+from pathlib import Path
 from typing import Optional
 from urllib.parse import urlparse
 
 import requests
+
+try:
+    from .security_paths import atomic_write
+except ImportError:
+    from security_paths import atomic_write
 
 CONFIG_PATH = os.path.expanduser("~/.config/ctk-codex-seo/google-api.json")
 TOKEN_PATH = os.path.expanduser("~/.config/ctk-codex-seo/oauth-token.json")
@@ -49,8 +55,7 @@ SERVICE_AUTH = {
 }
 
 OAUTH_SCOPES = (
-    "https://www.googleapis.com/auth/indexing "
-    "https://www.googleapis.com/auth/webmasters "
+    "https://www.googleapis.com/auth/webmasters.readonly "
     "https://www.googleapis.com/auth/analytics.readonly"
 )
 OAUTH_REDIRECT_URI = "http://localhost:8085"
@@ -187,9 +192,11 @@ def _load_oauth_token() -> Optional[dict]:
 
 def _save_oauth_token(token_data: dict):
     """Save OAuth token to TOKEN_PATH."""
-    os.makedirs(os.path.dirname(TOKEN_PATH), exist_ok=True)
-    with open(TOKEN_PATH, "w") as f:
-        json.dump(token_data, f, indent=2)
+    directory = os.path.dirname(TOKEN_PATH)
+    os.makedirs(directory, mode=0o700, exist_ok=True)
+    os.chmod(directory, 0o700)
+    payload = (json.dumps(token_data, indent=2) + "\n").encode("utf-8")
+    atomic_write(Path(TOKEN_PATH), payload, 0o600)
 
 
 def _google_token_uri(client: dict) -> str:
