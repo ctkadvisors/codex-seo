@@ -19,7 +19,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 
 from seo_pipeline_utils import validate_public_url
 

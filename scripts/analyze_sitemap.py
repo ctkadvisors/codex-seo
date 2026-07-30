@@ -14,7 +14,10 @@ from datetime import datetime, timezone
 from typing import Any
 from urllib.parse import urlparse
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 import defusedxml.ElementTree as ET
 
 from seo_pipeline_utils import build_session, validate_public_site_root, validate_public_url

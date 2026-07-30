@@ -20,10 +20,9 @@ import time
 from typing import Optional
 
 try:
-    import requests
+    from .security_network import requests
 except ImportError:
-    print("Error: requests library required. Install with: pip install requests")
-    sys.exit(1)
+    from security_network import requests
 
 # Import credential helpers (same directory)
 import os

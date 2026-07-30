@@ -15,7 +15,10 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 from bs4 import BeautifulSoup
 import defusedxml.ElementTree as ET
 

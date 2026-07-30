@@ -13,7 +13,10 @@ import sys
 import tempfile
 import urllib.parse
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 
 
 API_ROOT = "https://api.github.com/repos/AgriciDaniel/flow/contents"

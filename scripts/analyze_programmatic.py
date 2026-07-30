@@ -17,7 +17,10 @@ from statistics import mean
 from typing import Any
 from urllib.parse import urlparse
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 from bs4 import BeautifulSoup
 
 from analyze_sitemap import build_report as build_sitemap_report

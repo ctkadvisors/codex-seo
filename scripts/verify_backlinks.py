@@ -20,10 +20,9 @@ from typing import Optional
 from urllib.parse import urlparse
 
 try:
-    import requests
+    from .security_network import requests
 except ImportError:
-    print("Error: requests library required. Install with: pip install requests")
-    sys.exit(1)
+    from security_network import requests
 
 import os
 _SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))

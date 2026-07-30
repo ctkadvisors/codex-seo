@@ -110,19 +110,14 @@ def test_shared_reference_links_exist():
             assert candidate.exists() or alt.exists() or root_relative.exists(), f"Broken reference in {skill_file}: {match}"
 
 
-def test_installers_cover_full_skill_and_agent_surface():
+def test_installers_delegate_to_owned_transaction():
     install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
     install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
     uninstall_sh = (ROOT / "uninstall.sh").read_text(encoding="utf-8")
     uninstall_ps1 = (ROOT / "uninstall.ps1").read_text(encoding="utf-8")
-    for name in EXPECTED_SKILLS:
-        assert name in install_sh
-        assert name in install_ps1
-        assert name in uninstall_sh
-        assert name in uninstall_ps1
-    for name in EXPECTED_AGENTS:
-        assert name in uninstall_sh
-        assert name in uninstall_ps1
+    assert all("scripts/ctk_install.py" in text for text in (install_sh, uninstall_sh))
+    assert all("scripts\\ctk_install.py" in text for text in (install_ps1, uninstall_ps1))
+    assert " install " in install_sh and " uninstall " in uninstall_sh
 
 
 def test_extension_installers_are_codex_first():
@@ -157,43 +152,12 @@ def test_packaged_license_links_point_to_codex_repo():
         assert "AgriciDaniel/claude-seo" not in text
 
 
-def test_installers_exclude_generated_promotional_payloads():
-    install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
-    install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
-    assert "screenshots" not in re.search(r"for dir_name in ([^;]+); do", install_sh).group(1)
-    assert '"screenshots"' not in re.search(r"foreach \(\$pathName in @\(([^)]+)\)\)", install_ps1).group(1)
-
-
-def test_windows_installer_json_parse_is_windows_powershell_compatible():
-    install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
-    assert "ConvertFrom-Json -Depth" not in install_ps1
-    assert "ConvertFrom-JsonCompat" in install_ps1
-    assert "Get-JsonObjectText" in install_ps1
-    assert "--json-output" in install_ps1
-    assert "summary = {" in install_ps1
-
-
-def test_unix_installer_uses_portable_temp_dir_helper():
-    install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
-    assert "make_temp_dir()" in install_sh
-    assert 'TEMP_DIR="$(make_temp_dir)"' in install_sh
-    assert 'TEMP_DIR="$(mktemp -d)"' not in install_sh
-
-
-def test_installers_copy_requirement_group_files():
-    install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
-    install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
-    assert "requirements*.txt" in install_sh
-    assert "requirements*.txt" in install_ps1
-
-
-def test_installers_use_bootstrap_json_output_file():
-    install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
-    install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
-    assert 'BOOTSTRAP_JSON_FILE="${TEMP_DIR}/bootstrap-result.json"' in install_sh
-    assert "--json-output" in install_sh
-    assert '$bootstrapJsonPath = Join-Path $tempDir "bootstrap-result.json"' in install_ps1
-    assert "--json-output" in install_ps1
+def test_installers_have_no_download_dependency_or_destructive_logic():
+    wrappers = [ROOT / name for name in ("install.sh", "uninstall.sh", "install.ps1", "uninstall.ps1")]
+    forbidden = ("git clone", "curl ", "Invoke-WebRequest", "pip install", "rm -rf", "Remove-Item")
+    for path in wrappers:
+        text = path.read_text(encoding="utf-8")
+        assert all(token not in text for token in forbidden)
 
 
 def test_api_readiness_matrix_covers_smoke_suite():

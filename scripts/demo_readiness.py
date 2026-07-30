@@ -22,7 +22,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 
 
 ROOT = Path(__file__).resolve().parent.parent

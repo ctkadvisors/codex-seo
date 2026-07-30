@@ -14,7 +14,10 @@ import os
 import time
 from typing import Any
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 
 from parse_html import parse_html
 from seo_pipeline_utils import DEFAULT_TIMEOUT, build_session, now_iso, url_slug, validate_public_url

@@ -24,7 +24,10 @@ from pathlib import Path
 from typing import Optional
 from urllib.parse import urlparse
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 
 try:
     from .security_paths import atomic_write

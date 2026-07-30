@@ -17,10 +17,9 @@ import sys
 from typing import Optional
 
 try:
-    import requests
+    from .security_network import requests
 except ImportError:
-    print("Error: requests library required. Install with: pip install requests", file=sys.stderr)
-    sys.exit(1)
+    from security_network import requests
 
 try:
     from google_auth import get_api_key
