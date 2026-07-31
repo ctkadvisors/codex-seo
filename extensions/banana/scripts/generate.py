@@ -14,9 +14,13 @@ import base64
 import json
 import os
 import sys
-import urllib.request
 from datetime import datetime
 from pathlib import Path
+
+ROOT_SCRIPTS = Path(__file__).resolve().parents[2] / "scripts"
+if str(ROOT_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(ROOT_SCRIPTS))
+from security_network import requests
 
 DEFAULT_MODEL = "gemini-3.1-flash-image-preview"
 DEFAULT_RESOLUTION = "1K"
@@ -32,7 +36,7 @@ VALID_RESOLUTIONS = {"512", "1K", "2K", "4K"}
 def generate_image(prompt, model, aspect_ratio, resolution, api_key,
                    thinking_level=None, image_only=False):
     """Call Gemini API to generate an image."""
-    url = f"{API_BASE}/{model}:generateContent?key={api_key}"
+    url = f"{API_BASE}/{model}:generateContent"
 
     modalities = ["IMAGE"] if image_only else ["TEXT", "IMAGE"]
     body = {
@@ -49,23 +53,18 @@ def generate_image(prompt, model, aspect_ratio, resolution, api_key,
     if thinking_level:
         body["generationConfig"]["thinkingConfig"] = {"thinkingLevel": thinking_level}
 
-    data = json.dumps(body).encode("utf-8")
-    req = urllib.request.Request(
-        url,
-        data=data,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-
     try:
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            result = json.loads(resp.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        error_body = e.read().decode("utf-8") if e.fp else ""
-        print(json.dumps({"error": True, "status": e.code, "message": error_body}))
-        sys.exit(1)
-    except urllib.error.URLError as e:
-        print(json.dumps({"error": True, "message": str(e.reason)}))
+        response = requests.post(url, params={"key": api_key}, json=body, timeout=120)
+        if response.status_code >= 400:
+            print(json.dumps({
+                "error": True,
+                "status": response.status_code,
+                "message": response.text[:2000],
+            }))
+            sys.exit(1)
+        result = response.json()
+    except (requests.RequestException, ValueError) as exc:
+        print(json.dumps({"error": True, "message": type(exc).__name__}))
         sys.exit(1)
 
     # Extract image from response

@@ -24,9 +24,20 @@ def redact(value: Any) -> Any:
     if isinstance(value, tuple):
         return tuple(redact(item) for item in value)
     if isinstance(value, str):
-        return re.sub(
+        value = re.sub(
             r"(?i)\b(Bearer|Basic)\s+[A-Za-z0-9._~+/=-]+",
             r"\1 [REDACTED]",
             value,
         )
+        return re.sub(
+            r"(?i)([?&](?:api[_-]?key|key|access[_-]?token|refresh[_-]?token|"
+            r"client[_-]?secret|password)=)[^&#\s]+",
+            r"\1[REDACTED]",
+            value,
+        )
     return value
+
+
+def safe_exception(exc: BaseException) -> str:
+    """Return an exception message with common credential forms removed."""
+    return str(redact(str(exc)))

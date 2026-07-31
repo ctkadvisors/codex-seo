@@ -17,10 +17,12 @@ cd codex-seo
 .\install.ps1
 ```
 
-The installer writes one self-contained directory:
-`${CODEX_HOME:-~/.codex}/plugins/ctk-codex-seo`. It does not download code,
-install dependencies, edit Codex settings, register hooks, or touch shared
-`skills/` and `agents/` directories.
+The installer writes one self-contained local marketplace:
+`${CODEX_HOME:-~/.codex}/marketplaces/ctk-advisors`. It then uses the official
+`codex plugin marketplace add` and `codex plugin add` commands to register and
+enable `ctk-codex-seo`. It does not download code, install dependencies, edit
+legacy `settings.json`, register hooks, or touch shared `skills/` and `agents/`
+directories.
 
 Every installed file is recorded with a SHA-256 digest in
 `install-manifest.json`. An existing directory without a valid CTK ownership
@@ -28,6 +30,15 @@ manifest is treated as a collision. Updates refuse to overwrite locally
 modified owned files.
 
 Use `CODEX_HOME=/alternate/path` to select another Codex home.
+
+Verify discovery:
+
+```bash
+codex plugin list --json
+```
+
+Start a new Codex thread after installation, then invoke `$ctk-seo` or ask
+naturally for an SEO audit.
 
 ## Uninstall
 

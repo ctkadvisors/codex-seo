@@ -55,9 +55,9 @@ Load on-demand:
 
 ## Cross-Skill Delegation
 
-- Do NOT duplicate ctk-seo-local on-page analysis. Recommend `/seo local <url>` for website-level checks.
-- Do NOT duplicate ctk-seo-geo AI visibility analysis. Recommend `/seo geo <url>` for full GEO audit.
-- Do NOT duplicate ctk-seo-schema validation. Recommend `/seo schema <url>` for schema fixes.
+- Do NOT duplicate ctk-seo-local on-page analysis. Recommend `$ctk-seo local <url>` for website-level checks.
+- Do NOT duplicate ctk-seo-geo AI visibility analysis. Recommend `$ctk-seo geo <url>` for full GEO audit.
+- Do NOT duplicate ctk-seo-schema validation. Recommend `$ctk-seo schema <url>` for schema fixes.
 
 ## Output Format
 

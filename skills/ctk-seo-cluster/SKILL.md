@@ -8,8 +8,6 @@ description: >
   Use when user says "topic cluster", "content cluster", "semantic clustering",
   "pillar page", "hub and spoke", "content architecture", "keyword grouping",
   or "cluster plan".
-user-invokable: true
-argument-hint: "<seed-keyword or url>"
 license: MIT
 metadata:
   author: AgriciDaniel
@@ -23,13 +21,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -48,10 +46,10 @@ interactive cluster map visualizations.
 
 | Command | What it does |
 |---------|-------------|
-| `/seo cluster plan <seed-keyword>` | Full planning workflow: expand, cluster, architect, visualize |
-| `/seo cluster plan --from strategy` | Import from existing `/seo plan` output |
-| `/seo cluster execute` | Execute plan: create content via codex-blog or output briefs |
-| `/seo cluster map` | Regenerate the interactive cluster visualization |
+| `$ctk-seo cluster plan <seed-keyword>` | Full planning workflow: expand, cluster, architect, visualize |
+| `$ctk-seo cluster plan --from strategy` | Import from existing `$ctk-seo plan` output |
+| `$ctk-seo cluster execute` | Execute plan: create content via codex-blog or output briefs |
+| `$ctk-seo cluster map` | Regenerate the interactive cluster visualization |
 
 ---
 
@@ -194,7 +192,7 @@ Generate `cluster-map.html` using the template at `templates/cluster-map.html`.
 
 When invoked with `--from strategy`:
 
-1. Look for the most recent `/seo plan` output in the current directory (search for
+1. Look for the most recent `$ctk-seo plan` output in the current directory (search for
    files matching `*SEO*Plan*`, `*strategy*`, `*content-strategy*`)
 2. Parse markdown tables for: keywords, page types, content pillars, URL structures
 3. Validate extracted data: check for duplicates, missing keywords, incomplete entries
@@ -202,13 +200,13 @@ When invoked with `--from strategy`:
 5. Build cluster plan using the imported keywords as the starting set (skip Step 1)
 
 If no strategy file is found, prompt the user: "No existing SEO plan found in the
-current directory. Run `/seo plan` first, or provide a seed keyword for fresh clustering."
+current directory. Run `$ctk-seo plan` first, or provide a seed keyword for fresh clustering."
 
 ---
 
 ## Execution Workflow
 
-When `/seo cluster execute` is invoked:
+When `$ctk-seo cluster execute` is invoked:
 
 ### Check for codex-blog
 
@@ -252,7 +250,7 @@ Test: Does ~/.codex/skills/blog/SKILL.md exist?
 
 ## Cluster Scorecard
 
-Post-execution quality report. Run automatically after `/seo cluster execute` or
+Post-execution quality report. Run automatically after `$ctk-seo cluster execute` or
 on demand via analysis of the output directory.
 
 | Metric | Target | How Measured |
@@ -270,7 +268,7 @@ on demand via analysis of the output directory.
 
 ## Map Regeneration
 
-When `/seo cluster map` is invoked:
+When `$ctk-seo cluster map` is invoked:
 
 1. Read `cluster-plan.json` from the current directory
 2. Scan output directory and update post statuses (planned vs written)
@@ -304,7 +302,7 @@ All outputs are written to the current working directory:
 | `ctk-seo-google` | Reporting: generate PDF report of cluster plan and scorecard |
 
 After cluster planning or execution completes, offer:
-"Generate a PDF report? Use `/seo google report`"
+"Generate a PDF report? Use `$ctk-seo google report`"
 
 ---
 
@@ -315,8 +313,8 @@ After cluster planning or execution completes, offer:
 | "No seed keyword provided" | Missing argument | Prompt user for seed keyword or URL |
 | "Insufficient keyword variants" | Expansion yielded < 15 keywords | Run second expansion pass with PAA questions |
 | "SERP data unavailable" | WebSearch and DataForSEO both failing | Retry after 30s; if persistent, use intent-only clustering with warning |
-| "No strategy file found" | `--from strategy` but no plan exists | Prompt user to run `/seo plan` first |
-| "cluster-plan.json not found" | Execute without planning | Prompt user to run `/seo cluster plan` first |
+| "No strategy file found" | `--from strategy` but no plan exists | Prompt user to run `$ctk-seo plan` first |
+| "cluster-plan.json not found" | Execute without planning | Prompt user to run `$ctk-seo cluster plan` first |
 | "codex-blog not installed" | Execute attempted without blog skill | Generate content briefs instead; suggest installation |
 | "DataForSEO budget exceeded" | Cost check returned "blocked" | Fall back to WebSearch; inform user |
 | "Duplicate primary keywords" | Cannibalization detected | Merge affected posts or reassign keywords |
@@ -334,9 +332,9 @@ After cluster planning or execution completes, offer:
 
 ## FLOW Framework Integration
 
-For prompt-guided keyword research and gap analysis, use `/seo flow find [url|topic]` — FLOW's 5 find-stage prompts complement the SERP-overlap clustering methodology with structured discovery prompts.
+For prompt-guided keyword research and gap analysis, use `$ctk-seo flow find [url|topic]` — FLOW's 5 find-stage prompts complement the SERP-overlap clustering methodology with structured discovery prompts.
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.

@@ -33,14 +33,14 @@
 
 - New config path: `~/.config/ctk-codex-seo/`
 - New cache path: `~/.cache/ctk-codex-seo/`
-- Project cache path: `.ctk-seo-cache/`
+- Project cache path: `~/.cache/ctk-codex-seo/`
 - Credentials must stay outside the repository.
 - Optional live-data providers return setup-required states when credentials or MCP servers are unavailable.
 
 ## Common Prompts
 
 - `Do a full SEO check on https://example.com following best practices.`
-- `/seo audit https://example.com`
-- `/seo technical https://example.com`
-- `/seo schema https://example.com`
-- `/seo dataforseo serp "seo tools"`
+- `$ctk-seo audit https://example.com`
+- `$ctk-seo technical https://example.com`
+- `$ctk-seo schema https://example.com`
+- `$ctk-seo dataforseo serp "seo tools"`

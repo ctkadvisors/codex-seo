@@ -7,8 +7,6 @@ description: >
   to rank by analyzing what Google rewards for each keyword. Use when user says
   "SXO", "search experience", "page type mismatch", "SERP analysis", "user story",
   "persona scoring", "why isn't my page ranking", "intent mismatch", or "wireframe".
-user-invokable: true
-argument-hint: "<url> [keyword]"
 license: MIT
 metadata:
   author: AgriciDaniel
@@ -22,13 +20,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -49,10 +47,10 @@ well-optimized it is.
 
 | Command | Purpose |
 |---------|---------|
-| `/seo sxo <url>` | Full SXO analysis (auto-detect keyword from page) |
-| `/seo sxo <url> <keyword>` | Full SXO analysis for a specific keyword |
-| `/seo sxo wireframe <url>` | Generate IST/SOLL wireframe with concrete placeholders |
-| `/seo sxo personas <url>` | Persona-only scoring (skip SERP analysis) |
+| `$ctk-seo sxo <url>` | Full SXO analysis (auto-detect keyword from page) |
+| `$ctk-seo sxo <url> <keyword>` | Full SXO analysis for a specific keyword |
+| `$ctk-seo sxo wireframe <url>` | Generate IST/SOLL wireframe with concrete placeholders |
+| `$ctk-seo sxo personas <url>` | Persona-only scoring (skip SERP analysis) |
 
 ## Execution Pipeline
 
@@ -166,7 +164,7 @@ Read `references/persona-scoring.md` for methodology.
 
 ### Step 7: Wireframe Generation (Optional)
 
-Only execute when `/seo sxo wireframe` is invoked.
+Only execute when `$ctk-seo sxo wireframe` is invoked.
 
 Read `references/wireframe-templates.md` for templates.
 
@@ -202,12 +200,12 @@ The SXO score is **separate** from the main SEO Health Score.
 
 | Finding | Hand Off To |
 |---------|-------------|
-| E-E-A-T gaps in persona scoring | `/seo content` for deep E-E-A-T audit |
-| Missing schema types | `/seo schema` for generation |
-| Local intent detected in SERP | `/seo local` for GBP analysis |
-| Content depth gaps | `/seo page` for deep page analysis |
-| Technical issues found during fetch | `/seo technical` for full audit |
-| Image/media gaps | `/seo images` for optimization |
+| E-E-A-T gaps in persona scoring | `$ctk-seo content` for deep E-E-A-T audit |
+| Missing schema types | `$ctk-seo schema` for generation |
+| Local intent detected in SERP | `$ctk-seo local` for GBP analysis |
+| Content depth gaps | `$ctk-seo page` for deep page analysis |
+| Technical issues found during fetch | `$ctk-seo technical` for full audit |
+| Image/media gaps | `$ctk-seo images` for optimization |
 
 ## Output Format
 
@@ -270,5 +268,5 @@ Before delivering results, verify:
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.

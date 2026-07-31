@@ -6,13 +6,12 @@ import stat
 from pathlib import Path
 
 from scripts import google_auth, sync_flow
-from scripts.security_redaction import redact
+from scripts.security_redaction import redact, safe_exception
 
 
 def test_default_google_oauth_is_read_only():
     assert google_auth.OAUTH_SCOPES.split() == [
         "https://www.googleapis.com/auth/webmasters.readonly",
-        "https://www.googleapis.com/auth/analytics.readonly",
     ]
 
 
@@ -39,6 +38,12 @@ def test_redaction_covers_common_credentials():
         "client_secret": "[REDACTED]",
         "nested": {"refresh_token": "[REDACTED]", "safe": "yes"},
     }
+    assert "super-secret" not in redact(
+        "request failed: https://example.com/?api_key=super-secret&safe=yes"
+    )
+    assert "super-secret" not in safe_exception(
+        RuntimeError("https://example.com/?access_token=super-secret")
+    )
 
 
 def test_sync_flow_never_invokes_gh_for_implicit_credentials(monkeypatch):

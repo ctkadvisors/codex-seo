@@ -57,10 +57,7 @@ SERVICE_AUTH = {
     "ga4": "oauth_or_sa",
 }
 
-OAUTH_SCOPES = (
-    "https://www.googleapis.com/auth/webmasters.readonly "
-    "https://www.googleapis.com/auth/analytics.readonly"
-)
+OAUTH_SCOPES = "https://www.googleapis.com/auth/webmasters.readonly"
 OAUTH_REDIRECT_URI = "http://localhost:8085"
 
 # Human-readable service names

@@ -7,10 +7,7 @@ description: >
   from DataForSEO Merchant API. Use when user says "ecommerce SEO", "product SEO",
   "Google Shopping", "marketplace SEO", "product schema", "Amazon SEO",
   "product listings", "shopping ads", or "merchant SEO".
-user-invokable: true
-argument-hint: "<url or keyword>"
 license: MIT
-compatibility: "Enhanced with DataForSEO Merchant API (optional)"
 metadata:
   author: AgriciDaniel
   original_author: "Matej Marjanovic (Pro Hub Challenge)"
@@ -23,13 +20,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -43,10 +40,10 @@ DataForSEO Merchant API for live Google Shopping and Amazon data.
 
 | Command | Purpose | DataForSEO? |
 |---------|---------|-------------|
-| `/seo ecommerce <url>` | Full e-commerce SEO analysis of a product page or store | Optional |
-| `/seo ecommerce products <keyword>` | Google Shopping competitive analysis | Required |
-| `/seo ecommerce gaps <domain>` | Keyword gap: organic vs Shopping visibility | Required |
-| `/seo ecommerce schema <url>` | Product schema validation and enhancement | No |
+| `$ctk-seo ecommerce <url>` | Full e-commerce SEO analysis of a product page or store | Optional |
+| `$ctk-seo ecommerce products <keyword>` | Google Shopping competitive analysis | Required |
+| `$ctk-seo ecommerce gaps <domain>` | Keyword gap: organic vs Shopping visibility | Required |
+| `$ctk-seo ecommerce schema <url>` | Product schema validation and enhancement | No |
 
 ---
 
@@ -323,7 +320,7 @@ Validate and generate Product schema following Google's current requirements.
 | Empty Shopping results | No products for keyword | Suggest broader keyword, check location settings |
 | Amazon API timeout | Network/rate limit | Retry with backoff, fall back to Google-only |
 | Invalid URL | Malformed input | Validate via `google_auth.validate_url()`, show error |
-| Non-product page | URL is category/homepage | Detect page type, suggest `/seo ecommerce schema` instead |
+| Non-product page | URL is category/homepage | Detect page type, suggest `$ctk-seo ecommerce schema` instead |
 
 ---
 
@@ -352,10 +349,10 @@ Validate and generate Product schema following Google's current requirements.
 2. [High] ...
 3. [Medium] ...
 
-Generate a PDF report? Use `/seo google report`
+Generate a PDF report? Use `$ctk-seo google report`
 ```
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.

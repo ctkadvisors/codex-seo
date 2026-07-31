@@ -64,8 +64,8 @@ across remaining factors. Always note which factors were scored and which were s
 
 - For toxic link patterns beyond basic Moz Spam Score, load `references/backlink-quality.md`
 - For anchor text industry benchmarks, load `references/backlink-quality.md`
-- Do NOT duplicate ctk-seo-content analysis. Recommend `/seo content <url>` for E-E-A-T.
-- Do NOT duplicate ctk-seo-technical analysis. Recommend `/seo technical <url>` for crawlability.
+- Do NOT duplicate ctk-seo-content analysis. Recommend `$ctk-seo content <url>` for E-E-A-T.
+- Do NOT duplicate ctk-seo-technical analysis. Recommend `$ctk-seo technical <url>` for crawlability.
 
 ## Output Format
 
@@ -100,7 +100,7 @@ If any check fails, fix the report before returning it.
 
 - If Moz rate-limits mid-analysis, return partial data and note "rate_limited: true"
 - If Common Crawl download times out, skip CC metrics and note the timeout
-- If no sources return data, report: "No backlink data available. Run `/seo backlinks setup`."
+- If no sources return data, report: "No backlink data available. Run `$ctk-seo backlinks setup`."
 - Never fail silently — always report what succeeded and what failed
 - If all free sources fail, suggest DataForSEO extension: `./extensions/dataforseo/install.sh`
 """

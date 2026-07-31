@@ -4,7 +4,7 @@ import socket
 
 import pytest
 
-from scripts.security_network import validate_public_url
+from scripts.security_network import MAX_RESPONSE_BYTES, SafeRequests, validate_public_url
 
 
 @pytest.mark.parametrize(
@@ -40,3 +40,39 @@ def test_accepts_public_https(monkeypatch):
         lambda *args, **kwargs: [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0))],
     )
     assert validate_public_url("https://example.com/a") == "https://example.com/a"
+
+
+def test_requests_facade_supports_every_production_attribute():
+    client = SafeRequests()
+    assert callable(client.get)
+    assert callable(client.post)
+    assert callable(client.head)
+    assert issubclass(client.HTTPError, Exception)
+
+
+def test_credentials_are_rejected_before_unapproved_egress(monkeypatch):
+    client = SafeRequests()
+    monkeypatch.setattr(
+        socket,
+        "getaddrinfo",
+        lambda *args, **kwargs: [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0))],
+    )
+
+    with pytest.raises(ValueError, match="credentials"):
+        client.get("https://example.com", params={"key": "secret"})
+
+
+def test_chunked_response_limit_is_enforced():
+    class Response:
+        headers = {}
+        status_code = 200
+
+        def iter_content(self, chunk_size=1, decode_unicode=False):
+            yield b"x" * MAX_RESPONSE_BYTES
+            yield b"x"
+
+    client = SafeRequests()
+    response = Response()
+    client._enforce_stream_limit(response)
+    with pytest.raises(ValueError, match="size limit"):
+        list(response.iter_content())

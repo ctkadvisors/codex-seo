@@ -49,7 +49,7 @@ Installed resources are namespaced:
 - plugin: `ctk-codex-seo`
 - skills: `ctk-seo`, `ctk-seo-audit`, `ctk-seo-technical`, and so on
 - agents: `ctk-seo-*.toml`
-- runtime/config: `${CODEX_HOME}/plugins/ctk-codex-seo` and
+- runtime/config: `${CODEX_HOME}/marketplaces/ctk-advisors/plugins/ctk-codex-seo` and
   `${XDG_CONFIG_HOME:-~/.config}/ctk-codex-seo`
 - cache/reports: `${XDG_CACHE_HOME:-~/.cache}/ctk-codex-seo/<site-id>` and
   `${XDG_STATE_HOME:-~/.local/state}/ctk-codex-seo`

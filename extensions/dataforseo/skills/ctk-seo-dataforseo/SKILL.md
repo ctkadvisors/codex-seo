@@ -9,10 +9,7 @@ description: >
   installed. Use when user says "dataforseo", "live SERP", "keyword volume",
   "backlink data", "competitor data", "AI visibility check", "LLM mentions",
   "image SERP", "google images", "image rankings", or "real search data".
-user-invokable: true
-argument-hint: "[command] [query]"
 license: MIT
-compatibility: "Requires DataForSEO MCP server"
 metadata:
   author: AgriciDaniel
   version: "1.9.6"
@@ -24,13 +21,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -78,9 +75,9 @@ python scripts/dataforseo_costs.py log <endpoint> <actual_cost>
 ```
 
 **User commands for cost management:**
-- `/seo dataforseo costs today` → show today's spending breakdown
-- `/seo dataforseo costs summary` → show 7-day spending history
-- `/seo dataforseo costs config --mode threshold --threshold 0.50` → configure approval mode
+- `$ctk-seo dataforseo costs today` → show today's spending breakdown
+- `$ctk-seo dataforseo costs summary` → show 7-day spending history
+- `$ctk-seo dataforseo costs config --mode threshold --threshold 0.50` → configure approval mode
 
 Load `references/cost-tiers.md` for the full pricing table, budget presets, and cost reduction tips.
 
@@ -88,35 +85,35 @@ Load `references/cost-tiers.md` for the full pricing table, budget presets, and 
 
 | Command | What it does |
 |---------|-------------|
-| `/seo dataforseo serp <keyword>` | Google organic SERP results |
-| `/seo dataforseo serp-images <keyword>` | Google Images SERP results |
-| `/seo dataforseo serp-youtube <keyword>` | YouTube search results |
-| `/seo dataforseo youtube <video_id>` | YouTube video deep analysis |
-| `/seo dataforseo keywords <seed>` | Keyword ideas and suggestions |
-| `/seo dataforseo volume <keywords>` | Search volume for keywords |
-| `/seo dataforseo difficulty <keywords>` | Keyword difficulty scores |
-| `/seo dataforseo intent <keywords>` | Search intent classification |
-| `/seo dataforseo trends <keyword>` | Google Trends data |
-| `/seo dataforseo backlinks <domain>` | Full backlink profile |
-| `/seo dataforseo competitors <domain>` | Competitor domain analysis |
-| `/seo dataforseo ranked <domain>` | Ranked keywords for domain |
-| `/seo dataforseo intersection <domains>` | Keyword/backlink overlap |
-| `/seo dataforseo traffic <domains>` | Bulk traffic estimation |
-| `/seo dataforseo subdomains <domain>` | Subdomains with ranking data |
-| `/seo dataforseo top-searches <domain>` | Top queries mentioning domain |
-| `/seo dataforseo onpage <url>` | On-page analysis (Lighthouse + parsing) |
-| `/seo dataforseo tech <domain>` | Technology stack detection |
-| `/seo dataforseo whois <domain>` | WHOIS registration data |
-| `/seo dataforseo content <keyword/url>` | Content analysis and trends |
-| `/seo dataforseo listings <keyword>` | Business listings search |
-| `/seo dataforseo ai-scrape <query>` | ChatGPT web scraper for GEO |
-| `/seo dataforseo ai-mentions <keyword>` | LLM mention tracking for GEO |
+| `$ctk-seo dataforseo serp <keyword>` | Google organic SERP results |
+| `$ctk-seo dataforseo serp-images <keyword>` | Google Images SERP results |
+| `$ctk-seo dataforseo serp-youtube <keyword>` | YouTube search results |
+| `$ctk-seo dataforseo youtube <video_id>` | YouTube video deep analysis |
+| `$ctk-seo dataforseo keywords <seed>` | Keyword ideas and suggestions |
+| `$ctk-seo dataforseo volume <keywords>` | Search volume for keywords |
+| `$ctk-seo dataforseo difficulty <keywords>` | Keyword difficulty scores |
+| `$ctk-seo dataforseo intent <keywords>` | Search intent classification |
+| `$ctk-seo dataforseo trends <keyword>` | Google Trends data |
+| `$ctk-seo dataforseo backlinks <domain>` | Full backlink profile |
+| `$ctk-seo dataforseo competitors <domain>` | Competitor domain analysis |
+| `$ctk-seo dataforseo ranked <domain>` | Ranked keywords for domain |
+| `$ctk-seo dataforseo intersection <domains>` | Keyword/backlink overlap |
+| `$ctk-seo dataforseo traffic <domains>` | Bulk traffic estimation |
+| `$ctk-seo dataforseo subdomains <domain>` | Subdomains with ranking data |
+| `$ctk-seo dataforseo top-searches <domain>` | Top queries mentioning domain |
+| `$ctk-seo dataforseo onpage <url>` | On-page analysis (Lighthouse + parsing) |
+| `$ctk-seo dataforseo tech <domain>` | Technology stack detection |
+| `$ctk-seo dataforseo whois <domain>` | WHOIS registration data |
+| `$ctk-seo dataforseo content <keyword/url>` | Content analysis and trends |
+| `$ctk-seo dataforseo listings <keyword>` | Business listings search |
+| `$ctk-seo dataforseo ai-scrape <query>` | ChatGPT web scraper for GEO |
+| `$ctk-seo dataforseo ai-mentions <keyword>` | LLM mention tracking for GEO |
 
 ---
 
 ## SERP Analysis
 
-### `/seo dataforseo serp <keyword>`
+### `$ctk-seo dataforseo serp <keyword>`
 
 Fetch live Google organic search results.
 
@@ -128,7 +125,7 @@ Fetch live Google organic search results.
 
 **Output:** Rank, URL, title, description, domain, featured snippets, AI overview references, People Also Ask.
 
-### `/seo dataforseo serp-youtube <keyword>`
+### `$ctk-seo dataforseo serp-youtube <keyword>`
 
 Fetch YouTube search results. Valuable for GEO. YouTube mentions correlate most strongly with AI citations.
 
@@ -136,7 +133,7 @@ Fetch YouTube search results. Valuable for GEO. YouTube mentions correlate most 
 
 **Output:** Video title, channel, views, upload date, description, URL.
 
-### `/seo dataforseo youtube <video_id>`
+### `$ctk-seo dataforseo youtube <video_id>`
 
 Deep analysis of a specific YouTube video: info, comments, and subtitles. YouTube mentions have the strongest correlation (0.737) with AI visibility, making this critical for GEO analysis.
 
@@ -146,7 +143,7 @@ Deep analysis of a specific YouTube video: info, comments, and subtitles. YouTub
 
 **Output:** Video metadata (title, channel, views, likes, description), top comments with engagement, subtitle/transcript text.
 
-### `/seo dataforseo serp-images <keyword>`
+### `$ctk-seo dataforseo serp-images <keyword>`
 
 Fetch live Google Images search results. See which images rank for a keyword,
 which domains dominate image results, and identify visual content opportunities.
@@ -171,7 +168,7 @@ which domains dominate image results, and identify visual content opportunities.
 
 ## Keyword Research
 
-### `/seo dataforseo keywords <seed>`
+### `$ctk-seo dataforseo keywords <seed>`
 
 Generate keyword ideas, suggestions, and related terms from a seed keyword.
 
@@ -181,7 +178,7 @@ Generate keyword ideas, suggestions, and related terms from a seed keyword.
 
 **Output:** Keyword, search volume, CPC, competition level, keyword difficulty, trend.
 
-### `/seo dataforseo volume <keywords>`
+### `$ctk-seo dataforseo volume <keywords>`
 
 Get search volume and metrics for a list of keywords.
 
@@ -191,7 +188,7 @@ Get search volume and metrics for a list of keywords.
 
 **Output:** Keyword, monthly search volume, CPC, competition, monthly trend data.
 
-### `/seo dataforseo difficulty <keywords>`
+### `$ctk-seo dataforseo difficulty <keywords>`
 
 Calculate keyword difficulty scores for ranking competitiveness.
 
@@ -201,7 +198,7 @@ Calculate keyword difficulty scores for ranking competitiveness.
 
 **Output:** Keyword, difficulty score (0-100), interpretation (Easy/Medium/Hard/Very Hard).
 
-### `/seo dataforseo intent <keywords>`
+### `$ctk-seo dataforseo intent <keywords>`
 
 Classify keywords by user search intent.
 
@@ -211,7 +208,7 @@ Classify keywords by user search intent.
 
 **Output:** Keyword, intent type (informational, navigational, commercial, transactional), confidence score.
 
-### `/seo dataforseo trends <keyword>`
+### `$ctk-seo dataforseo trends <keyword>`
 
 Analyze keyword trends over time using Google Trends data.
 
@@ -225,7 +222,7 @@ Analyze keyword trends over time using Google Trends data.
 
 ## Domain & Competitor Analysis
 
-### `/seo dataforseo backlinks <domain>`
+### `$ctk-seo dataforseo backlinks <domain>`
 
 Comprehensive backlink profile analysis.
 
@@ -235,7 +232,7 @@ Comprehensive backlink profile analysis.
 
 **Output:** Total backlinks, referring domains, domain rank, spam score, top anchors, new/lost backlinks over time, dofollow ratio, top referring domains.
 
-### `/seo dataforseo competitors <domain>`
+### `$ctk-seo dataforseo competitors <domain>`
 
 Identify competing domains and estimate traffic.
 
@@ -243,7 +240,7 @@ Identify competing domains and estimate traffic.
 
 **Output:** Competitor domains, keyword overlap %, estimated traffic, domain rank, common keywords.
 
-### `/seo dataforseo ranked <domain>`
+### `$ctk-seo dataforseo ranked <domain>`
 
 List keywords a domain ranks for with positions and page data.
 
@@ -253,7 +250,7 @@ List keywords a domain ranks for with positions and page data.
 
 **Output:** Keyword, position, URL, search volume, traffic share, SERP features.
 
-### `/seo dataforseo intersection <domain1> <domain2> [...]`
+### `$ctk-seo dataforseo intersection <domain1> <domain2> [...]`
 
 Find shared keywords and backlink sources across 2-20 domains.
 
@@ -263,7 +260,7 @@ Find shared keywords and backlink sources across 2-20 domains.
 
 **Output:** Shared keywords with positions per domain, shared backlink sources, unique keywords per domain.
 
-### `/seo dataforseo traffic <domains>`
+### `$ctk-seo dataforseo traffic <domains>`
 
 Estimate organic search traffic for one or more domains.
 
@@ -273,7 +270,7 @@ Estimate organic search traffic for one or more domains.
 
 **Output:** Domain, estimated organic traffic, estimated traffic cost, top keywords.
 
-### `/seo dataforseo subdomains <domain>`
+### `$ctk-seo dataforseo subdomains <domain>`
 
 Enumerate subdomains with their ranking data and traffic estimates.
 
@@ -283,7 +280,7 @@ Enumerate subdomains with their ranking data and traffic estimates.
 
 **Output:** Subdomain, ranked keywords count, estimated traffic, organic cost.
 
-### `/seo dataforseo top-searches <domain>`
+### `$ctk-seo dataforseo top-searches <domain>`
 
 Find the most popular search queries that mention a specific domain in results.
 
@@ -297,7 +294,7 @@ Find the most popular search queries that mention a specific domain in results.
 
 ## Technical / On-Page
 
-### `/seo dataforseo onpage <url>`
+### `$ctk-seo dataforseo onpage <url>`
 
 Run on-page analysis including Lighthouse audit and content parsing.
 
@@ -310,7 +307,7 @@ Run on-page analysis including Lighthouse audit and content parsing.
 
 **Output:** Pages crawled, status codes, meta tags, titles, content size, load times, Lighthouse scores, broken links, resource analysis.
 
-### `/seo dataforseo tech <domain>`
+### `$ctk-seo dataforseo tech <domain>`
 
 Detect technologies used on a domain.
 
@@ -318,7 +315,7 @@ Detect technologies used on a domain.
 
 **Output:** Technology name, version, category (CMS, analytics, CDN, framework, etc.).
 
-### `/seo dataforseo whois <domain>`
+### `$ctk-seo dataforseo whois <domain>`
 
 Retrieve WHOIS registration data.
 
@@ -330,7 +327,7 @@ Retrieve WHOIS registration data.
 
 ## Content & Business Data
 
-### `/seo dataforseo content <keyword/url>`
+### `$ctk-seo dataforseo content <keyword/url>`
 
 Analyze content quality, search for content by topic, and track phrase trends.
 
@@ -340,7 +337,7 @@ Analyze content quality, search for content by topic, and track phrase trends.
 
 **Output:** Content matches with quality scores, sentiment analysis, readability metrics, phrase trend data over time.
 
-### `/seo dataforseo listings <keyword>`
+### `$ctk-seo dataforseo listings <keyword>`
 
 Search business listings for local SEO competitive analysis.
 
@@ -354,7 +351,7 @@ Search business listings for local SEO competitive analysis.
 
 ## AI Visibility / GEO
 
-### `/seo dataforseo ai-scrape <query>`
+### `$ctk-seo dataforseo ai-scrape <query>`
 
 Scrape what ChatGPT web search returns for a query. Real GEO visibility check: see which sources ChatGPT cites for your target keywords.
 
@@ -364,7 +361,7 @@ Scrape what ChatGPT web search returns for a query. Real GEO visibility check: s
 
 **Output:** ChatGPT response content, cited sources/URLs, referenced domains.
 
-### `/seo dataforseo ai-mentions <keyword>`
+### `$ctk-seo dataforseo ai-mentions <keyword>`
 
 Track how LLMs mention brands, domains, and topics. Critical for GEO. Measures actual AI visibility across multiple LLM platforms.
 
@@ -419,5 +416,5 @@ Match existing codex-seo output patterns:
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.

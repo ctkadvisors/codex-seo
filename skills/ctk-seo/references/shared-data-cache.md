@@ -1,24 +1,24 @@
 # Shared Data Cache Reference
 
-This reference defines the shared `.ctk-seo-cache/` system used across codex-seo skills.
+This reference defines the shared `~/.cache/ctk-codex-seo/` system used across codex-seo skills.
 All cache files are optional performance optimizations. If a cache is missing,
 stale, corrupt, or unreadable, the skill proceeds with normal gathering.
 
 ## Core Rules
 
-- Cache location: `.ctk-seo-cache/`
+- Cache location: `~/.cache/ctk-codex-seo/`
 - Reference this file from each skill Step 0 block
 - No cache file is required for a skill to run
 - Corrupt JSON should be treated as missing cache
 - Permission errors should be skipped silently
 - Users can force fresh gathering by saying `refresh` or `re-run`
 - Cache freshness does not auto-expire; each file should include an analysis timestamp
-- Never commit `.ctk-seo-cache/` contents
+- Never commit `~/.cache/ctk-codex-seo/` contents
 
 ## Directory Layout
 
 ```text
-.ctk-seo-cache/
+~/.cache/ctk-codex-seo/
   site-meta.json
   plan.json
   audit-scores.json
@@ -82,7 +82,7 @@ Use this at the beginning of each skill process or gather section:
 ```md
 **Step 0 — Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for cached data from other skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for cached data from other skills.
 Reference: `ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 [List specific cache files this skill checks]
@@ -99,20 +99,14 @@ Use this at the end of each skill delivery section:
 ```md
 **Write to shared data cache:**
 
-After completing all work, write results to `.ctk-seo-cache/`.
+After completing all work, write results to `~/.cache/ctk-codex-seo/`.
 
 ```bash
-mkdir -p .ctk-seo-cache/pages/{url-slug}
-mkdir -p .ctk-seo-cache
+mkdir -p ~/.cache/ctk-codex-seo/pages/{url-slug}
+mkdir -p ~/.cache/ctk-codex-seo
 ```
 
 Write the JSON file per the schema in `ctk-seo/references/shared-data-cache.md`.
-Add `.ctk-seo-cache/` to `.gitignore` if not already present:
-
-```bash
-grep -qxF '.ctk-seo-cache/' .gitignore 2>/dev/null || echo '.ctk-seo-cache/' >> .gitignore
-```
-```
 
 ## Error Handling Rules
 

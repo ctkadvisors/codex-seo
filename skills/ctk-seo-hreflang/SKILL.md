@@ -5,8 +5,6 @@ description: >
   common mistakes, validates language/region codes, and generates correct
   hreflang implementations. Use when user says "hreflang", "i18n SEO",
   "international SEO", "multi-language", "multi-region", or "language tags".
-user-invokable: true
-argument-hint: "[url]"
 license: MIT
 metadata:
   author: AgriciDaniel
@@ -19,13 +17,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -225,7 +223,7 @@ Load `references/cultural-profiles.md` for pre-built profiles (DACH, Francophone
 
 ## Content Parity Audit
 
-**Command:** `/seo hreflang audit <directory-or-url>`
+**Command:** `$ctk-seo hreflang audit <directory-or-url>`
 
 Audit content parity across all language versions of a site or local content directory.
 
@@ -271,5 +269,5 @@ Load on-demand as needed (do NOT load all at startup):
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.

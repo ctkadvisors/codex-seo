@@ -6,18 +6,18 @@ Codex SEO is a local Codex skill suite with plugin metadata, specialist skills, 
 
 - `.codex-plugin/plugin.json` exposes the suite to Codex plugin discovery.
 - `skills/ctk-seo/SKILL.md` is the canonical orchestrator.
-- `skills/seo-*` contains specialist workflows.
-- `skills/ctk-seo/references/shared-data-cache.md` defines `.ctk-seo-cache/` contracts.
-- `agents/seo-*.toml` provides Codex agent profiles for parallel audit slices.
+- `skills/ctk-seo-*` contains specialist workflows.
+- `skills/ctk-seo/references/shared-data-cache.md` defines XDG cache contracts.
+- `agents/ctk-seo-*.toml` provides Codex agent profiles for parallel audit slices.
 - `scripts/` contains deterministic wrappers, fetch/parse helpers, Google/API utilities, drift monitoring, and report generators.
 - `extensions/` contains optional setup helpers for DataForSEO, Firecrawl, and image generation.
 
 ## Runtime Flow
 
-1. Route natural-language or `/seo ...` prompts to the orchestrator or specialist skill.
-2. Check `.ctk-seo-cache/` for reusable context.
+1. Route natural-language or `$ctk-seo ...` prompts to the orchestrator or specialist skill.
+2. Check `~/.cache/ctk-codex-seo/` for reusable context.
 3. Gather fresh evidence with scripts, Codex tools, or configured MCP/API integrations.
-4. Write reports to `output/` and concise machine-readable summaries to `.ctk-seo-cache/`.
+4. Write reports to `~/.local/state/ctk-codex-seo/reports/` and concise machine-readable summaries to `~/.cache/ctk-codex-seo/`.
 5. Return setup-required states when credentials or MCP servers are missing instead of fabricating data.
 
 ## Config And Cache
@@ -25,7 +25,7 @@ Codex SEO is a local Codex skill suite with plugin metadata, specialist skills, 
 - New credentials: `~/.config/ctk-codex-seo/`
 - New runtime caches: `~/.cache/ctk-codex-seo/`
 - Legacy read fallback: `~/.config/claude-seo/` and `~/.cache/claude-seo/`
-- Project cache: `.ctk-seo-cache/` in the active workspace, ignored by git
+- Runtime cache: `~/.cache/ctk-codex-seo/`, outside active repositories
 
 ## Public Interfaces
 

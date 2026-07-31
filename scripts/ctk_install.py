@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Transactional, ownership-aware installer for the CTK Codex SEO plugin."""
+"""Transactional installer that registers CTK SEO through a local Codex marketplace."""
 
 from __future__ import annotations
 
@@ -7,9 +7,11 @@ import argparse
 import json
 import os
 import shutil
+import subprocess
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Callable
 
 try:
     from .security_paths import atomic_write, hash_file, reject_symlink_components
@@ -18,8 +20,17 @@ except ImportError:  # Direct script execution.
 
 
 PLUGIN_NAME = "ctk-codex-seo"
+MARKETPLACE_NAME = "ctk-advisors"
 MANIFEST_NAME = "install-manifest.json"
-EXCLUDED_PARTS = {".git", ".venv", "__pycache__", ".pytest_cache", ".mypy_cache"}
+EXCLUDED_PARTS = {
+    ".git",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ctk-seo-cache",
+}
+CommandRunner = Callable[[list[str], dict[str, str]], subprocess.CompletedProcess[str]]
 
 
 @dataclass(frozen=True)
@@ -29,8 +40,12 @@ class Result:
     details: tuple[str, ...] = field(default_factory=tuple)
 
 
-def _target(codex_home: Path) -> Path:
-    return codex_home.expanduser().resolve() / "plugins" / PLUGIN_NAME
+def marketplace_root(codex_home: Path) -> Path:
+    return codex_home.expanduser().resolve() / "marketplaces" / MARKETPLACE_NAME
+
+
+def _plugin_root(root: Path) -> Path:
+    return root / "plugins" / PLUGIN_NAME
 
 
 def _source_files(source: Path) -> list[Path]:
@@ -49,14 +64,18 @@ def _source_files(source: Path) -> list[Path]:
     return files
 
 
-def _read_manifest(target: Path) -> dict:
-    path = target / MANIFEST_NAME
+def _read_manifest(root: Path) -> dict:
+    path = root / MANIFEST_NAME
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise ValueError("missing or invalid ownership manifest") from exc
-    if data.get("plugin") != PLUGIN_NAME or data.get("schema") != 1:
-        raise ValueError("ownership manifest does not identify this plugin")
+    if (
+        data.get("plugin") != PLUGIN_NAME
+        or data.get("marketplace") != MARKETPLACE_NAME
+        or data.get("schema") != 2
+    ):
+        raise ValueError("ownership manifest does not identify this CTK marketplace")
     files = data.get("files")
     if not isinstance(files, list) or not all(
         isinstance(item, dict)
@@ -70,27 +89,66 @@ def _read_manifest(target: Path) -> dict:
     return data
 
 
-def _modified_owned_files(target: Path, manifest: dict) -> list[str]:
+def _modified_owned_files(root: Path, manifest: dict) -> list[str]:
     modified: list[str] = []
     for item in manifest["files"]:
-        path = target / item["path"]
+        path = root / item["path"]
         if path.is_symlink() or not path.is_file() or hash_file(path) != item["sha256"]:
             modified.append(item["path"])
     return modified
 
 
+def _marketplace_payload() -> dict:
+    return {
+        "name": MARKETPLACE_NAME,
+        "interface": {"displayName": "CTK Advisors"},
+        "plugins": [
+            {
+                "name": PLUGIN_NAME,
+                "source": {"source": "local", "path": f"./plugins/{PLUGIN_NAME}"},
+                "policy": {
+                    "installation": "AVAILABLE",
+                    "authentication": "ON_USE",
+                },
+                "category": "Productivity",
+            }
+        ],
+    }
+
+
 def _build_stage(source: Path, stage: Path) -> None:
-    entries = []
+    entries: list[dict[str, str]] = []
+    plugin_stage = _plugin_root(stage)
     for source_file in _source_files(source):
-        relative = source_file.relative_to(source)
+        relative = Path("plugins") / PLUGIN_NAME / source_file.relative_to(source)
         destination = stage / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source_file, destination, follow_symlinks=False)
         os.chmod(destination, source_file.stat().st_mode & 0o777)
         entries.append({"path": relative.as_posix(), "sha256": hash_file(destination)})
+
+    plugin_manifest = json.loads(
+        (plugin_stage / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+    if plugin_manifest.get("name") != PLUGIN_NAME:
+        raise ValueError("plugin manifest name does not match the CTK plugin")
+
+    marketplace_path = stage / ".agents" / "plugins" / "marketplace.json"
+    atomic_write(
+        marketplace_path,
+        (json.dumps(_marketplace_payload(), indent=2) + "\n").encode(),
+        0o644,
+    )
+    entries.append(
+        {
+            "path": marketplace_path.relative_to(stage).as_posix(),
+            "sha256": hash_file(marketplace_path),
+        }
+    )
     manifest = {
-        "schema": 1,
+        "schema": 2,
         "plugin": PLUGIN_NAME,
+        "marketplace": MARKETPLACE_NAME,
         "files": entries,
     }
     atomic_write(
@@ -101,9 +159,78 @@ def _build_stage(source: Path, stage: Path) -> None:
     _read_manifest(stage)
 
 
-def install(source: Path, codex_home: Path) -> Result:
+def _default_runner(args: list[str], env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(args, env=env, capture_output=True, text=True, check=False)
+
+
+def _run_codex(
+    args: list[str],
+    codex_home: Path,
+    command_runner: CommandRunner,
+) -> subprocess.CompletedProcess[str]:
+    env = dict(os.environ)
+    env["CODEX_HOME"] = str(codex_home.expanduser().resolve())
+    return command_runner(["codex", *args], env)
+
+
+def _register(
+    root: Path,
+    codex_home: Path,
+    command_runner: CommandRunner,
+    *,
+    add_marketplace: bool,
+) -> Result:
+    if add_marketplace:
+        result = _run_codex(
+            ["plugin", "marketplace", "add", str(root), "--json"],
+            codex_home,
+            command_runner,
+        )
+        if result.returncode != 0:
+            return Result(False, "registration_failed", (result.stderr.strip(),))
+    result = _run_codex(
+        ["plugin", "add", f"{PLUGIN_NAME}@{MARKETPLACE_NAME}", "--json"],
+        codex_home,
+        command_runner,
+    )
+    if result.returncode != 0:
+        if add_marketplace:
+            _run_codex(
+                ["plugin", "marketplace", "remove", MARKETPLACE_NAME, "--json"],
+                codex_home,
+                command_runner,
+            )
+        return Result(False, "registration_failed", (result.stderr.strip(),))
+    return Result(True, "registered")
+
+
+def _unregister(codex_home: Path, command_runner: CommandRunner) -> Result:
+    remove_plugin = _run_codex(
+        ["plugin", "remove", f"{PLUGIN_NAME}@{MARKETPLACE_NAME}", "--json"],
+        codex_home,
+        command_runner,
+    )
+    if remove_plugin.returncode != 0:
+        return Result(False, "deregistration_failed", (remove_plugin.stderr.strip(),))
+    remove_marketplace = _run_codex(
+        ["plugin", "marketplace", "remove", MARKETPLACE_NAME, "--json"],
+        codex_home,
+        command_runner,
+    )
+    if remove_marketplace.returncode != 0:
+        return Result(False, "deregistration_failed", (remove_marketplace.stderr.strip(),))
+    return Result(True, "unregistered")
+
+
+def install(
+    source: Path,
+    codex_home: Path,
+    *,
+    command_runner: CommandRunner = _default_runner,
+) -> Result:
     source = source.expanduser().resolve()
-    target = _target(codex_home)
+    codex_home = codex_home.expanduser().resolve()
+    root = marketplace_root(codex_home)
     try:
         reject_symlink_components(source)
         _source_files(source)
@@ -112,75 +239,86 @@ def install(source: Path, codex_home: Path) -> Result:
     if not (source / ".codex-plugin" / "plugin.json").is_file():
         return Result(False, "invalid_source", ("missing plugin manifest",))
 
-    existing_manifest = None
-    if target.exists():
-        if target.is_symlink() or not target.is_dir():
+    updating = root.exists()
+    if updating:
+        if root.is_symlink() or not root.is_dir():
             return Result(False, "collision")
-        if not (target / MANIFEST_NAME).is_file():
+        if not (root / MANIFEST_NAME).is_file():
             return Result(False, "collision")
         try:
-            existing_manifest = _read_manifest(target)
+            existing_manifest = _read_manifest(root)
         except ValueError as exc:
             return Result(False, "ownership_invalid", (str(exc),))
-        modified = _modified_owned_files(target, existing_manifest)
+        modified = _modified_owned_files(root, existing_manifest)
         if modified:
             return Result(False, "owned_files_modified", tuple(modified))
 
-    plugins = target.parent
-    plugins.mkdir(parents=True, exist_ok=True)
-    if plugins.is_symlink():
+    parent = root.parent
+    parent.mkdir(parents=True, exist_ok=True)
+    if parent.is_symlink():
         return Result(False, "unsafe_destination")
-    stage = Path(tempfile.mkdtemp(prefix=f".{PLUGIN_NAME}.stage-", dir=plugins))
-    rollback = plugins / f".{PLUGIN_NAME}.rollback-{os.getpid()}"
+    stage = Path(tempfile.mkdtemp(prefix=f".{MARKETPLACE_NAME}.stage-", dir=parent))
+    rollback = parent / f".{MARKETPLACE_NAME}.rollback-{os.getpid()}"
     try:
         _build_stage(source, stage)
-        if target.exists():
+        if updating:
             if rollback.exists():
                 return Result(False, "unsafe_destination")
-            os.replace(target, rollback)
-        try:
-            os.replace(stage, target)
-        except Exception:
-            if rollback.exists() and not target.exists():
-                os.replace(rollback, target)
-            raise
-        _read_manifest(target)
+            os.replace(root, rollback)
+        os.replace(stage, root)
+        registration = _register(
+            root,
+            codex_home,
+            command_runner,
+            add_marketplace=not updating,
+        )
+        if not registration.ok:
+            if root.exists():
+                shutil.rmtree(root)
+            if rollback.exists():
+                os.replace(rollback, root)
+                _register(root, codex_home, command_runner, add_marketplace=False)
+            return registration
         if rollback.exists():
             shutil.rmtree(rollback)
         return Result(True, "installed")
+    except FileNotFoundError as exc:
+        if rollback.exists() and not root.exists():
+            os.replace(rollback, root)
+        return Result(False, "codex_cli_missing", (str(exc),))
     except (OSError, ValueError) as exc:
+        if rollback.exists() and not root.exists():
+            os.replace(rollback, root)
         return Result(False, "install_failed", (str(exc),))
     finally:
         if stage.exists():
             shutil.rmtree(stage)
 
 
-def uninstall(codex_home: Path, *, force_owned_modifications: bool = False) -> Result:
-    target = _target(codex_home)
-    if not target.exists():
+def uninstall(
+    codex_home: Path,
+    *,
+    force_owned_modifications: bool = False,
+    command_runner: CommandRunner = _default_runner,
+) -> Result:
+    codex_home = codex_home.expanduser().resolve()
+    root = marketplace_root(codex_home)
+    if not root.exists():
         return Result(True, "not_installed")
     try:
-        manifest = _read_manifest(target)
+        manifest = _read_manifest(root)
     except ValueError as exc:
         return Result(False, "ownership_invalid", (str(exc),))
-    modified = _modified_owned_files(target, manifest)
-    if force_owned_modifications:
-        shutil.rmtree(target)
-        return Result(True, "uninstalled")
-
-    modified_set = set(modified)
-    for item in manifest["files"]:
-        if item["path"] not in modified_set:
-            (target / item["path"]).unlink()
-    for directory in sorted((p for p in target.rglob("*") if p.is_dir()), reverse=True):
-        try:
-            directory.rmdir()
-        except OSError:
-            pass
-    if modified:
+    modified = _modified_owned_files(root, manifest)
+    if modified and not force_owned_modifications:
         return Result(False, "modified_files", tuple(modified))
-    (target / MANIFEST_NAME).unlink(missing_ok=True)
-    target.rmdir()
+    try:
+        deregistration = _unregister(codex_home, command_runner)
+    except FileNotFoundError as exc:
+        return Result(False, "codex_cli_missing", (str(exc),))
+    if not deregistration.ok:
+        return deregistration
+    shutil.rmtree(root)
     return Result(True, "uninstalled")
 
 
@@ -189,15 +327,26 @@ def main() -> int:
     subcommands = parser.add_subparsers(dest="command", required=True)
     install_parser = subcommands.add_parser("install")
     install_parser.add_argument("--source", type=Path, default=Path(__file__).resolve().parents[1])
-    install_parser.add_argument("--codex-home", type=Path, default=Path(os.environ.get("CODEX_HOME", "~/.codex")))
+    install_parser.add_argument(
+        "--codex-home",
+        type=Path,
+        default=Path(os.environ.get("CODEX_HOME", "~/.codex")),
+    )
     uninstall_parser = subcommands.add_parser("uninstall")
-    uninstall_parser.add_argument("--codex-home", type=Path, default=Path(os.environ.get("CODEX_HOME", "~/.codex")))
+    uninstall_parser.add_argument(
+        "--codex-home",
+        type=Path,
+        default=Path(os.environ.get("CODEX_HOME", "~/.codex")),
+    )
     uninstall_parser.add_argument("--force-owned-modifications", action="store_true")
     args = parser.parse_args()
     result = (
         install(args.source, args.codex_home)
         if args.command == "install"
-        else uninstall(args.codex_home, force_owned_modifications=args.force_owned_modifications)
+        else uninstall(
+            args.codex_home,
+            force_owned_modifications=args.force_owned_modifications,
+        )
     )
     print(json.dumps({"ok": result.ok, "code": result.code, "details": result.details}))
     return 0 if result.ok else 1

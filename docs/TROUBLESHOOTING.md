@@ -5,21 +5,23 @@
 Verify the canonical skill exists:
 
 ```bash
-ls ~/.codex/skills/ctk-seo/SKILL.md
-ls ~/.codex/agents/ctk-seo-technical.toml
+codex plugin list --json
 ```
 
-Restart Codex after reinstalling.
+Confirm `ctk-codex-seo@ctk-advisors` is enabled, then start a new Codex thread.
 
 ## Runtime Not Ready
 
 ```bash
-~/.codex/skills/ctk-seo/.venv/bin/python ~/.codex/skills/ctk-seo/scripts/verify_environment.py
+python scripts/bootstrap_environment.py --json
 ```
 
 If Playwright Chromium fails, core workflows can still run. Visual and PDF workflows remain limited until browser installation succeeds.
 
-On Python 3.14 macOS, some optional packages can lag wheel support. The installer should still complete when `requirements-core.txt` installs and `core_ready` is true; use the verifier notes to identify any optional visual, Google API, report, or OCR capability that needs a different Python/runtime.
+The bootstrap accepts binary wheels only and verifies hashes from
+`requirements/core.txt`. Use the returned `python` path for subsequent commands.
+Optional visual, Google API, report, and OCR packages require an explicit,
+separately reviewed installation.
 
 ## Credentials Missing
 
@@ -44,5 +46,7 @@ For optional MCP/API workflows, `setup_required` is a valid result when credenti
 ## Reinstall
 
 ```bash
-CODEX_SEO_REPO=https://github.com/AgriciDaniel/codex-seo CODEX_SEO_REF=v1.9.6-codex.5 bash install.sh
+git clone https://github.com/ctkadvisors/codex-seo.git
+cd codex-seo
+./install.sh
 ```

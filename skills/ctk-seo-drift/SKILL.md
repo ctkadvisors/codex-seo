@@ -6,8 +6,6 @@ description: >
   to your on-page SEO. Use when user says "SEO drift", "baseline", "track changes",
   "did anything break", "SEO regression", "compare SEO", "before and after",
   "monitor SEO changes", or "deployment check".
-user-invokable: true
-argument-hint: "baseline|compare|history <url>"
 license: MIT
 metadata:
   author: AgriciDaniel
@@ -21,13 +19,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -41,9 +39,9 @@ Git for your SEO. Capture baselines, detect regressions, track changes over time
 
 | Command | Purpose |
 |---------|---------|
-| `/seo drift baseline <url>` | Capture current SEO state as a "known good" snapshot |
-| `/seo drift compare <url>` | Compare current page state to stored baseline |
-| `/seo drift history <url>` | Show change history and past comparisons |
+| `$ctk-seo drift baseline <url>` | Capture current SEO state as a "known good" snapshot |
+| `$ctk-seo drift compare <url>` | Compare current page state to stored baseline |
+| `$ctk-seo drift history <url>` | Show change history and past comparisons |
 
 ---
 
@@ -175,14 +173,14 @@ When drift is detected, recommend the appropriate specialized skill:
 
 | Finding | Recommendation |
 |---------|----------------|
-| Schema removed or modified | Run `/seo schema <url>` for full validation |
-| CWV regression | Run `/seo technical <url>` for performance audit |
-| Title or meta description changed | Run `/seo page <url>` for content analysis |
-| Canonical changed or removed | Run `/seo technical <url>` for indexability check |
-| Noindex added | Run `/seo technical <url>` for crawlability audit |
-| H1/heading structure changed | Run `/seo content <url>` for E-E-A-T review |
-| OG tags removed | Run `/seo page <url>` for social sharing analysis |
-| Status code changed to error | Run `/seo technical <url>` for full diagnostics |
+| Schema removed or modified | Run `$ctk-seo schema <url>` for full validation |
+| CWV regression | Run `$ctk-seo technical <url>` for performance audit |
+| Title or meta description changed | Run `$ctk-seo page <url>` for content analysis |
+| Canonical changed or removed | Run `$ctk-seo technical <url>` for indexability check |
+| Noindex added | Run `$ctk-seo technical <url>` for crawlability audit |
+| H1/heading structure changed | Run `$ctk-seo content <url>` for E-E-A-T review |
+| OG tags removed | Run `$ctk-seo page <url>` for social sharing analysis |
+| Status code changed to error | Run `$ctk-seo technical <url>` for full diagnostics |
 
 ---
 
@@ -214,26 +212,26 @@ When drift is detected, recommend the appropriate specialized skill:
 
 ### Pre/Post Deployment Check
 ```
-/seo drift baseline https://example.com     # Before deploy
+$ctk-seo drift baseline https://example.com     # Before deploy
 # ... deploy happens ...
-/seo drift compare https://example.com      # After deploy
+$ctk-seo drift compare https://example.com      # After deploy
 ```
 
 ### Ongoing Monitoring
 ```
-/seo drift baseline https://example.com     # Initial capture
+$ctk-seo drift baseline https://example.com     # Initial capture
 # ... weeks later ...
-/seo drift compare https://example.com      # Check for drift
-/seo drift history https://example.com      # Review all changes
+$ctk-seo drift compare https://example.com      # Check for drift
+$ctk-seo drift history https://example.com      # Review all changes
 ```
 
 ### Investigating a Traffic Drop
 ```
-/seo drift compare https://example.com      # What changed?
-/seo drift history https://example.com      # When did it change?
+$ctk-seo drift compare https://example.com      # What changed?
+$ctk-seo drift history https://example.com      # When did it change?
 ```
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.

@@ -11,7 +11,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 import bootstrap_environment as bootstrap_module  # noqa: E402
 
 
-def test_bootstrap_environment_allows_core_ready_without_playwright(monkeypatch, tmp_path: Path):
+def test_bootstrap_environment_installs_only_hashed_core(monkeypatch, tmp_path: Path):
     venv_dir = tmp_path / "fake-venv"
     python_path = venv_dir / "Scripts" / "python.exe"
     python_path.parent.mkdir(parents=True, exist_ok=True)
@@ -36,58 +36,19 @@ def test_bootstrap_environment_allows_core_ready_without_playwright(monkeypatch,
                 "stderr": "",
                 "ok": True,
             }
-        if "playwright" in cmd:
-            return {"cmd": cmd, "returncode": 1, "stdout": "", "stderr": "browser install failed", "ok": False}
         return {"cmd": cmd, "returncode": 0, "stdout": "", "stderr": "", "ok": True}
 
     monkeypatch.setattr(bootstrap_module, "run_command", fake_run_command)
-    result = bootstrap_module.bootstrap_environment(venv_dir=venv_dir, install_playwright_browser=True)
+    result = bootstrap_module.bootstrap_environment(venv_dir=venv_dir)
 
     assert result["ok"] is True
     assert result["full_ready"] is False
     assert result["verification"]["capabilities"]["core_ready"] is True
     assert result["verification"]["capabilities"]["visual_ready"] is False
-
-
-def test_bootstrap_environment_allows_optional_requirement_failures(monkeypatch, tmp_path: Path):
-    venv_dir = tmp_path / "fake-venv"
-    python_path = venv_dir / "Scripts" / "python.exe"
-    python_path.parent.mkdir(parents=True, exist_ok=True)
-    python_path.write_text("", encoding="utf-8")
-
-    verification_payload = {
-        "ready": True,
-        "capabilities": {
-            "core_ready": True,
-            "visual_ready": False,
-            "premium_report_ready": False,
-            "full_ready": False,
-        },
-    }
-
-    def fake_run_command(cmd: list[str], cwd: Path | None = None):
-        command_text = " ".join(cmd)
-        if "requirements-ocr.txt" in command_text:
-            return {"cmd": cmd, "returncode": 1, "stdout": "", "stderr": "onnxruntime unavailable", "ok": False}
-        if "verify_environment.py" in command_text:
-            return {
-                "cmd": cmd,
-                "returncode": 0,
-                "stdout": json.dumps(verification_payload),
-                "stderr": "",
-                "ok": True,
-            }
-        return {"cmd": cmd, "returncode": 0, "stdout": "", "stderr": "", "ok": True}
-
-    monkeypatch.setattr(bootstrap_module, "run_command", fake_run_command)
-    result = bootstrap_module.bootstrap_environment(venv_dir=venv_dir, install_playwright_browser=False)
-
-    assert result["ok"] is True
-    assert result["optional_failed_groups"] == ["ocr"]
-    failed_optional_steps = [
-        step for step in result["steps"] if step.get("group") == "ocr" and step["ok"] is False
-    ]
-    assert len(failed_optional_steps) == 1
+    install_step = next(step for step in result["steps"] if step["group"] == "core")
+    assert "--require-hashes" in install_step["cmd"]
+    assert "--only-binary=:all:" in install_step["cmd"]
+    assert "playwright" not in " ".join(" ".join(step["cmd"]) for step in result["steps"])
 
 
 def test_bootstrap_environment_fails_when_core_requirements_fail(monkeypatch, tmp_path: Path):
@@ -108,7 +69,7 @@ def test_bootstrap_environment_fails_when_core_requirements_fail(monkeypatch, tm
 
     def fake_run_command(cmd: list[str], cwd: Path | None = None):
         command_text = " ".join(cmd)
-        if "requirements-core.txt" in command_text:
+        if "requirements/core.txt" in command_text:
             return {"cmd": cmd, "returncode": 1, "stdout": "", "stderr": "lxml unavailable", "ok": False}
         if "verify_environment.py" in command_text:
             return {
@@ -121,7 +82,7 @@ def test_bootstrap_environment_fails_when_core_requirements_fail(monkeypatch, tm
         return {"cmd": cmd, "returncode": 0, "stdout": "", "stderr": "", "ok": True}
 
     monkeypatch.setattr(bootstrap_module, "run_command", fake_run_command)
-    result = bootstrap_module.bootstrap_environment(venv_dir=venv_dir, install_playwright_browser=False)
+    result = bootstrap_module.bootstrap_environment(venv_dir=venv_dir)
 
     assert result["ok"] is False
     failed_required_steps = [
