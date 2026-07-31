@@ -45,32 +45,19 @@ It covers technical SEO, on-page analysis, content quality, E-E-A-T, schema mark
 ## Status
 
 - Repository visibility: public.
-- Current release: [`v1.9.6-codex.5`](https://github.com/AgriciDaniel/codex-seo/releases/tag/v1.9.6-codex.5).
-- Installer default ref: `v1.9.6-codex.5`.
-- Latest local validation: 52 tests passing, full installed smoke suite passing, demo readiness passing.
+- Hardened fork: [`ctkadvisors/codex-seo`](https://github.com/ctkadvisors/codex-seo).
+- Latest local validation: 76 tests passing.
 - Runtime credentials stay outside the repo under Codex/local config paths.
 - Discovery topics: `codex`, `codex-cli`, `codex-skills`, `ctk-seo`, `ai-seo`, `ai-search`, `technical-seo`, `generative-engine-optimization`, `core-web-vitals`, `schema-markup`, `local-seo`, `ecommerce-seo`, `content-strategy`, `google-search-console`, `dataforseo`, `mcp`, `python`, `automation`, `marketing-automation`, `open-source`.
 
 ## Install
 
-### One-Line Install
+### Clone, Review, Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/codex-seo/v1.9.6-codex.5/install.sh | bash
-```
-
-Windows:
-
-```powershell
-irm https://raw.githubusercontent.com/AgriciDaniel/codex-seo/v1.9.6-codex.5/install.ps1 | iex
-```
-
-### Review Before Installing
-
-```bash
-git clone https://github.com/AgriciDaniel/codex-seo.git
+git clone https://github.com/ctkadvisors/codex-seo.git
 cd codex-seo
-bash install.sh
+./install.sh
 ```
 
 Windows:

@@ -21,7 +21,7 @@ main() {
     # Check prerequisites
     if [ ! -d "${SEO_SKILL_DIR}" ]; then
         echo "x Codex SEO is not installed."
-        echo "  Install it first: curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/codex-seo/main/install.sh | bash"
+        echo "  Install it first: git clone https://github.com/ctkadvisors/codex-seo.git && cd codex-seo && ./install.sh"
         exit 1
     fi
     echo "v Codex SEO detected"

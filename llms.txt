@@ -14,9 +14,8 @@
 
 ## Install
 
-- Private preview: `gh repo clone AgriciDaniel/codex-seo && cd codex-seo && bash install.sh`
-- Future public install: `curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/codex-seo/main/install.sh | bash`
-- Windows private preview: `gh repo clone AgriciDaniel/codex-seo; cd codex-seo; powershell -ExecutionPolicy Bypass -File .\install.ps1`
+- Reviewed fork: `gh repo clone ctkadvisors/codex-seo && cd codex-seo && ./install.sh`
+- Windows: `gh repo clone ctkadvisors/codex-seo; cd codex-seo; .\install.ps1`
 
 ## Core Docs
 

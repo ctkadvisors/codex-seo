@@ -2,7 +2,10 @@
 
 ## Supported Versions
 
-Security fixes are provided for the current `main` branch.
+Security fixes are provided for the current `main` branch. The fork's threat
+model and upstream review policy are documented in
+[`docs/THREAT-MODEL.md`](docs/THREAT-MODEL.md) and
+[`docs/UPSTREAM.md`](docs/UPSTREAM.md).
 
 ## Reporting a Vulnerability
 
