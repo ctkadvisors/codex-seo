@@ -1,71 +1,49 @@
 # Installation
 
-## One-Line Install
-
-### Unix
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/codex-seo/v1.9.6-codex.5/install.sh | bash
-```
-
-### Windows
-
-```powershell
-irm https://raw.githubusercontent.com/AgriciDaniel/codex-seo/v1.9.6-codex.5/install.ps1 | iex
-```
-
-## Manual Install From Local Checkout
+Clone the CTK-reviewed fork, inspect the revision if desired, then run its
+local installer:
 
 ```bash
-git clone https://github.com/AgriciDaniel/codex-seo.git
+git clone https://github.com/ctkadvisors/codex-seo.git
 cd codex-seo
-bash install.sh
+./install.sh
 ```
 
-Windows:
+PowerShell:
 
 ```powershell
-git clone https://github.com/AgriciDaniel/codex-seo.git
+git clone https://github.com/ctkadvisors/codex-seo.git
 cd codex-seo
-powershell -ExecutionPolicy Bypass -File .\install.ps1
+.\install.ps1
 ```
 
-## What Gets Installed
+The installer writes one self-contained directory:
+`${CODEX_HOME:-~/.codex}/plugins/ctk-codex-seo`. It does not download code,
+install dependencies, edit Codex settings, register hooks, or touch shared
+`skills/` and `agents/` directories.
 
-- `~/.codex/skills/seo`
-- `~/.codex/skills/seo-*`
-- `~/.codex/agents/seo-*.toml`
-- Python runtime at `~/.codex/skills/seo/.venv`
-- Core Python dependencies, with optional visual/report/Google/OCR groups attempted best-effort
+Every installed file is recorded with a SHA-256 digest in
+`install-manifest.json`. An existing directory without a valid CTK ownership
+manifest is treated as a collision. Updates refuse to overwrite locally
+modified owned files.
 
-## Overrides
-
-- `CODEX_HOME`: alternate Codex home
-- `CODEX_SEO_REPO`: fork or local Git path
-- `CODEX_SEO_REF`: branch, tag, or commit; defaults to `v1.9.6-codex.5`
-- `CODEX_SEO_SKIP_PLAYWRIGHT_BROWSER=1`: skip Chromium install
-- `CODEX_SEO_PLAYWRIGHT_WITH_DEPS=1`: install Playwright system deps where supported
-
-## Verify
-
-```bash
-~/.codex/skills/seo/.venv/bin/python ~/.codex/skills/seo/scripts/verify_environment.py
-```
-
-Windows:
-
-```powershell
-& "$HOME\.codex\skills\seo\.venv\Scripts\python.exe" "$HOME\.codex\skills\seo\scripts\verify_environment.py"
-```
+Use `CODEX_HOME=/alternate/path` to select another Codex home.
 
 ## Uninstall
 
 ```bash
-bash uninstall.sh
+./uninstall.sh
 ```
 
-Windows:
+PowerShell:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\uninstall.ps1
+.\uninstall.ps1
+```
+
+Uninstall removes only unchanged files listed in the ownership manifest.
+Modified files are preserved and reported. To explicitly remove them too:
+
+```bash
+./uninstall.sh --force-owned-modifications
 ```

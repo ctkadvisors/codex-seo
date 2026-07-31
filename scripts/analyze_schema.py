@@ -8,6 +8,8 @@ Usage:
 
 from __future__ import annotations
 
+from seo_pipeline_utils import cache_root, reports_root
+
 import argparse
 import json
 from pathlib import Path
@@ -144,7 +146,7 @@ def analyze_schema(url: str, timeout: int = DEFAULT_TIMEOUT) -> dict[str, Any]:
 
     parse_data = parse_html(response.text, response.url)
     soup = BeautifulSoup(response.text, "lxml")
-    site_meta = load_json_if_present(ROOT / ".seo-cache" / "site-meta.json") or {}
+    site_meta = load_json_if_present(cache_root() / "site-meta.json") or {}
     page_type = page_type_for(response.url, parse_data)
     business_type = site_meta.get("business_type", "generic website")
 

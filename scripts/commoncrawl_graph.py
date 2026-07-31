@@ -27,10 +27,9 @@ import time
 from typing import Optional
 
 try:
-    import requests
+    from .security_network import requests
 except ImportError:
-    print("Error: requests library required. Install with: pip install requests")
-    sys.exit(1)
+    from security_network import requests
 
 _SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCRIPTS_DIR)

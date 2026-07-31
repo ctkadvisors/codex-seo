@@ -17,7 +17,7 @@ cd codex-seo
 python -m pip install -r requirements.txt
 ```
 
-If you are working from a public fork, a normal `git clone` of that fork is fine. Keep credentials, `.env` files, `.mcp.json`, `output/`, and `.seo-cache/` out of commits.
+If you are working from a public fork, a normal `git clone` of that fork is fine. Keep credentials, `.env` files, `.mcp.json`, `output/`, and `.ctk-seo-cache/` out of commits.
 
 ## Validation Before PR
 

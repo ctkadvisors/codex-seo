@@ -10,13 +10,13 @@ main() {
     echo "→ Uninstalling DataForSEO extension..."
 
     # Remove skill
-    rm -rf "${SKILLS_ROOT}/seo-dataforseo"
+    rm -rf "${SKILLS_ROOT}/ctk-seo-dataforseo"
 
     # Remove agent
-    rm -f "${AGENT_DIR}/seo-dataforseo.toml"
+    rm -f "${AGENT_DIR}/ctk-seo-dataforseo.toml"
 
     # Remove field config
-    rm -f "${SKILLS_ROOT}/seo/dataforseo-field-config.json"
+    rm -f "${SKILLS_ROOT}/ctk-seo/dataforseo-field-config.json"
 
     # Remove MCP server entry from settings.json
     if [ -f "${SETTINGS_FILE}" ]; then

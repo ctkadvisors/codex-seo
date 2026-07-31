@@ -13,15 +13,17 @@ import analyze_hreflang  # noqa: E402
 import analyze_programmatic  # noqa: E402
 import generate_competitor_pages  # noqa: E402
 import run_skill_workflow  # noqa: E402
+from seo_pipeline_utils import cache_root  # noqa: E402
 
 
-def test_cache_roots_are_repo_relative():
-    expected = analyze_content.ROOT / ".seo-cache"
+def test_cache_roots_are_outside_the_repository():
+    expected = cache_root()
     assert analyze_content.CACHE_ROOT == expected
     assert analyze_geo.CACHE_ROOT == expected
     assert analyze_hreflang.CACHE_ROOT == expected
     assert analyze_programmatic.CACHE_ROOT == expected
     assert generate_competitor_pages.CACHE_ROOT == expected
+    assert analyze_content.ROOT not in expected.parents
 
 
 def test_seo_audit_wrapper_honors_output_root(monkeypatch, tmp_path: Path):
@@ -37,7 +39,7 @@ def test_seo_audit_wrapper_honors_output_root(monkeypatch, tmp_path: Path):
         }
 
     monkeypatch.setattr(run_skill_workflow, "run_audit_with_output_root", fake_run_audit_with_output_root)
-    result = run_skill_workflow.run_specialist("seo-audit", "https://example.com", output_root=tmp_path)
+    result = run_skill_workflow.run_specialist("ctk-seo-audit", "https://example.com", output_root=tmp_path)
 
     assert captured["target"] == "https://example.com"
     assert captured["premium_report"] == "auto"
@@ -80,9 +82,9 @@ def test_google_tier_status_handles_minus_one_and_zero(monkeypatch, tmp_path: Pa
     monkeypatch.setattr(run_skill_workflow, "output_dir_for", lambda skill, target, output_root=None: tmp_path / skill)
 
     monkeypatch.setattr(google_auth, "detect_tier", lambda: {"tier": -1})
-    no_creds = run_skill_workflow.run_specialist("seo-google", "https://example.com", output_root=tmp_path)
+    no_creds = run_skill_workflow.run_specialist("ctk-seo-google", "https://example.com", output_root=tmp_path)
     assert no_creds["result"]["status"] == "setup_required"
 
     monkeypatch.setattr(google_auth, "detect_tier", lambda: {"tier": 0})
-    api_key_only = run_skill_workflow.run_specialist("seo-google", "https://example.com", output_root=tmp_path)
+    api_key_only = run_skill_workflow.run_specialist("ctk-seo-google", "https://example.com", output_root=tmp_path)
     assert api_key_only["result"]["status"] == "ready"

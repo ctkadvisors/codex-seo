@@ -15,7 +15,10 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 from bs4 import BeautifulSoup
 import defusedxml.ElementTree as ET
 
@@ -23,8 +26,10 @@ from seo_pipeline_utils import build_session, validate_public_site_root
 
 
 DEFAULT_TIMEOUT = 20
+from seo_pipeline_utils import cache_root, reports_root
+
 ROOT = Path(__file__).resolve().parent.parent
-CACHE_ROOT = ROOT / ".seo-cache"
+CACHE_ROOT = cache_root()
 SITEMAP_NS = {
     "sm": "http://www.sitemaps.org/schemas/sitemap/0.9",
     "xhtml": "http://www.w3.org/1999/xhtml",

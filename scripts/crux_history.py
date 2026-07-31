@@ -18,10 +18,9 @@ from typing import Optional
 from urllib.parse import urlparse
 
 try:
-    import requests
+    from .security_network import requests
 except ImportError:
-    print("Error: requests library required. Install with: pip install requests")
-    sys.exit(1)
+    from security_network import requests
 
 try:
     from google_auth import get_api_key, validate_url

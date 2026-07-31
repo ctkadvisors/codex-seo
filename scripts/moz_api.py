@@ -20,10 +20,9 @@ import time
 from typing import Optional
 
 try:
-    import requests
+    from .security_network import requests
 except ImportError:
-    print("Error: requests library required. Install with: pip install requests")
-    sys.exit(1)
+    from security_network import requests
 
 # Import credential helpers (same directory)
 import os
@@ -40,7 +39,7 @@ MOZ_ENDPOINT = "https://api.moz.com/jsonrpc"
 
 # Rate limit: 1 request per 10 seconds on free tier
 RATE_LIMIT_DELAY = 10
-RATE_LIMIT_FILE = os.path.expanduser("~/.cache/codex-seo/moz_last_request.lock")
+RATE_LIMIT_FILE = os.path.expanduser("~/.cache/ctk-codex-seo/moz_last_request.lock")
 LEGACY_RATE_LIMIT_FILE = os.path.expanduser("~/.cache/claude-seo/moz_last_request.lock")
 
 
@@ -95,7 +94,7 @@ def _moz_request(method: str, params: dict, api_key: str) -> dict:
 
     payload = {
         "jsonrpc": "2.0",
-        "id": "codex-seo",
+        "id": "ctk-codex-seo",
         "method": method,
         "params": params,
     }

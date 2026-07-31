@@ -15,25 +15,30 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 import defusedxml.ElementTree as ET
 
 from seo_pipeline_utils import build_session, validate_public_url
 
+
+from seo_pipeline_utils import cache_root, reports_root
 
 ROOT = Path(__file__).resolve().parent.parent
 NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 
 
 def resolve_plan_assets() -> Path:
-    """Find seo-plan templates in repo and installed Codex skill layouts."""
+    """Find ctk-seo-plan templates in repo and installed Codex skill layouts."""
     env_path = os.environ.get("CODEX_SEO_PLAN_ASSETS")
     candidates = []
     if env_path:
         candidates.append(Path(env_path).expanduser())
     candidates.extend([
-        ROOT / "skills" / "seo-plan" / "assets",  # repository checkout
-        ROOT.parent / "seo-plan" / "assets",      # installed ~/.codex/skills/seo sibling
+        ROOT / "skills" / "ctk-seo-plan" / "assets",  # repository checkout
+        ROOT.parent / "ctk-seo-plan" / "assets",      # installed ~/.codex/skills/seo sibling
     ])
     for candidate in candidates:
         if (candidate / "generic.md").exists():
@@ -171,8 +176,8 @@ def build_plan(url: str, competitors: list[str] | None = None) -> dict[str, Any]
     parsed = urlparse(normalized_url)
     site_root = f"{parsed.scheme}://{parsed.netloc}"
 
-    site_meta = load_json_if_present(ROOT / ".seo-cache" / "site-meta.json")
-    audit_scores = load_json_if_present(ROOT / ".seo-cache" / "audit-scores.json")
+    site_meta = load_json_if_present(cache_root() / "site-meta.json")
+    audit_scores = load_json_if_present(cache_root() / "audit-scores.json")
     template_key, template_path = choose_template(site_meta)
     template_body = template_path.read_text(encoding="utf-8")
     discovered_paths = discover_site_pages(site_root)
@@ -315,7 +320,7 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     write_markdown_files(plan, output_dir)
     (output_dir / "SUMMARY.json").write_text(json.dumps(plan, indent=2), encoding="utf-8")
-    (ROOT / ".seo-cache" / "plan.json").write_text(json.dumps({
+    (cache_root() / "plan.json").write_text(json.dumps({
         "cache_type": plan["cache_type"],
         "analyzed_at": plan["analyzed_at"],
         "domain": plan["domain"],

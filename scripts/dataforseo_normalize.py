@@ -302,14 +302,14 @@ def normalize_merchant(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 # ---------------------------------------------------------------------------
-# Social normalizer (placeholder for future seo-social skill)
+# Social normalizer (placeholder for future ctk-seo-social skill)
 # ---------------------------------------------------------------------------
 
 def normalize_social(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """
     Normalize social signal data from DataForSEO.
 
-    Placeholder for future seo-social skill integration. Handles social
+    Placeholder for future ctk-seo-social skill integration. Handles social
     media engagement metrics, share counts, and platform-specific data.
 
     Args:

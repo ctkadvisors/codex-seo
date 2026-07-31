@@ -12,10 +12,10 @@ Write-Host ""
 # Check prerequisites
 $CodexRoot = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME ".codex" }
 $SkillsRoot = Join-Path $CodexRoot "skills"
-$SeoSkillDir = Join-Path $SkillsRoot "seo"
+$SeoSkillDir = Join-Path $SkillsRoot "ctk-seo"
 if (-not (Test-Path $SeoSkillDir)) {
     Write-Host "✗ Codex SEO is not installed." -ForegroundColor Red
-    Write-Host "  Install it first: irm https://raw.githubusercontent.com/AgriciDaniel/codex-seo/main/install.ps1 | iex"
+    Write-Host "  Install it first: git clone https://github.com/ctkadvisors/codex-seo.git; cd codex-seo; .\install.ps1"
     exit 1
 }
 Write-Host "✓ Codex SEO detected" -ForegroundColor Green
@@ -65,18 +65,18 @@ if ([string]::IsNullOrEmpty($DfsePassword)) {
 # Determine source directory
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRootCandidate = Resolve-Path (Join-Path $ScriptDir "..\..") -ErrorAction SilentlyContinue
-$InstalledSkillCandidate = Resolve-Path (Join-Path $ScriptDir "..\..\..\seo-dataforseo\SKILL.md") -ErrorAction SilentlyContinue
-if ($RepoRootCandidate -and (Test-Path (Join-Path $RepoRootCandidate.Path "skills\seo-dataforseo\SKILL.md"))) {
-    $SkillSource = Join-Path $RepoRootCandidate.Path "skills\seo-dataforseo\SKILL.md"
-    $AgentSource = Join-Path $RepoRootCandidate.Path "agents\seo-dataforseo.toml"
+$InstalledSkillCandidate = Resolve-Path (Join-Path $ScriptDir "..\..\..\ctk-seo-dataforseo\SKILL.md") -ErrorAction SilentlyContinue
+if ($RepoRootCandidate -and (Test-Path (Join-Path $RepoRootCandidate.Path "skills\ctk-seo-dataforseo\SKILL.md"))) {
+    $SkillSource = Join-Path $RepoRootCandidate.Path "skills\ctk-seo-dataforseo\SKILL.md"
+    $AgentSource = Join-Path $RepoRootCandidate.Path "agents\ctk-seo-dataforseo.toml"
     $FieldConfigSource = Join-Path $ScriptDir "field-config.json"
 } elseif ($InstalledSkillCandidate) {
     $SkillSource = $InstalledSkillCandidate.Path
-    $AgentSource = Join-Path $CodexRoot "agents\seo-dataforseo.toml"
+    $AgentSource = Join-Path $CodexRoot "agents\ctk-seo-dataforseo.toml"
     $FieldConfigSource = Join-Path $ScriptDir "field-config.json"
-} elseif (Test-Path "$ScriptDir\skills\seo-dataforseo\SKILL.md") {
-    $SkillSource = "$ScriptDir\skills\seo-dataforseo\SKILL.md"
-    $AgentSource = "$ScriptDir\agents\seo-dataforseo.toml"
+} elseif (Test-Path "$ScriptDir\skills\ctk-seo-dataforseo\SKILL.md") {
+    $SkillSource = "$ScriptDir\skills\ctk-seo-dataforseo\SKILL.md"
+    $AgentSource = "$ScriptDir\agents\ctk-seo-dataforseo.toml"
     $FieldConfigSource = Join-Path $ScriptDir "field-config.json"
 } else {
     Write-Host "✗ Cannot find extension source files." -ForegroundColor Red
@@ -85,7 +85,7 @@ if ($RepoRootCandidate -and (Test-Path (Join-Path $RepoRootCandidate.Path "skill
 }
 
 # Set paths
-$SkillDir = Join-Path $SkillsRoot "seo-dataforseo"
+$SkillDir = Join-Path $SkillsRoot "ctk-seo-dataforseo"
 $AgentDir = Join-Path $CodexRoot "agents"
 $SettingsFile = Join-Path $CodexRoot "settings.json"
 $FieldConfigPath = "$SeoSkillDir\dataforseo-field-config.json"
@@ -99,7 +99,7 @@ Copy-Item -Force $SkillSource "$SkillDir\SKILL.md"
 # Install agent
 Write-Host "→ Installing DataForSEO agent..." -ForegroundColor Yellow
 New-Item -ItemType Directory -Force -Path $AgentDir | Out-Null
-$AgentTarget = Join-Path $AgentDir "seo-dataforseo.toml"
+$AgentTarget = Join-Path $AgentDir "ctk-seo-dataforseo.toml"
 if ($AgentSource -and (Test-Path $AgentSource) -and ((Resolve-Path $AgentSource).Path -ne $AgentTarget)) {
     Copy-Item -Force $AgentSource $AgentTarget
 } elseif (Test-Path $AgentTarget) {

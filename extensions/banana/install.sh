@@ -7,9 +7,9 @@ set -euo pipefail
 main() {
     CODEX_ROOT="${CODEX_HOME:-${HOME}/.codex}"
     SKILLS_ROOT="${CODEX_ROOT}/skills"
-    SKILL_DIR="${SKILLS_ROOT}/seo-image-gen"
+    SKILL_DIR="${SKILLS_ROOT}/ctk-seo-image-gen"
     AGENT_DIR="${CODEX_ROOT}/agents"
-    SEO_SKILL_DIR="${SKILLS_ROOT}/seo"
+    SEO_SKILL_DIR="${SKILLS_ROOT}/ctk-seo"
     SETTINGS_FILE="${CODEX_ROOT}/settings.json"
 
     echo "════════════════════════════════════════"
@@ -21,7 +21,7 @@ main() {
     # Check prerequisites
     if [ ! -d "${SEO_SKILL_DIR}" ]; then
         echo "✗ Codex SEO is not installed."
-        echo "  Install it first: curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/codex-seo/main/install.sh | bash"
+        echo "  Install it first: git clone https://github.com/ctkadvisors/codex-seo.git && cd codex-seo && ./install.sh"
         exit 1
     fi
     echo "✓ Codex SEO detected"
@@ -50,18 +50,18 @@ main() {
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
     # Check if running from the repo, from an installed Codex SEO suite, or standalone.
-    if [ -f "${SCRIPT_DIR}/../../skills/seo-image-gen/SKILL.md" ]; then
+    if [ -f "${SCRIPT_DIR}/../../skills/ctk-seo-image-gen/SKILL.md" ]; then
         REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-        SKILL_SOURCE="${REPO_ROOT}/skills/seo-image-gen/SKILL.md"
-        AGENT_SOURCE="${REPO_ROOT}/agents/seo-image-gen.toml"
+        SKILL_SOURCE="${REPO_ROOT}/skills/ctk-seo-image-gen/SKILL.md"
+        AGENT_SOURCE="${REPO_ROOT}/agents/ctk-seo-image-gen.toml"
         ASSET_SOURCE="${SCRIPT_DIR}"
-    elif [ -f "${SCRIPT_DIR}/../../../seo-image-gen/SKILL.md" ]; then
-        SKILL_SOURCE="$(cd "${SCRIPT_DIR}/../../../seo-image-gen" && pwd)/SKILL.md"
-        AGENT_SOURCE="${AGENT_DIR}/seo-image-gen.toml"
+    elif [ -f "${SCRIPT_DIR}/../../../ctk-seo-image-gen/SKILL.md" ]; then
+        SKILL_SOURCE="$(cd "${SCRIPT_DIR}/../../../ctk-seo-image-gen" && pwd)/SKILL.md"
+        AGENT_SOURCE="${AGENT_DIR}/ctk-seo-image-gen.toml"
         ASSET_SOURCE="${SCRIPT_DIR}"
-    elif [ -f "${SCRIPT_DIR}/skills/seo-image-gen/SKILL.md" ]; then
-        SKILL_SOURCE="${SCRIPT_DIR}/skills/seo-image-gen/SKILL.md"
-        AGENT_SOURCE="${SCRIPT_DIR}/agents/seo-image-gen.toml"
+    elif [ -f "${SCRIPT_DIR}/skills/ctk-seo-image-gen/SKILL.md" ]; then
+        SKILL_SOURCE="${SCRIPT_DIR}/skills/ctk-seo-image-gen/SKILL.md"
+        AGENT_SOURCE="${SCRIPT_DIR}/agents/ctk-seo-image-gen.toml"
         ASSET_SOURCE="${SCRIPT_DIR}"
     else
         echo "✗ Cannot find extension source files."
@@ -142,16 +142,16 @@ print('  ✓ nanobanana-mcp configured in settings.json')
 
     # Install skill
     echo ""
-    echo "→ Installing seo-image-gen skill..."
+    echo "→ Installing ctk-seo-image-gen skill..."
     mkdir -p "${SKILL_DIR}"
     cp "${SKILL_SOURCE}" "${SKILL_DIR}/SKILL.md"
 
     # Install agent
-    echo "→ Installing seo-image-gen agent..."
+    echo "→ Installing ctk-seo-image-gen agent..."
     mkdir -p "${AGENT_DIR}"
-    if [ -f "${AGENT_SOURCE}" ] && [ "${AGENT_SOURCE}" != "${AGENT_DIR}/seo-image-gen.toml" ]; then
-        cp "${AGENT_SOURCE}" "${AGENT_DIR}/seo-image-gen.toml"
-    elif [ -f "${AGENT_DIR}/seo-image-gen.toml" ]; then
+    if [ -f "${AGENT_SOURCE}" ] && [ "${AGENT_SOURCE}" != "${AGENT_DIR}/ctk-seo-image-gen.toml" ]; then
+        cp "${AGENT_SOURCE}" "${AGENT_DIR}/ctk-seo-image-gen.toml"
+    elif [ -f "${AGENT_DIR}/ctk-seo-image-gen.toml" ]; then
         echo "  ✓ Codex TOML agent already installed"
     else
         echo "  ⚠  Codex TOML agent not found; reinstall the core Codex SEO suite if delegation is unavailable."

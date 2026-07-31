@@ -1,4 +1,4 @@
-"""Sync Flow operational references from GitHub into the seo-flow skill."""
+"""Sync Flow operational references from GitHub into the ctk-seo-flow skill."""
 
 import argparse
 import base64
@@ -13,7 +13,10 @@ import sys
 import tempfile
 import urllib.parse
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 
 
 API_ROOT = "https://api.github.com/repos/AgriciDaniel/flow/contents"
@@ -33,7 +36,7 @@ STATIC_FILES = [
     ("docs/01-framework/flow-framework.md", "flow-framework.md"),
     ("docs/10-references/bibliography.md", "bibliography.md"),
 ]
-LOCK_REL = pathlib.Path("skills") / "seo-flow" / "references" / "flow-prompts.lock"
+LOCK_REL = pathlib.Path("skills") / "ctk-seo-flow" / "references" / "flow-prompts.lock"
 
 
 def script_root():
@@ -47,7 +50,7 @@ def parse_args():
         "without writing; --ref <sha> syncs from a specific Flow commit."
     )
     parser = argparse.ArgumentParser(
-        description="Sync Flow references into skills/seo-flow/references/.",
+        description="Sync Flow references into skills/ctk-seo-flow/references/.",
         epilog=epilog,
     )
     parser.add_argument("--dry-run", action="store_true", help="Report changes without writing files.")
@@ -63,14 +66,10 @@ def _base_headers():
 
 
 def _authed_headers():
-    """Returns authenticated headers, or base headers if gh CLI is absent or unauthed."""
-    try:
-        result = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True)
-    except FileNotFoundError:
+    """Use only an explicitly supplied process token; never query credential stores."""
+    token = os.environ.get("GITHUB_TOKEN", "").strip()
+    if not token:
         return _base_headers()
-    if result.returncode != 0 or not result.stdout.strip():
-        return _base_headers()
-    token = result.stdout.strip()
     return {**_base_headers(), "Authorization": f"Bearer {token}"}
 
 
@@ -228,7 +227,7 @@ def record_write(root, path, content, dry_run, changes):
 
 def sync(args):
     root = script_root()
-    refs = root / "skills" / "seo-flow" / "references"
+    refs = root / "skills" / "ctk-seo-flow" / "references"
     today = datetime.date.today().isoformat()
     headers = _base_headers()
     changes = {"added": [], "updated": [], "unchanged": [], "hashes": {}}

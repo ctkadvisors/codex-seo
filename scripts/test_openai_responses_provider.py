@@ -19,10 +19,13 @@ import shlex
 import subprocess
 from typing import Any
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 
 
-DEFAULT_TOOL_COMMAND = "python scripts/run_skill_workflow.py --skill seo-page https://www.python.org --json"
+DEFAULT_TOOL_COMMAND = "python scripts/run_skill_workflow.py --skill ctk-seo-page https://www.python.org --json"
 DEFAULT_LOOP_COMMAND = 'python -c "print(12345)"'
 
 

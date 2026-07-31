@@ -7,9 +7,9 @@ set -euo pipefail
 main() {
     CODEX_ROOT="${CODEX_HOME:-${HOME}/.codex}"
     SKILLS_ROOT="${CODEX_ROOT}/skills"
-    SKILL_DIR="${SKILLS_ROOT}/seo-firecrawl"
+    SKILL_DIR="${SKILLS_ROOT}/ctk-seo-firecrawl"
     AGENT_DIR="${CODEX_ROOT}/agents"
-    SEO_SKILL_DIR="${SKILLS_ROOT}/seo"
+    SEO_SKILL_DIR="${SKILLS_ROOT}/ctk-seo"
     SETTINGS_FILE="${CODEX_ROOT}/settings.json"
 
     echo "════════════════════════════════════════"
@@ -21,7 +21,7 @@ main() {
     # Check prerequisites
     if [ ! -d "${SEO_SKILL_DIR}" ]; then
         echo "x Codex SEO is not installed."
-        echo "  Install it first: curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/codex-seo/main/install.sh | bash"
+        echo "  Install it first: git clone https://github.com/ctkadvisors/codex-seo.git && cd codex-seo && ./install.sh"
         exit 1
     fi
     echo "v Codex SEO detected"
@@ -64,16 +64,16 @@ main() {
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
     # Check if running from the repo, from an installed Codex SEO suite, or standalone.
-    if [ -f "${SCRIPT_DIR}/../../skills/seo-firecrawl/SKILL.md" ]; then
+    if [ -f "${SCRIPT_DIR}/../../skills/ctk-seo-firecrawl/SKILL.md" ]; then
         REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-        SKILL_SOURCE="${REPO_ROOT}/skills/seo-firecrawl/SKILL.md"
-        AGENT_SOURCE="${REPO_ROOT}/agents/seo-firecrawl.toml"
-    elif [ -f "${SCRIPT_DIR}/../../../seo-firecrawl/SKILL.md" ]; then
-        SKILL_SOURCE="$(cd "${SCRIPT_DIR}/../../../seo-firecrawl" && pwd)/SKILL.md"
-        AGENT_SOURCE="${AGENT_DIR}/seo-firecrawl.toml"
-    elif [ -f "${SCRIPT_DIR}/skills/seo-firecrawl/SKILL.md" ]; then
-        SKILL_SOURCE="${SCRIPT_DIR}/skills/seo-firecrawl/SKILL.md"
-        AGENT_SOURCE="${SCRIPT_DIR}/agents/seo-firecrawl.toml"
+        SKILL_SOURCE="${REPO_ROOT}/skills/ctk-seo-firecrawl/SKILL.md"
+        AGENT_SOURCE="${REPO_ROOT}/agents/ctk-seo-firecrawl.toml"
+    elif [ -f "${SCRIPT_DIR}/../../../ctk-seo-firecrawl/SKILL.md" ]; then
+        SKILL_SOURCE="$(cd "${SCRIPT_DIR}/../../../ctk-seo-firecrawl" && pwd)/SKILL.md"
+        AGENT_SOURCE="${AGENT_DIR}/ctk-seo-firecrawl.toml"
+    elif [ -f "${SCRIPT_DIR}/skills/ctk-seo-firecrawl/SKILL.md" ]; then
+        SKILL_SOURCE="${SCRIPT_DIR}/skills/ctk-seo-firecrawl/SKILL.md"
+        AGENT_SOURCE="${SCRIPT_DIR}/agents/ctk-seo-firecrawl.toml"
     else
         echo "x Cannot find extension source files."
         echo "  Run this script from the codex-seo repo: ./extensions/firecrawl/install.sh"
@@ -88,9 +88,9 @@ main() {
 
     echo "-> Installing Firecrawl agent..."
     mkdir -p "${AGENT_DIR}"
-    if [ -f "${AGENT_SOURCE}" ] && [ "${AGENT_SOURCE}" != "${AGENT_DIR}/seo-firecrawl.toml" ]; then
-        cp "${AGENT_SOURCE}" "${AGENT_DIR}/seo-firecrawl.toml"
-    elif [ -f "${AGENT_DIR}/seo-firecrawl.toml" ]; then
+    if [ -f "${AGENT_SOURCE}" ] && [ "${AGENT_SOURCE}" != "${AGENT_DIR}/ctk-seo-firecrawl.toml" ]; then
+        cp "${AGENT_SOURCE}" "${AGENT_DIR}/ctk-seo-firecrawl.toml"
+    elif [ -f "${AGENT_DIR}/ctk-seo-firecrawl.toml" ]; then
         echo "  v Codex TOML agent already installed"
     else
         echo "  Warning: Codex TOML agent not found; reinstall the core Codex SEO suite if delegation is unavailable."

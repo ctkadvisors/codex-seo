@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import ipaddress
+import os
 import re
 import socket
 from datetime import datetime, timezone
@@ -14,7 +15,10 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 from bs4 import BeautifulSoup
 
 
@@ -154,16 +158,21 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 
 
 def ensure_cache_gitignore(repo_root: Path) -> None:
-    """Ensure .seo-cache is ignored in git."""
-    gitignore_path = repo_root / ".gitignore"
-    try:
-        current = gitignore_path.read_text(encoding="utf-8") if gitignore_path.exists() else ""
-    except OSError:
-        return
-    if ".seo-cache/" in current:
-        return
-    prefix = "" if not current or current.endswith("\n") else "\n"
-    gitignore_path.write_text(f"{current}{prefix}.seo-cache/\n", encoding="utf-8")
+    """Compatibility no-op: audits never mutate a repository's ignore rules."""
+
+
+def cache_root() -> Path:
+    base = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
+    return (base / "ctk-codex-seo").expanduser().resolve()
+
+
+def state_root() -> Path:
+    base = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state"))
+    return (base / "ctk-codex-seo").expanduser().resolve()
+
+
+def reports_root() -> Path:
+    return state_root() / "reports"
 
 
 class PublicURLSession(requests.Session):

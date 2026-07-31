@@ -6,7 +6,7 @@ YouTube mentions have the strongest AI visibility correlation (0.737).
 This script provides authoritative YouTube data directly from Google.
 
 Usage:
-    python youtube_search.py search "claude code seo"
+    python youtube_search.py search "claude code ctk-seo"
     python youtube_search.py video dQw4w9WgXcQ --json
     python youtube_search.py channel UCxxxxxx --json
 """

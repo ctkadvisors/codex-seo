@@ -56,7 +56,7 @@ When installed, other Codex SEO skills automatically leverage Firecrawl:
 ## Troubleshooting
 
 **MCP not connecting?**
-- Check sanitized workflow status: `python scripts/run_skill_workflow.py --skill seo-firecrawl --json https://example.com`
+- Check sanitized workflow status: `python scripts/run_skill_workflow.py --skill ctk-seo-firecrawl --json https://example.com`
 - Manual config: See [FIRECRAWL-SETUP.md](docs/FIRECRAWL-SETUP.md)
 
 **Credits exhausted?**

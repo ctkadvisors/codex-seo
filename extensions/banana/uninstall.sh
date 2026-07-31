@@ -10,10 +10,10 @@ main() {
     echo "→ Uninstalling Banana Image Generation extension..."
 
     # Remove skill (includes copied scripts and references)
-    rm -rf "${SKILLS_ROOT}/seo-image-gen"
+    rm -rf "${SKILLS_ROOT}/ctk-seo-image-gen"
 
     # Remove agent
-    rm -f "${AGENT_DIR}/seo-image-gen.toml"
+    rm -f "${AGENT_DIR}/ctk-seo-image-gen.toml"
 
     # Ask before removing MCP server (user may use standalone banana skill)
     if [ -f "${SETTINGS_FILE}" ]; then

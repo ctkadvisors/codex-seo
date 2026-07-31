@@ -10,77 +10,77 @@ AGENTS = ROOT / "agents"
 
 
 EXPECTED_SKILLS = {
-    "seo",
-    "seo-audit",
-    "seo-backlinks",
-    "seo-cluster",
-    "seo-competitor-pages",
-    "seo-content",
-    "seo-dataforseo",
-    "seo-drift",
-    "seo-ecommerce",
-    "seo-flow",
-    "seo-firecrawl",
-    "seo-geo",
-    "seo-google",
-    "seo-hreflang",
-    "seo-image-gen",
-    "seo-images",
-    "seo-local",
-    "seo-maps",
-    "seo-page",
-    "seo-performance",
-    "seo-plan",
-    "seo-programmatic",
-    "seo-schema",
-    "seo-sitemap",
-    "seo-sxo",
-    "seo-technical",
-    "seo-visual",
+    "ctk-seo",
+    "ctk-seo-audit",
+    "ctk-seo-backlinks",
+    "ctk-seo-cluster",
+    "ctk-seo-competitor-pages",
+    "ctk-seo-content",
+    "ctk-seo-dataforseo",
+    "ctk-seo-drift",
+    "ctk-seo-ecommerce",
+    "ctk-seo-flow",
+    "ctk-seo-firecrawl",
+    "ctk-seo-geo",
+    "ctk-seo-google",
+    "ctk-seo-hreflang",
+    "ctk-seo-image-gen",
+    "ctk-seo-images",
+    "ctk-seo-local",
+    "ctk-seo-maps",
+    "ctk-seo-page",
+    "ctk-seo-performance",
+    "ctk-seo-plan",
+    "ctk-seo-programmatic",
+    "ctk-seo-schema",
+    "ctk-seo-sitemap",
+    "ctk-seo-sxo",
+    "ctk-seo-technical",
+    "ctk-seo-visual",
 }
 
 
 EXPECTED_AGENTS = {
-    "seo-backlinks",
-    "seo-cluster",
-    "seo-competitor-pages",
-    "seo-content",
-    "seo-dataforseo",
-    "seo-drift",
-    "seo-ecommerce",
-    "seo-flow",
-    "seo-firecrawl",
-    "seo-geo",
-    "seo-google",
-    "seo-hreflang",
-    "seo-image-gen",
-    "seo-images",
-    "seo-local",
-    "seo-maps",
-    "seo-performance",
-    "seo-plan",
-    "seo-programmatic",
-    "seo-schema",
-    "seo-sitemap",
-    "seo-sxo",
-    "seo-technical",
-    "seo-visual",
+    "ctk-seo-backlinks",
+    "ctk-seo-cluster",
+    "ctk-seo-competitor-pages",
+    "ctk-seo-content",
+    "ctk-seo-dataforseo",
+    "ctk-seo-drift",
+    "ctk-seo-ecommerce",
+    "ctk-seo-flow",
+    "ctk-seo-firecrawl",
+    "ctk-seo-geo",
+    "ctk-seo-google",
+    "ctk-seo-hreflang",
+    "ctk-seo-image-gen",
+    "ctk-seo-images",
+    "ctk-seo-local",
+    "ctk-seo-maps",
+    "ctk-seo-performance",
+    "ctk-seo-plan",
+    "ctk-seo-programmatic",
+    "ctk-seo-schema",
+    "ctk-seo-sitemap",
+    "ctk-seo-sxo",
+    "ctk-seo-technical",
+    "ctk-seo-visual",
 }
 
 
 def test_codex_plugin_manifest_is_valid():
     manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
-    assert manifest["name"] == "codex-seo"
-    assert manifest["version"] == "1.9.6+codex.5"
+    assert manifest["name"] == "ctk-codex-seo"
+    assert manifest["version"] == "2.0.0"
     assert manifest["skills"] == "./skills/"
-    assert manifest["hooks"] == "./hooks/hooks.json"
-    assert manifest["repository"] == "https://github.com/AgriciDaniel/codex-seo"
-    assert manifest["interface"]["displayName"] == "Codex SEO"
+    assert "hooks" not in manifest
+    assert manifest["repository"] == "https://github.com/ctkadvisors/codex-seo"
+    assert manifest["interface"]["displayName"] == "CTK Codex SEO"
 
 
 def test_expected_skills_and_agents_exist():
     skill_dirs = {path.name for path in SKILLS.iterdir() if path.is_dir()}
-    agent_names = {path.stem for path in AGENTS.glob("seo-*.toml")}
+    agent_names = {path.stem for path in AGENTS.glob("ctk-seo-*.toml")}
     assert EXPECTED_SKILLS <= skill_dirs
     assert EXPECTED_AGENTS <= agent_names
 
@@ -96,8 +96,8 @@ def test_skill_metadata_and_cache_contracts():
         assert text.startswith("---\n"), f"{skill_file} missing frontmatter"
         assert re.search(r"^name:\s*", text, re.MULTILINE), f"{skill_file} missing name"
         assert re.search(r"^description:\s*", text, re.MULTILINE), f"{skill_file} missing description"
-        if skill_dir.name != "seo":
-            assert ".seo-cache" in text, f"{skill_file} missing shared cache guidance"
+        if skill_dir.name != "ctk-seo":
+            assert ".ctk-seo-cache" in text, f"{skill_file} missing shared cache guidance"
 
 
 def test_shared_reference_links_exist():
@@ -110,19 +110,14 @@ def test_shared_reference_links_exist():
             assert candidate.exists() or alt.exists() or root_relative.exists(), f"Broken reference in {skill_file}: {match}"
 
 
-def test_installers_cover_full_skill_and_agent_surface():
+def test_installers_delegate_to_owned_transaction():
     install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
     install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
     uninstall_sh = (ROOT / "uninstall.sh").read_text(encoding="utf-8")
     uninstall_ps1 = (ROOT / "uninstall.ps1").read_text(encoding="utf-8")
-    for name in EXPECTED_SKILLS:
-        assert name in install_sh
-        assert name in install_ps1
-        assert name in uninstall_sh
-        assert name in uninstall_ps1
-    for name in EXPECTED_AGENTS:
-        assert name in uninstall_sh
-        assert name in uninstall_ps1
+    assert all("scripts/ctk_install.py" in text for text in (install_sh, uninstall_sh))
+    assert all("scripts\\ctk_install.py" in text for text in (install_ps1, uninstall_ps1))
+    assert " install " in install_sh and " uninstall " in uninstall_sh
 
 
 def test_extension_installers_are_codex_first():
@@ -151,49 +146,18 @@ def test_extension_installers_are_codex_first():
 
 
 def test_packaged_license_links_point_to_codex_repo():
-    for path in list(SKILLS.glob("seo*/LICENSE.txt")) + list((ROOT / "extensions").glob("*/skills/seo*/LICENSE.txt")):
+    for path in list(SKILLS.glob("ctk-seo*/LICENSE.txt")) + list((ROOT / "extensions").glob("*/skills/ctk-seo*/LICENSE.txt")):
         text = path.read_text(encoding="utf-8")
         assert "AgriciDaniel/codex-seo" in text
         assert "AgriciDaniel/claude-seo" not in text
 
 
-def test_installers_exclude_generated_promotional_payloads():
-    install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
-    install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
-    assert "screenshots" not in re.search(r"for dir_name in ([^;]+); do", install_sh).group(1)
-    assert '"screenshots"' not in re.search(r"foreach \(\$pathName in @\(([^)]+)\)\)", install_ps1).group(1)
-
-
-def test_windows_installer_json_parse_is_windows_powershell_compatible():
-    install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
-    assert "ConvertFrom-Json -Depth" not in install_ps1
-    assert "ConvertFrom-JsonCompat" in install_ps1
-    assert "Get-JsonObjectText" in install_ps1
-    assert "--json-output" in install_ps1
-    assert "summary = {" in install_ps1
-
-
-def test_unix_installer_uses_portable_temp_dir_helper():
-    install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
-    assert "make_temp_dir()" in install_sh
-    assert 'TEMP_DIR="$(make_temp_dir)"' in install_sh
-    assert 'TEMP_DIR="$(mktemp -d)"' not in install_sh
-
-
-def test_installers_copy_requirement_group_files():
-    install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
-    install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
-    assert "requirements*.txt" in install_sh
-    assert "requirements*.txt" in install_ps1
-
-
-def test_installers_use_bootstrap_json_output_file():
-    install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
-    install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
-    assert 'BOOTSTRAP_JSON_FILE="${TEMP_DIR}/bootstrap-result.json"' in install_sh
-    assert "--json-output" in install_sh
-    assert '$bootstrapJsonPath = Join-Path $tempDir "bootstrap-result.json"' in install_ps1
-    assert "--json-output" in install_ps1
+def test_installers_have_no_download_dependency_or_destructive_logic():
+    wrappers = [ROOT / name for name in ("install.sh", "uninstall.sh", "install.ps1", "uninstall.ps1")]
+    forbidden = ("git clone", "curl ", "Invoke-WebRequest", "pip install", "rm -rf", "Remove-Item")
+    for path in wrappers:
+        text = path.read_text(encoding="utf-8")
+        assert all(token not in text for token in forbidden)
 
 
 def test_api_readiness_matrix_covers_smoke_suite():
@@ -208,9 +172,9 @@ def test_api_readiness_matrix_covers_smoke_suite():
 
 def test_extension_fallback_skills_match_canonical_skills():
     mirrors = {
-        "seo-dataforseo": ROOT / "extensions" / "dataforseo" / "skills" / "seo-dataforseo" / "SKILL.md",
-        "seo-firecrawl": ROOT / "extensions" / "firecrawl" / "skills" / "seo-firecrawl" / "SKILL.md",
-        "seo-image-gen": ROOT / "extensions" / "banana" / "skills" / "seo-image-gen" / "SKILL.md",
+        "ctk-seo-dataforseo": ROOT / "extensions" / "dataforseo" / "skills" / "ctk-seo-dataforseo" / "SKILL.md",
+        "ctk-seo-firecrawl": ROOT / "extensions" / "firecrawl" / "skills" / "ctk-seo-firecrawl" / "SKILL.md",
+        "ctk-seo-image-gen": ROOT / "extensions" / "banana" / "skills" / "ctk-seo-image-gen" / "SKILL.md",
     }
     for skill, fallback in mirrors.items():
         canonical = SKILLS / skill / "SKILL.md"

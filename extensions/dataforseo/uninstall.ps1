@@ -9,12 +9,12 @@ $SkillsRoot = Join-Path $CodexRoot "skills"
 $AgentDir = Join-Path $CodexRoot "agents"
 
 # Remove skill
-if (Test-Path (Join-Path $SkillsRoot "seo-dataforseo")) {
-    Remove-Item -Recurse -Force (Join-Path $SkillsRoot "seo-dataforseo")
+if (Test-Path (Join-Path $SkillsRoot "ctk-seo-dataforseo")) {
+    Remove-Item -Recurse -Force (Join-Path $SkillsRoot "ctk-seo-dataforseo")
 }
 
 # Remove agent
-$agentFile = Join-Path $AgentDir "seo-dataforseo.toml"
+$agentFile = Join-Path $AgentDir "ctk-seo-dataforseo.toml"
 if (Test-Path $agentFile) {
     Remove-Item -Force $agentFile
 }

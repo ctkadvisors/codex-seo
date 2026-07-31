@@ -15,7 +15,7 @@ Prefer Codex config paths:
 - Project-local: `.codex/config.toml`
 - User-wide: `~/.codex/config.toml`
 
-Keep credentials out of version control. Provider-specific scripts use `~/.config/codex-seo/` for local credentials and read old `~/.config/claude-seo/` files only as migration fallback.
+Keep credentials out of version control. Provider-specific scripts use `~/.config/ctk-codex-seo/` for local credentials and read old `~/.config/claude-seo/` files only as migration fallback.
 
 ## Extension Helpers
 

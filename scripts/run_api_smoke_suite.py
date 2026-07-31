@@ -8,6 +8,8 @@ Usage:
 
 from __future__ import annotations
 
+from seo_pipeline_utils import cache_root, reports_root
+
 import argparse
 import json
 import subprocess
@@ -20,39 +22,39 @@ from seo_pipeline_utils import domain_slug
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SKILLS = [
-    "seo-audit",
-    "seo-backlinks",
-    "seo-cluster",
-    "seo-competitor-pages",
-    "seo-content",
-    "seo-dataforseo",
-    "seo-drift",
-    "seo-ecommerce",
-    "seo-flow",
-    "seo-firecrawl",
-    "seo-geo",
-    "seo-google",
-    "seo-hreflang",
-    "seo-image-gen",
-    "seo-images",
-    "seo-local",
-    "seo-maps",
-    "seo-page",
-    "seo-performance",
-    "seo-plan",
-    "seo-programmatic",
-    "seo-schema",
-    "seo-sitemap",
-    "seo-sxo",
-    "seo-technical",
-    "seo-visual",
+    "ctk-seo-audit",
+    "ctk-seo-backlinks",
+    "ctk-seo-cluster",
+    "ctk-seo-competitor-pages",
+    "ctk-seo-content",
+    "ctk-seo-dataforseo",
+    "ctk-seo-drift",
+    "ctk-seo-ecommerce",
+    "ctk-seo-flow",
+    "ctk-seo-firecrawl",
+    "ctk-seo-geo",
+    "ctk-seo-google",
+    "ctk-seo-hreflang",
+    "ctk-seo-image-gen",
+    "ctk-seo-images",
+    "ctk-seo-local",
+    "ctk-seo-maps",
+    "ctk-seo-page",
+    "ctk-seo-performance",
+    "ctk-seo-plan",
+    "ctk-seo-programmatic",
+    "ctk-seo-schema",
+    "ctk-seo-sitemap",
+    "ctk-seo-sxo",
+    "ctk-seo-technical",
+    "ctk-seo-visual",
 ]
 
 
 def suite_dir(target: str) -> Path:
     """Resolve the suite output directory."""
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    return ROOT / "output" / f"api-smoke-{domain_slug(target)}-{stamp}"
+    return reports_root() / f"api-smoke-{domain_slug(target)}-{stamp}"
 
 
 def run_command(skill: str, target: str, out_dir: Path) -> dict:

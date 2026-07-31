@@ -10,7 +10,7 @@ import pytest
 
 ROOT = Path(__file__).parents[1]
 SCRIPT = ROOT / "scripts" / "sync_flow.py"
-REF_DIR = ROOT / "skills" / "seo-flow" / "references"
+REF_DIR = ROOT / "skills" / "ctk-seo-flow" / "references"
 
 
 def load_sync_flow_module():
@@ -52,7 +52,7 @@ def test_synced_prompt_files_have_attribution_headers():
 
 
 def test_agent_toml_has_untrusted_webfetch_rule_and_no_bash_grant():
-    agent_file = ROOT / "agents" / "seo-flow.toml"
+    agent_file = ROOT / "agents" / "ctk-seo-flow.toml"
     content = agent_file.read_text(encoding="utf-8")
     tools_line = next((line for line in content.splitlines() if line.startswith("tools:")), "")
     assert "Bash" not in tools_line

@@ -15,7 +15,7 @@ What it verifies:
 - Required core imports from `requirements-core.txt`
 - Optional visual, report, Google API, and OCR imports
 - Playwright Chromium availability
-- Writable `.seo-cache/` and `output/` directories
+- Writable `.ctk-seo-cache/` and `output/` directories
 - Optional target connectivity
 
 `verify_environment.py` is safe to run before dependencies are installed. In a cold runtime it reports missing packages instead of crashing on import.
@@ -45,7 +45,7 @@ python scripts/run_headless_audit.py https://www.python.org --output-root output
 What it does:
 1. Verifies the environment
 2. Fetches the homepage
-3. Detects business type and writes `.seo-cache/site-meta.json`
+3. Detects business type and writes `.ctk-seo-cache/site-meta.json`
 4. Runs deterministic specialist analyzers:
    - `scripts/analyze_technical.py`
    - `scripts/analyze_content.py`
@@ -61,15 +61,15 @@ What it does:
 ### 3. Standard Skill Wrapper
 
 ```bash
-python scripts/run_skill_workflow.py --skill seo-page https://www.python.org --json
-python scripts/run_skill_workflow.py --skill seo-hreflang https://www.python.org --json
-python scripts/run_skill_workflow.py --skill seo-audit https://www.python.org --output-root output/custom-audits --json
+python scripts/run_skill_workflow.py --skill ctk-seo-page https://www.python.org --json
+python scripts/run_skill_workflow.py --skill ctk-seo-hreflang https://www.python.org --json
+python scripts/run_skill_workflow.py --skill ctk-seo-audit https://www.python.org --output-root output/custom-audits --json
 ```
 
 This wrapper gives API agents a single deterministic command shape across the skill suite and handles:
 - environment verification artifact creation
 - standard report file generation
-- cache writes aligned to `.seo-cache/`
+- cache writes aligned to `.ctk-seo-cache/`
 - stable output directories under `output/`
 - optional `--output-root` overrides with consistent absolute artifact paths
 
@@ -119,7 +119,7 @@ output/<domain-slug>-audit-<timestamp>/
 Related cache outputs:
 
 ```text
-.seo-cache/
+.ctk-seo-cache/
   site-meta.json
   audit-scores.json
   pages/homepage/

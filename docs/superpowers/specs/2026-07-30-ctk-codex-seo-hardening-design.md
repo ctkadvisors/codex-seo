@@ -155,7 +155,7 @@ specific file.
 ## Repository Mutation Policy
 
 Audit and reporting commands are read-only by default. They do not add
-`.seo-cache` to `.gitignore`, create output in the current repository, edit
+`.ctk-seo-cache` to `.gitignore`, create output in the current repository, edit
 markup, install hooks, or apply recommendations.
 
 Commands that produce artifacts default to CTK-owned cache/state locations.

@@ -10,6 +10,8 @@ Usage:
 
 from __future__ import annotations
 
+from seo_pipeline_utils import cache_root, reports_root
+
 import argparse
 import base64
 import json
@@ -22,17 +24,20 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TARGET = "https://example.com"
 DEFAULT_WORKFLOWS = [
-    "seo-dataforseo",
-    "seo-image-gen",
-    "seo-maps",
-    "seo-performance",
-    "seo-visual",
+    "ctk-seo-dataforseo",
+    "ctk-seo-image-gen",
+    "ctk-seo-maps",
+    "ctk-seo-performance",
+    "ctk-seo-visual",
 ]
 REQUIRED_MCP = {
     "dataforseo": ["DATAFORSEO_USERNAME", "DATAFORSEO_PASSWORD"],
@@ -259,7 +264,7 @@ def dataforseo_live_serp(settings: dict[str, Any], keyword: str) -> dict[str, An
 
 def workflow_check(skill: str, target: str) -> dict[str, Any]:
     """Run one deterministic workflow and keep only demo-safe summary fields."""
-    out_root = ROOT / "output" / "demo-readiness"
+    out_root = reports_root() / "demo-readiness"
     cmd = [
         sys.executable,
         str(ROOT / "scripts" / "run_skill_workflow.py"),
@@ -299,7 +304,7 @@ def build_report(
     live_serp: bool = False,
     check_npm: bool = True,
     workflows: list[str] | None = None,
-    serp_keyword: str = "codex seo",
+    serp_keyword: str = "codex ctk-seo",
 ) -> dict[str, Any]:
     """Build the complete demo-readiness report."""
     settings_path = codex_settings_path()
@@ -368,7 +373,7 @@ def main() -> int:
     parser.add_argument("--target", default=DEFAULT_TARGET, help="Demo target URL")
     parser.add_argument("--live-apis", action="store_true", help="Validate DataForSEO and Gemini API credentials")
     parser.add_argument("--live-serp", action="store_true", help="Run one low-depth live DataForSEO SERP request")
-    parser.add_argument("--serp-keyword", default="codex seo", help="Keyword for --live-serp")
+    parser.add_argument("--serp-keyword", default="codex ctk-seo", help="Keyword for --live-serp")
     parser.add_argument("--skip-npm", action="store_true", help="Skip npm package metadata checks")
     parser.add_argument("--workflows", action="store_true", help="Run the default demo workflow checks")
     parser.add_argument("--workflow", action="append", help="Specific workflow to run; may be repeated")

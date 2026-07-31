@@ -37,9 +37,9 @@ Codex SEO works best from natural-language prompts, but command-style prompts ar
 ## Headless Examples
 
 ```bash
-python scripts/run_skill_workflow.py --skill seo-technical https://example.com --json
-python scripts/run_skill_workflow.py --skill seo-google https://example.com --json
-python scripts/run_api_smoke_suite.py https://example.com --skill seo-drift --json
+python scripts/run_skill_workflow.py --skill ctk-seo-technical https://example.com --json
+python scripts/run_skill_workflow.py --skill ctk-seo-google https://example.com --json
+python scripts/run_api_smoke_suite.py https://example.com --skill ctk-seo-drift --json
 ```
 
-Wrappers write artifacts to `output/` and cache summaries to `.seo-cache/`.
+Wrappers write artifacts to `output/` and cache summaries to `.ctk-seo-cache/`.

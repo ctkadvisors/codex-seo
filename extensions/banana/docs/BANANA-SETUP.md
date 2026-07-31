@@ -35,12 +35,12 @@ add to `~/.codex/settings.json`:
 
 Run the validation script:
 ```bash
-python3 ~/.codex/skills/seo-image-gen/scripts/validate_setup.py
+python3 ~/.codex/skills/ctk-seo-image-gen/scripts/validate_setup.py
 ```
 
 Or check manually:
-1. `ls ~/.codex/skills/seo-image-gen/SKILL.md`:skill file exists
-2. `ls ~/.codex/agents/seo-image-gen.toml`:agent file exists
+1. `ls ~/.codex/skills/ctk-seo-image-gen/SKILL.md`:skill file exists
+2. `ls ~/.codex/agents/ctk-seo-image-gen.toml`:agent file exists
 3. `grep nanobanana ~/.codex/settings.json`:MCP configured
 
 ## Common Issues

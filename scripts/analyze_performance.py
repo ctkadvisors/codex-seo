@@ -14,7 +14,10 @@ import os
 import time
 from typing import Any
 
-import requests
+try:
+    from .security_network import requests
+except ImportError:
+    from security_network import requests
 
 from parse_html import parse_html
 from seo_pipeline_utils import DEFAULT_TIMEOUT, build_session, now_iso, url_slug, validate_public_url
@@ -34,7 +37,7 @@ def normalize_lighthouse_result(payload: dict[str, Any]) -> dict[str, Any]:
             "performance": {"score": (categories.get("performance", {}) or {}).get("score", 0)},
             "accessibility": {"score": (categories.get("accessibility", {}) or {}).get("score", 0)},
             "best-practices": {"score": (categories.get("best-practices", {}) or {}).get("score", 0)},
-            "seo": {"score": (categories.get("seo", {}) or {}).get("score", 0)},
+            "ctk-seo": {"score": (categories.get("ctk-seo", {}) or {}).get("score", 0)},
         },
         "audits": {
             "largest-contentful-paint": {"numericValue": float((audits.get("largest-contentful-paint", {}) or {}).get("numericValue", 0))},
@@ -76,7 +79,7 @@ def heuristic_lighthouse(url: str, html: str, response_ms: float, byte_size: int
             "performance": {"score": round(performance_score / 100.0, 2)},
             "accessibility": {"score": 0.9},
             "best-practices": {"score": 0.88},
-            "seo": {"score": round(seo_score / 100.0, 2)},
+            "ctk-seo": {"score": round(seo_score / 100.0, 2)},
         },
         "audits": {
             "largest-contentful-paint": {"numericValue": round(lcp_ms, 2)},
@@ -92,7 +95,7 @@ def fetch_pagespeed(url: str, strategy: str) -> dict[str, Any] | None:
     params: dict[str, Any] = {
         "url": url,
         "strategy": strategy,
-        "category": ["performance", "accessibility", "best-practices", "seo"],
+        "category": ["performance", "accessibility", "best-practices", "ctk-seo"],
     }
     api_key = os.getenv("PAGESPEED_API_KEY")
     if api_key:

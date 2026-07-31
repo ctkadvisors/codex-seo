@@ -2,7 +2,7 @@
 """
 Google SEO Report Generator - Professional PDF/HTML reports from API data.
 
-Consumes JSON output from seo-google scripts and generates formatted reports
+Consumes JSON output from ctk-seo-google scripts and generates formatted reports
 with charts, analytics, and actionable recommendations.
 
 Usage:
@@ -127,7 +127,7 @@ def chart_lighthouse_gauges(data: dict, output_dir: Path) -> str:
         ("performance", "Performance"),
         ("accessibility", "Accessibility"),
         ("best-practices", "Best Practices"),
-        ("seo", "SEO"),
+        ("ctk-seo", "SEO"),
     ]
 
     for ax, (key, label) in zip(axes.flat, categories):
@@ -1046,10 +1046,10 @@ def _build_executive_summary(domain, timestamp, data, report_type):
         color = _score_color(perf_score)
         cards.append(("perf", f"{perf_score}/100", "Lighthouse Performance", color))
 
-    seo_score = mobile.get("lighthouse_scores", {}).get("seo")
+    seo_score = mobile.get("lighthouse_scores", {}).get("ctk-seo")
     if seo_score is not None:
         color = _score_color(seo_score)
-        cards.append(("seo", f"{seo_score}/100", "Lighthouse SEO", color))
+        cards.append(("ctk-seo", f"{seo_score}/100", "Lighthouse SEO", color))
 
     # GSC totals
     gsc = data.get("gsc", {})
@@ -1179,7 +1179,7 @@ def _build_cwv_section(psi_data, crux_data, chart_paths, history_data=None, sect
         lines.append('    </thead>')
         lines.append('    <tbody>')
         for key, label in [("performance", "Performance"), ("accessibility", "Accessibility"),
-                           ("best-practices", "Best Practices"), ("seo", "SEO")]:
+                           ("best-practices", "Best Practices"), ("ctk-seo", "SEO")]:
             s = scores.get(key)
             if s is not None:
                 cls = "status-pass" if s >= 90 else ("status-warn" if s >= 50 else "status-fail")
@@ -2293,7 +2293,7 @@ def generate_xlsx(data, domain, report_type, output_dir):
             ws.append(["Lighthouse Scores", ""])
             ws.append(["Category", "Score"])
             _style_header(ws, ws.max_row)
-            for cat in ["performance", "accessibility", "best_practices", "seo"]:
+            for cat in ["performance", "accessibility", "best_practices", "ctk-seo"]:
                 val = scores.get(cat)
                 if val is not None:
                     row_num = ws.max_row + 1

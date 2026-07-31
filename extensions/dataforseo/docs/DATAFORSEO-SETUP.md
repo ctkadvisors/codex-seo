@@ -54,7 +54,7 @@ If the installer's auto-configuration fails, add this to `~/.codex/settings.json
         "DATAFORSEO_USERNAME": "your-email@example.com",
         "DATAFORSEO_PASSWORD": "your-api-password",
         "ENABLED_MODULES": "SERP,KEYWORDS_DATA,ONPAGE,DATAFORSEO_LABS,BACKLINKS,DOMAIN_ANALYTICS,BUSINESS_DATA,CONTENT_ANALYSIS,AI_OPTIMIZATION",
-        "FIELD_CONFIG_PATH": "/home/youruser/.codex/skills/seo/dataforseo-field-config.json"
+        "FIELD_CONFIG_PATH": "/home/youruser/.codex/skills/ctk-seo/dataforseo-field-config.json"
       }
     }
   }

@@ -31,13 +31,9 @@ if SCRIPT_DIR not in sys.path:
     sys.path.insert(0, SCRIPT_DIR)
 
 try:
-    import requests
+    from .security_network import requests
 except ImportError:
-    print(
-        json.dumps({"error": "requests library required. Install with: pip install requests"}),
-        file=sys.stdout,
-    )
-    sys.exit(1)
+    from security_network import requests
 
 
 # ---------------------------------------------------------------------------

@@ -9,10 +9,10 @@ AGENT_DIR="${CODEX_ROOT}/agents"
 SETTINGS_FILE="${CODEX_ROOT}/settings.json"
 
 # Remove skill directory
-rm -rf "${SKILLS_ROOT}/seo-firecrawl"
+rm -rf "${SKILLS_ROOT}/ctk-seo-firecrawl"
 echo "v Removed skill files"
 
-rm -f "${AGENT_DIR}/seo-firecrawl.toml"
+rm -f "${AGENT_DIR}/ctk-seo-firecrawl.toml"
 echo "v Removed agent profile"
 
 # Remove MCP entry from settings.json

@@ -81,5 +81,5 @@ jobs:
 
       - name: Contract smoke
         run: |
-          python scripts/run_skill_workflow.py --skill seo-dataforseo https://example.com --json
-          python scripts/run_skill_workflow.py --skill seo-image-gen https://example.com --json
+          python scripts/run_skill_workflow.py --skill ctk-seo-dataforseo https://example.com --json
+          python scripts/run_skill_workflow.py --skill ctk-seo-image-gen https://example.com --json
