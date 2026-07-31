@@ -12,10 +12,10 @@ python scripts/verify_environment.py --target https://www.python.org --json
 
 What it verifies:
 - Python version
-- Required core imports from `requirements-core.txt`
+- Required core imports from `requirements/core.txt`
 - Optional visual, report, Google API, and OCR imports
 - Playwright Chromium availability
-- Writable `.ctk-seo-cache/` and `output/` directories
+- Writable `~/.cache/ctk-codex-seo/` and `~/.local/state/ctk-codex-seo/reports/` directories
 - Optional target connectivity
 
 `verify_environment.py` is safe to run before dependencies are installed. In a cold runtime it reports missing packages instead of crashing on import.
@@ -33,7 +33,12 @@ Readiness fields:
 python scripts/bootstrap_environment.py --target https://www.python.org --json
 ```
 
-Use this first in fresh API runtimes such as Paperclip. It creates or updates a virtualenv, installs `requirements-core.txt`, then installs optional visual, report, Google API, and OCR requirement groups best-effort. It attempts `playwright install chromium` when the Playwright package is available, then runs `verify_environment.py` inside that venv so the bootstrap result reflects actual runtime readiness. `ok: true` means the core non-visual workflows are runnable. Use `full_ready` when you specifically need screenshots or premium PDF deliverables.
+Use this first in a fresh runtime. It creates or updates an isolated virtualenv under
+`${XDG_STATE_HOME:-~/.local/state}/ctk-codex-seo/venvs/core`, installs the reviewed
+core lock with hash checking and binary wheels only, then runs
+`verify_environment.py` inside that venv. The JSON `python` field is the interpreter
+to use for subsequent script commands. Optional browser, reporting, and provider
+dependencies are never installed implicitly.
 
 ### 2. Full Audit Pipeline
 
@@ -45,7 +50,7 @@ python scripts/run_headless_audit.py https://www.python.org --output-root output
 What it does:
 1. Verifies the environment
 2. Fetches the homepage
-3. Detects business type and writes `.ctk-seo-cache/site-meta.json`
+3. Detects business type and writes `~/.cache/ctk-codex-seo/site-meta.json`
 4. Runs deterministic specialist analyzers:
    - `scripts/analyze_technical.py`
    - `scripts/analyze_content.py`
@@ -69,8 +74,8 @@ python scripts/run_skill_workflow.py --skill ctk-seo-audit https://www.python.or
 This wrapper gives API agents a single deterministic command shape across the skill suite and handles:
 - environment verification artifact creation
 - standard report file generation
-- cache writes aligned to `.ctk-seo-cache/`
-- stable output directories under `output/`
+- cache writes aligned to `~/.cache/ctk-codex-seo/`
+- stable output directories under `~/.local/state/ctk-codex-seo/reports/`
 - optional `--output-root` overrides with consistent absolute artifact paths
 
 ### 4. Full API Smoke Suite
@@ -98,10 +103,10 @@ Use this for live OpenAI-compatible provider testing. It checks:
 
 ## Output Contract
 
-The headless runner writes an audit directory under `output/`:
+The headless runner writes an audit directory under `~/.local/state/ctk-codex-seo/reports/`:
 
 ```text
-output/<domain-slug>-audit-<timestamp>/
+~/.local/state/ctk-codex-seo/reports/<domain-slug>-audit-<timestamp>/
   ACTION-PLAN.md
   FULL-AUDIT-REPORT.md
   SUMMARY.json
@@ -119,7 +124,7 @@ output/<domain-slug>-audit-<timestamp>/
 Related cache outputs:
 
 ```text
-.ctk-seo-cache/
+~/.cache/ctk-codex-seo/
   site-meta.json
   audit-scores.json
   pages/homepage/

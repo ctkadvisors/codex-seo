@@ -38,10 +38,10 @@ IP ranges.
 ## Cross-Skill Delegation
 
 When drift is detected, recommend the appropriate skill:
-- Schema issues: `/seo schema <url>`
-- Performance regression: `/seo technical <url>` or `/seo google psi <url>`
-- Content/title changes: `/seo page <url>` or `/seo content <url>`
-- Canonical/indexability: `/seo technical <url>`
+- Schema issues: `$ctk-seo schema <url>`
+- Performance regression: `$ctk-seo technical <url>` or `$ctk-seo google psi <url>`
+- Content/title changes: `$ctk-seo page <url>` or `$ctk-seo content <url>`
+- Canonical/indexability: `$ctk-seo technical <url>`
 
 ## Output
 

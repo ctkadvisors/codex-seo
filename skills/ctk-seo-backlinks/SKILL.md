@@ -1,10 +1,7 @@
 ---
 name: ctk-seo-backlinks
 description: "Backlink profile analysis: referring domains, anchor text distribution, toxic link detection, competitor gap analysis. Works with free APIs (Moz, Bing Webmaster, Common Crawl) and DataForSEO extension. Use when user says backlinks, link profile, referring domains, anchor text, toxic links, link gap, link building, disavow, or backlink audit."
-user-invokable: true
-argument-hint: "<url>"
 license: MIT
-compatibility: "Free: Common Crawl + verify always available. Optional: Moz API, Bing Webmaster (free signup). Premium: DataForSEO extension."
 metadata:
   author: AgriciDaniel
   version: "1.9.6"
@@ -16,13 +13,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -42,18 +39,18 @@ Run `python scripts/backlinks_auth.py --check --json` to detect all sources at o
 
 If no sources are configured beyond the always-available tier:
 - Still produce a report using Common Crawl domain metrics
-- Suggest: "Run `/seo backlinks setup` to add free Moz and Bing API keys for richer data"
+- Suggest: "Run `$ctk-seo backlinks setup` to add free Moz and Bing API keys for richer data"
 
 ## Quick Reference
 
 | Command | Purpose |
 |---------|---------|
-| `/seo backlinks <url>` | Full backlink profile analysis (uses all available sources) |
-| `/seo backlinks gap <url1> <url2>` | Competitor backlink gap analysis |
-| `/seo backlinks toxic <url>` | Toxic link detection and disavow recommendations |
-| `/seo backlinks new <url>` | New and lost backlinks (DataForSEO only) |
-| `/seo backlinks verify <url> --links <file>` | Verify known backlinks still exist |
-| `/seo backlinks setup` | Show setup instructions for free backlink APIs |
+| `$ctk-seo backlinks <url>` | Full backlink profile analysis (uses all available sources) |
+| `$ctk-seo backlinks gap <url1> <url2>` | Competitor backlink gap analysis |
+| `$ctk-seo backlinks toxic <url>` | Toxic link detection and disavow recommendations |
+| `$ctk-seo backlinks new <url>` | New and lost backlinks (DataForSEO only) |
+| `$ctk-seo backlinks verify <url> --links <file>` | Verify known backlinks still exist |
+| `$ctk-seo backlinks setup` | Show setup instructions for free backlink APIs |
 
 ## Analysis Framework
 
@@ -195,7 +192,7 @@ Calculate a 0-100 score. When mixing sources, apply confidence weighting:
   Backlink Health Score: INSUFFICIENT DATA (X/7 factors scored)
   ```
   Show individual factor scores that ARE available with their source and confidence.
-  Recommend: "Configure Moz API (free) for a scoreable profile. Run `/seo backlinks setup`"
+  Recommend: "Configure Moz API (free) for a scoreable profile. Run `$ctk-seo backlinks setup`"
 
 When only CC is available, cap maximum score at 70/100.
 A numeric score with fewer than 4 data sources is **misleading** — it implies poor health when
@@ -223,7 +220,7 @@ the reality is we simply lack data.
 
 | Error | Cause | Resolution |
 |-------|-------|-----------|
-| No sources configured | No API keys, no DataForSEO | Run `/seo backlinks setup` |
+| No sources configured | No API keys, no DataForSEO | Run `$ctk-seo backlinks setup` |
 | Moz rate limit | Free tier: 1 req/10s | Wait 10 seconds, retry. Built into script. |
 | Bing site not verified | Site not verified in Bing | Verify at https://www.bing.com/webmasters |
 | CC download timeout | Large graph file, slow connection | Use `--timeout 180` flag |
@@ -236,7 +233,7 @@ the reality is we simply lack data.
 3. Bing configured? → Use for links/competitor comparison (confidence: 0.70)
 4. Always: Common Crawl for domain-level metrics (confidence: 0.50)
 5. Always: Verification crawler for known link checks (confidence: 0.95)
-6. Nothing works? → "Run `/seo backlinks setup` to configure free APIs"
+6. Nothing works? → "Run `$ctk-seo backlinks setup` to configure free APIs"
 
 ## Pre-Delivery Review (MANDATORY)
 
@@ -270,7 +267,7 @@ If ANY check fails, fix the finding before presenting. Never present inferred da
 ## Post-Analysis
 
 After completing any backlink analysis command, always offer:
-"Generate a professional PDF report? Use `/seo google report`"
+"Generate a professional PDF report? Use `$ctk-seo google report`"
 
 ## Reference Documentation
 
@@ -280,5 +277,5 @@ Load on demand (do NOT load at startup):
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.

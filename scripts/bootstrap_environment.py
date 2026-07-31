@@ -4,8 +4,7 @@ Bootstrap a Codex SEO runtime for headless CLI/API execution.
 
 Usage:
     python scripts/bootstrap_environment.py --json
-    python scripts/bootstrap_environment.py --venv .ctk-codex-seo-venv --json
-    python scripts/bootstrap_environment.py --skip-playwright-browser --json
+    python scripts/bootstrap_environment.py --venv /tmp/ctk-seo-venv --json
 """
 
 from __future__ import annotations
@@ -22,15 +21,10 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_VENV = ROOT / ".ctk-codex-seo-venv"
+STATE_HOME = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state"))
+DEFAULT_VENV = STATE_HOME / "ctk-codex-seo" / "venvs" / "core"
 OUTPUT_LIMIT = 12000
-CORE_REQUIREMENTS = ROOT / "requirements-core.txt"
-OPTIONAL_REQUIREMENT_GROUPS = [
-    ("visual", ROOT / "requirements-visual.txt"),
-    ("report", ROOT / "requirements-report.txt"),
-    ("google", ROOT / "requirements-google.txt"),
-    ("ocr", ROOT / "requirements-ocr.txt"),
-]
+CORE_REQUIREMENTS = ROOT / "requirements" / "core.txt"
 
 
 def truncate_output(text: str, limit: int = OUTPUT_LIMIT) -> tuple[str, bool]:
@@ -66,6 +60,8 @@ def pip_install_requirements(venv_python: Path, requirements_file: Path, group: 
         "pip",
         "install",
         "--disable-pip-version-check",
+        "--require-hashes",
+        "--only-binary=:all:",
         "-r",
         str(requirements_file),
     ])
@@ -100,11 +96,9 @@ def parse_json_stdout(step: dict[str, Any]) -> dict[str, Any] | None:
 
 def bootstrap_environment(
     venv_dir: Path | None = None,
-    install_playwright_browser: bool = True,
-    with_deps: bool = False,
     target: str | None = None,
 ) -> dict[str, Any]:
-    """Create/update a runtime venv and install core plus optional dependencies."""
+    """Create/update the reviewed core runtime from the hashed lockfile."""
     venv_dir = venv_dir or DEFAULT_VENV
     created = False
     if not venv_dir.exists():
@@ -117,42 +111,15 @@ def bootstrap_environment(
         raise RuntimeError(f"Virtual environment Python not found: {venv_python}")
 
     steps = []
-    pip_step = run_command([
-        str(venv_python),
-        "-m",
-        "pip",
-        "install",
-        "--disable-pip-version-check",
-        "--upgrade",
-        "pip",
-    ])
-    pip_step["group"] = "pip"
-    pip_step["required"] = True
-    steps.append(pip_step)
-
-    core_requirements = CORE_REQUIREMENTS if CORE_REQUIREMENTS.exists() else ROOT / "requirements.txt"
-    core_step = pip_install_requirements(venv_python, core_requirements, "core", required=True)
+    if not CORE_REQUIREMENTS.is_file():
+        raise RuntimeError(f"Hashed core lockfile not found: {CORE_REQUIREMENTS}")
+    core_step = pip_install_requirements(
+        venv_python,
+        CORE_REQUIREMENTS,
+        "core",
+        required=True,
+    )
     steps.append(core_step)
-
-    visual_package_ready = core_step["ok"]
-    if core_step["ok"]:
-        for group, requirements_file in OPTIONAL_REQUIREMENT_GROUPS:
-            if requirements_file.exists():
-                step = pip_install_requirements(venv_python, requirements_file, group, required=False)
-                steps.append(step)
-                if group == "visual":
-                    visual_package_ready = step["ok"]
-
-    playwright_step = None
-    if install_playwright_browser and visual_package_ready:
-        cmd = [str(venv_python), "-m", "playwright", "install"]
-        if with_deps:
-            cmd.append("--with-deps")
-        cmd.append("chromium")
-        playwright_step = run_command(cmd)
-        playwright_step["group"] = "playwright-browser"
-        playwright_step["required"] = False
-        steps.append(playwright_step)
 
     verify_cmd = [str(venv_python), str(ROOT / "scripts" / "verify_environment.py"), "--json"]
     if target:
@@ -165,9 +132,7 @@ def bootstrap_environment(
 
     core_ready = bool(verification and verification.get("capabilities", {}).get("core_ready"))
     full_ready = bool(verification and verification.get("capabilities", {}).get("full_ready"))
-    optional_failed_groups = [
-        step.get("group", "unknown") for step in steps if not step.get("required") and not step["ok"]
-    ]
+    optional_failed_groups: list[str] = []
     ok = (
         all(step["ok"] for step in steps if step.get("required"))
         and verification_step["ok"]
@@ -215,8 +180,6 @@ def main() -> int:
     """CLI entry point."""
     parser = argparse.ArgumentParser(description="Bootstrap a Codex SEO runtime environment")
     parser.add_argument("--venv", help="Virtualenv directory to create/use")
-    parser.add_argument("--skip-playwright-browser", action="store_true", help="Skip `playwright install chromium`")
-    parser.add_argument("--with-deps", action="store_true", help="Pass --with-deps to Playwright install")
     parser.add_argument("--target", help="Optional URL to validate after bootstrap")
     parser.add_argument("--json", action="store_true", help="Output JSON")
     parser.add_argument("--json-output", help="Write JSON payload to this file as clean installer transport")
@@ -225,8 +188,6 @@ def main() -> int:
     try:
         result = bootstrap_environment(
             venv_dir=Path(args.venv) if args.venv else None,
-            install_playwright_browser=not args.skip_playwright_browser,
-            with_deps=args.with_deps,
             target=args.target,
         )
     except Exception as exc:  # pragma: no cover - exact failures are platform dependent

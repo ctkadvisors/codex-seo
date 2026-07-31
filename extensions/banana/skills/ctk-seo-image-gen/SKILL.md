@@ -1,10 +1,7 @@
 ---
 name: ctk-seo-image-gen
 description: "AI image generation for SEO assets: OG/social preview images, blog hero images, schema images, product photography, infographics. Powered by Gemini via nanobanana-mcp. Requires banana extension installed. Use when user says \"generate image\", \"OG image\", \"social preview\", \"hero image\", \"blog image\", \"product photo\", \"infographic\", \"seo image\", \"create visual\", \"image-gen\", \"favicon\", \"schema image\", \"pinterest pin\", \"generate visual\", \"banner\", or \"thumbnail\"."
-argument-hint: "[og|hero|product|infographic|custom|batch] <description>"
-user-invokable: true
 license: MIT
-compatibility: "Requires nanobanana MCP server"
 metadata:
   author: AgriciDaniel
   version: "1.9.6"
@@ -16,13 +13,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -38,8 +35,8 @@ This extension is built on the Banana image-generation pipeline
 for SEO-specific image workflows in Codex.
 
 This skill has two components with distinct roles:
-- **SKILL.md** (this file): Handles interactive `/seo image-gen` commands for generating images
-- **Agent** (`agents/ctk-seo-image-gen.toml`): Audit-only analyst spawned during `/seo audit` to assess existing OG/social images and produce a generation plan (never auto-generates)
+- **SKILL.md** (this file): Handles interactive `$ctk-seo image-gen` commands for generating images
+- **Agent** (`agents/ctk-seo-image-gen.toml`): Audit-only analyst spawned during `$ctk-seo audit` to assess existing OG/social images and produce a generation plan (never auto-generates)
 
 ## Prerequisites
 
@@ -57,12 +54,12 @@ and provide install instructions.
 
 | Command | What it does |
 |---------|-------------|
-| `/seo image-gen og <description>` | Generate OG/social preview image (1200x630 feel) |
-| `/seo image-gen hero <description>` | Blog hero image (widescreen, dramatic) |
-| `/seo image-gen product <description>` | Product photography (clean, white BG) |
-| `/seo image-gen infographic <description>` | Infographic visual (vertical, data-heavy) |
-| `/seo image-gen custom <description>` | Custom image with full Creative Director pipeline |
-| `/seo image-gen batch <description> [N]` | Generate N variations (default: 3) |
+| `$ctk-seo image-gen og <description>` | Generate OG/social preview image (1200x630 feel) |
+| `$ctk-seo image-gen hero <description>` | Blog hero image (widescreen, dramatic) |
+| `$ctk-seo image-gen product <description>` | Product photography (clean, white BG) |
+| `$ctk-seo image-gen infographic <description>` | Infographic visual (vertical, data-heavy) |
+| `$ctk-seo image-gen custom <description>` | Custom image with full Creative Director pipeline |
+| `$ctk-seo image-gen batch <description> [N]` | Generate N variations (default: 3) |
 
 ## SEO Image Use Cases
 
@@ -166,7 +163,7 @@ Approximate costs (gemini-3.1-flash):
 
 ## Cross-Skill Integration
 
-- **ctk-seo-images** (analysis) feeds into **ctk-seo-image-gen** (generation): audit results from `/seo images` identify missing or low-quality images; use those findings to drive `/seo image-gen` commands
+- **ctk-seo-images** (analysis) feeds into **ctk-seo-image-gen** (generation): audit results from `$ctk-seo images` identify missing or low-quality images; use those findings to drive `$ctk-seo image-gen` commands
 - **ctk-seo-audit** spawns the ctk-seo-image-gen **agent** (not this skill) to analyze OG/social images across the site and produce a prioritized generation plan
 - **ctk-seo-schema** can consume generated images: after generation, suggest `ImageObject` schema markup pointing to the new assets
 
@@ -192,5 +189,5 @@ After generating, always provide:
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.

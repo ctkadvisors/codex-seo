@@ -1,8 +1,6 @@
 ---
 name: ctk-seo
 description: "Comprehensive SEO analysis for any website, page, business, or topic. Full site audits, SEO checks, single-page analysis, technical SEO (crawlability, indexability, Core Web Vitals with INP), schema markup, content quality (E-E-A-T), image optimization, sitemap analysis, GEO for AI Overviews/ChatGPT/Perplexity, and SEO best-practice planning. Industry detection for SaaS, e-commerce, local, publishers, agencies. Triggers on: SEO, audit, full SEO check, SEO best practices, optimize my site, ranking, organic search, schema, Core Web Vitals, sitemap, E-E-A-T, AI Overviews, GEO, technical SEO, content quality, page speed, structured data."
-user-invokable: true
-argument-hint: "[command] [url]"
 license: MIT
 metadata:
   author: AgriciDaniel
@@ -13,7 +11,7 @@ metadata:
 # SEO: Universal SEO Analysis Skill
 
 Codex can invoke this skill from natural language ("audit this site", "check schema",
-"run a technical SEO review") or from command-like prompts such as `/seo audit <url>`.
+"run a technical SEO review") or from command-like prompts such as `$ctk-seo audit <url>`.
 Use the matching specialist skill directly when the request is narrow.
 
 **Scripts:** Located at the plugin root `scripts/` directory.
@@ -26,13 +24,13 @@ agent profiles, with optional MCP-backed extensions for DataForSEO, Firecrawl, a
 
 **Step 0 -- Check shared data cache:**
 
-Before routing or gathering, check `.ctk-seo-cache/` for cached data from other skills.
+Before routing or gathering, check `~/.cache/ctk-codex-seo/` for cached data from other skills.
 Reference: `references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for audit summary context from a prior full audit
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level specialist context
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for audit summary context from a prior full audit
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level specialist context
 
 - If found: parse and use the data (note "Using cached [X] from [date]")
 - If missing: proceed without it (note "No cached [X] found, gathering fresh")
@@ -43,36 +41,36 @@ Check these cache files when present:
 
 | Command | What it does |
 |---------|-------------|
-| `/seo audit <url>` | Full website audit with parallel subagent delegation |
-| `/seo page <url>` | Deep single-page analysis |
-| `/seo sitemap <url or generate>` | Analyze or generate XML sitemaps |
-| `/seo schema <url>` | Detect, validate, and generate Schema.org markup |
-| `/seo images <url or optimize>` | Image SEO: on-page audit, SERP analysis, file optimization |
-| `/seo technical <url>` | Technical SEO audit (9 categories) |
-| `/seo content <url>` | E-E-A-T and content quality analysis |
-| `/seo geo <url>` | AI Overviews / Generative Engine Optimization |
-| `/seo plan <business-type>` | Strategic SEO planning |
-| `/seo programmatic [url\|plan]` | Programmatic SEO analysis and planning |
-| `/seo competitor-pages [url\|generate]` | Competitor comparison page generation |
-| `/seo local <url>` | Local SEO analysis (GBP, citations, reviews, map pack) |
-| `/seo maps [command] [args]` | Maps intelligence (geo-grid, GBP audit, reviews, competitors) |
-| `/seo hreflang [url]` | Hreflang/i18n SEO audit and generation |
-| `/seo google [command] [url]` | Google SEO APIs (GSC, PageSpeed, CrUX, Indexing, GA4) |
-| `/seo backlinks <url>` | Backlink profile analysis (free: Moz, Bing, CC; premium: DataForSEO) |
-| `/seo cluster <seed-keyword>` | SERP-based semantic clustering and content architecture |
-| `/seo sxo <url>` | Search Experience Optimization: page-type analysis, user stories, personas |
-| `/seo drift baseline <url>` | Capture SEO baseline for change monitoring |
-| `/seo drift compare <url>` | Compare current state to stored baseline |
-| `/seo drift history <url>` | Show drift history over time |
-| `/seo ecommerce <url>` | E-commerce SEO: product schema, marketplace intelligence |
-| `/seo firecrawl [command] <url>` | Full-site crawling and site mapping (extension) |
-| `/seo dataforseo [command]` | Live SEO data via DataForSEO (extension) |
-| `/seo image-gen [use-case] <description>` | AI image generation for SEO assets (extension) |
-| `/seo flow [stage] [url\|topic]` | FLOW framework: evidence-led prompts for Find, Leverage, Optimize, Win, or Local stages |
+| `$ctk-seo audit <url>` | Full website audit with parallel subagent delegation |
+| `$ctk-seo page <url>` | Deep single-page analysis |
+| `$ctk-seo sitemap <url or generate>` | Analyze or generate XML sitemaps |
+| `$ctk-seo schema <url>` | Detect, validate, and generate Schema.org markup |
+| `$ctk-seo images <url or optimize>` | Image SEO: on-page audit, SERP analysis, file optimization |
+| `$ctk-seo technical <url>` | Technical SEO audit (9 categories) |
+| `$ctk-seo content <url>` | E-E-A-T and content quality analysis |
+| `$ctk-seo geo <url>` | AI Overviews / Generative Engine Optimization |
+| `$ctk-seo plan <business-type>` | Strategic SEO planning |
+| `$ctk-seo programmatic [url\|plan]` | Programmatic SEO analysis and planning |
+| `$ctk-seo competitor-pages [url\|generate]` | Competitor comparison page generation |
+| `$ctk-seo local <url>` | Local SEO analysis (GBP, citations, reviews, map pack) |
+| `$ctk-seo maps [command] [args]` | Maps intelligence (geo-grid, GBP audit, reviews, competitors) |
+| `$ctk-seo hreflang [url]` | Hreflang/i18n SEO audit and generation |
+| `$ctk-seo google [command] [url]` | Google SEO APIs (GSC, PageSpeed, CrUX, Indexing, GA4) |
+| `$ctk-seo backlinks <url>` | Backlink profile analysis (free: Moz, Bing, CC; premium: DataForSEO) |
+| `$ctk-seo cluster <seed-keyword>` | SERP-based semantic clustering and content architecture |
+| `$ctk-seo sxo <url>` | Search Experience Optimization: page-type analysis, user stories, personas |
+| `$ctk-seo drift baseline <url>` | Capture SEO baseline for change monitoring |
+| `$ctk-seo drift compare <url>` | Compare current state to stored baseline |
+| `$ctk-seo drift history <url>` | Show drift history over time |
+| `$ctk-seo ecommerce <url>` | E-commerce SEO: product schema, marketplace intelligence |
+| `$ctk-seo firecrawl [command] <url>` | Full-site crawling and site mapping (extension) |
+| `$ctk-seo dataforseo [command]` | Live SEO data via DataForSEO (extension) |
+| `$ctk-seo image-gen [use-case] <description>` | AI image generation for SEO assets (extension) |
+| `$ctk-seo flow [stage] [url\|topic]` | FLOW framework: evidence-led prompts for Find, Leverage, Optimize, Win, or Local stages |
 
 ## Orchestration Logic
 
-When the user invokes `/seo audit`, delegate to subagents in parallel:
+When the user invokes `$ctk-seo audit`, delegate to subagents in parallel:
 1. Detect business type (SaaS, local, ecommerce, publisher, agency, other)
 2. Spawn subagents: ctk-seo-technical, ctk-seo-content, ctk-seo-schema, ctk-seo-sitemap, ctk-seo-performance, ctk-seo-visual, ctk-seo-geo
 3. If Google API credentials detected (`python scripts/google_auth.py --check`), also spawn ctk-seo-google agent
@@ -86,7 +84,7 @@ When the user invokes `/seo audit`, delegate to subagents in parallel:
 11. Always include ctk-seo-sxo in full audits (search experience applies to all sites)
 12. Collect results and generate unified report with SEO Health Score (0-100)
 13. Create prioritized action plan (Critical -> High -> Medium -> Low)
-14. **Offer PDF report**: "Generate a professional PDF report? Use `/seo google report full`"
+14. **Offer PDF report**: "Generate a professional PDF report? Use `$ctk-seo google report full`"
 
 For individual commands, load the relevant sub-skill directly.
 After any analysis command completes, offer to generate a PDF report via `scripts/google_report.py`.
@@ -95,7 +93,7 @@ After any analysis command completes, offer to generate a PDF report via `script
 
 Detect business type from homepage signals:
 - **SaaS**: pricing page, /features, /integrations, /docs, "free trial", "sign up"
-- **Local Service**: phone number, address, service area, "serving [city]", Google Maps embed --> auto-suggest `/seo local` for deeper analysis
+- **Local Service**: phone number, address, service area, "serving [city]", Google Maps embed --> auto-suggest `$ctk-seo local` for deeper analysis
 - **E-commerce**: /products, /collections, /cart, "add to cart", product schema
 - **Publisher**: /blog, /articles, /topics, article schema, author pages, publication dates
 - **Agency**: /case-studies, /portfolio, /industries, "our work", client logos
@@ -129,32 +127,32 @@ Built by agricidaniel — Join the AI Marketing Hub community
 ### When to show when enabled
 
 Display after these commands complete their full output:
-- `/seo audit` (after full site audit report + action plan)
-- `/seo page` (after deep single-page analysis)
-- `/seo technical` (after technical audit report)
-- `/seo content` (after E-E-A-T content assessment)
-- `/seo schema` (after schema detection/validation report)
-- `/seo sitemap` (after sitemap analysis or generation)
-- `/seo geo` (after GEO optimization report)
-- `/seo plan` (after strategic SEO plan)
-- `/seo local` (after local SEO audit)
-- `/seo maps` (after maps intelligence report)
-- `/seo google` (after Google API data report)
-- `/seo backlinks` (after backlink profile analysis)
-- `/seo cluster` (after cluster plan generation)
-- `/seo sxo` (after SXO analysis report)
-- `/seo drift compare` (after drift comparison report)
-- `/seo ecommerce` (after e-commerce analysis)
+- `$ctk-seo audit` (after full site audit report + action plan)
+- `$ctk-seo page` (after deep single-page analysis)
+- `$ctk-seo technical` (after technical audit report)
+- `$ctk-seo content` (after E-E-A-T content assessment)
+- `$ctk-seo schema` (after schema detection/validation report)
+- `$ctk-seo sitemap` (after sitemap analysis or generation)
+- `$ctk-seo geo` (after GEO optimization report)
+- `$ctk-seo plan` (after strategic SEO plan)
+- `$ctk-seo local` (after local SEO audit)
+- `$ctk-seo maps` (after maps intelligence report)
+- `$ctk-seo google` (after Google API data report)
+- `$ctk-seo backlinks` (after backlink profile analysis)
+- `$ctk-seo cluster` (after cluster plan generation)
+- `$ctk-seo sxo` (after SXO analysis report)
+- `$ctk-seo drift compare` (after drift comparison report)
+- `$ctk-seo ecommerce` (after e-commerce analysis)
 
 ### When to skip
 
 Do NOT show the footer after:
-- `/seo images` (quick image check — too small)
-- `/seo hreflang` (quick validation — too small)
-- `/seo competitor-pages` (page generation step)
-- `/seo programmatic` (quick analysis)
-- `/seo dataforseo` (data fetching utility)
-- `/seo image-gen` (asset generation)
+- `$ctk-seo images` (quick image check — too small)
+- `$ctk-seo hreflang` (quick validation — too small)
+- `$ctk-seo competitor-pages` (page generation step)
+- `$ctk-seo programmatic` (quick analysis)
+- `$ctk-seo dataforseo` (data fetching utility)
+- `$ctk-seo image-gen` (asset generation)
 - Context intake questions (before analysis starts)
 - Error messages or "missing data" prompts
 

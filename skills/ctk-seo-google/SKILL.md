@@ -9,8 +9,6 @@ description: >
   "indexing API", "GA4 organic", "URL inspection", "google api setup",
   "real CWV data", "impressions", "clicks", "CTR", "position data",
   "LCP", "INP", "CLS", "FCP", "TTFB", or "Lighthouse scores".
-user-invokable: true
-argument-hint: "[command] [url|property]"
 license: MIT
 metadata:
   author: AgriciDaniel
@@ -23,13 +21,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -40,7 +38,7 @@ analysis (existing codex-seo skills) and Google's real-time field data: actual
 Chrome user metrics, real indexation status, search performance, and organic traffic.
 
 All APIs are free. Setup requires a Google Cloud project with API key and/or
-service account -- run `/seo google setup` for step-by-step instructions.
+service account -- run `$ctk-seo google setup` for step-by-step instructions.
 
 ## Prerequisites
 
@@ -76,33 +74,33 @@ Always communicate the detected tier before running commands.
 
 | Command | What it does | Tier |
 |---------|-------------|------|
-| `/seo google setup` | Check/configure API credentials | -- |
-| `/seo google pagespeed <url>` | PSI Lighthouse + CrUX field data | 0 |
-| `/seo google crux <url>` | CrUX field data only (p75 metrics) | 0 |
-| `/seo google crux-history <url>` | 25-week CWV trend analysis | 0 |
-| `/seo google gsc <property>` | Search Console: clicks, impressions, CTR, position | 1 |
-| `/seo google inspect <url>` | URL Inspection: index status, canonical, crawl info | 1 |
-| `/seo google inspect-batch <file>` | Batch URL Inspection from file | 1 |
-| `/seo google sitemaps <property>` | GSC sitemap status | 1 |
-| `/seo google index <url>` | Submit URL to Indexing API | 1 |
-| `/seo google index-batch <file>` | Batch submit up to 200 URLs | 1 |
-| `/seo google ga4 [property-id]` | GA4 organic traffic report | 2 |
-| `/seo google ga4-pages [property-id]` | Top organic landing pages | 2 |
-| `/seo google youtube <query>` | YouTube video search (views, likes, duration) | 0 |
-| `/seo google youtube-video <id>` | YouTube video details + top comments | 0 |
-| `/seo google nlp <url-or-text>` | NLP entity extraction + sentiment + classification | 0 |
-| `/seo google entities <url-or-text>` | Entity analysis only (for E-E-A-T) | 0 |
-| `/seo google keywords <seed>` | Keyword ideas from Google Ads Keyword Planner | 3 |
-| `/seo google volume <keywords>` | Search volume lookup from Keyword Planner | 3 |
-| `/seo google entity <query>` | Knowledge Graph entity check | 0 |
-| `/seo google safety <url>` | Web Risk URL safety check | 0 |
-| `/seo google quotas` | Show rate limits for all APIs | -- |
+| `$ctk-seo google setup` | Check/configure API credentials | -- |
+| `$ctk-seo google pagespeed <url>` | PSI Lighthouse + CrUX field data | 0 |
+| `$ctk-seo google crux <url>` | CrUX field data only (p75 metrics) | 0 |
+| `$ctk-seo google crux-history <url>` | 25-week CWV trend analysis | 0 |
+| `$ctk-seo google gsc <property>` | Search Console: clicks, impressions, CTR, position | 1 |
+| `$ctk-seo google inspect <url>` | URL Inspection: index status, canonical, crawl info | 1 |
+| `$ctk-seo google inspect-batch <file>` | Batch URL Inspection from file | 1 |
+| `$ctk-seo google sitemaps <property>` | GSC sitemap status | 1 |
+| `$ctk-seo google index <url>` | Submit URL to Indexing API | 1 |
+| `$ctk-seo google index-batch <file>` | Batch submit up to 200 URLs | 1 |
+| `$ctk-seo google ga4 [property-id]` | GA4 organic traffic report | 2 |
+| `$ctk-seo google ga4-pages [property-id]` | Top organic landing pages | 2 |
+| `$ctk-seo google youtube <query>` | YouTube video search (views, likes, duration) | 0 |
+| `$ctk-seo google youtube-video <id>` | YouTube video details + top comments | 0 |
+| `$ctk-seo google nlp <url-or-text>` | NLP entity extraction + sentiment + classification | 0 |
+| `$ctk-seo google entities <url-or-text>` | Entity analysis only (for E-E-A-T) | 0 |
+| `$ctk-seo google keywords <seed>` | Keyword ideas from Google Ads Keyword Planner | 3 |
+| `$ctk-seo google volume <keywords>` | Search volume lookup from Keyword Planner | 3 |
+| `$ctk-seo google entity <query>` | Knowledge Graph entity check | 0 |
+| `$ctk-seo google safety <url>` | Web Risk URL safety check | 0 |
+| `$ctk-seo google quotas` | Show rate limits for all APIs | -- |
 
 ---
 
 ## PageSpeed + CrUX
 
-### `/seo google pagespeed <url>`
+### `$ctk-seo google pagespeed <url>`
 
 Combined Lighthouse lab data + CrUX field data.
 
@@ -113,13 +111,13 @@ Combined Lighthouse lab data + CrUX field data.
 Output merges lab scores (point-in-time Lighthouse) with field data (28-day
 Chrome user metrics). CrUX tries URL-level first, falls back to origin-level.
 
-### `/seo google crux <url>`
+### `$ctk-seo google crux <url>`
 
 CrUX field data only (no Lighthouse run). Faster.
 
 **Script:** `python scripts/pagespeed_check.py <url> --crux-only --json`
 
-### `/seo google crux-history <url>`
+### `$ctk-seo google crux-history <url>`
 
 25-week CrUX History trends. Shows whether CWV metrics are improving, stable, or degrading.
 
@@ -132,7 +130,7 @@ Output includes per-metric trend direction, percentage change, and weekly p75 va
 
 ## Search Console
 
-### `/seo google gsc <property>`
+### `$ctk-seo google gsc <property>`
 
 Search Analytics: clicks, impressions, CTR, position for last 28 days.
 
@@ -142,7 +140,7 @@ Search Analytics: clicks, impressions, CTR, position for last 28 days.
 
 Includes quick-win detection: queries at position 4-10 with high impressions.
 
-### `/seo google inspect <url>`
+### `$ctk-seo google inspect <url>`
 
 URL Inspection: real indexation status from Google.
 
@@ -151,13 +149,13 @@ URL Inspection: real indexation status from Google.
 Returns: verdict (PASS/FAIL), coverage state, robots.txt status, indexing state,
 page fetch state, canonical selection, mobile usability, rich results.
 
-### `/seo google inspect-batch <file>`
+### `$ctk-seo google inspect-batch <file>`
 
 Batch inspection from a file (one URL per line). Rate limited to 2,000/day per site.
 
 **Script:** `python scripts/gsc_inspect.py --batch <file> --json`
 
-### `/seo google sitemaps <property>`
+### `$ctk-seo google sitemaps <property>`
 
 List submitted sitemaps with status, errors, warnings.
 
@@ -167,7 +165,7 @@ List submitted sitemaps with status, errors, warnings.
 
 ## Indexing API
 
-### `/seo google index <url>`
+### `$ctk-seo google index <url>`
 
 Notify Google of a URL update.
 
@@ -177,7 +175,7 @@ Notify Google of a URL update.
 The Indexing API is officially for JobPosting and BroadcastEvent/VideoObject pages.
 Always inform the user of this restriction. Daily quota: 200 publish requests.
 
-### `/seo google index-batch <file>`
+### `$ctk-seo google index-batch <file>`
 
 Batch submit URLs from a file. Tracks quota usage.
 
@@ -187,7 +185,7 @@ Batch submit URLs from a file. Tracks quota usage.
 
 ## GA4 Traffic
 
-### `/seo google ga4 [property-id]`
+### `$ctk-seo google ga4 [property-id]`
 
 Organic traffic report: daily sessions, users, pageviews, bounce rate, engagement.
 
@@ -195,7 +193,7 @@ Organic traffic report: daily sessions, users, pageviews, bounce rate, engagemen
 **Reference:** `references/ga4-data-api.md`
 **Default:** 28 days, filtered to Organic Search channel group.
 
-### `/seo google ga4-pages [property-id]`
+### `$ctk-seo google ga4-pages [property-id]`
 
 Top organic landing pages ranked by sessions.
 
@@ -207,7 +205,7 @@ Top organic landing pages ranked by sessions.
 
 YouTube mentions have the strongest AI visibility correlation (0.737). Free, API key only.
 
-### `/seo google youtube <query>`
+### `$ctk-seo google youtube <query>`
 
 Search YouTube for videos. Returns title, channel, views, likes, duration.
 
@@ -215,7 +213,7 @@ Search YouTube for videos. Returns title, channel, views, likes, duration.
 **Reference:** `references/youtube-api.md`
 **Quota:** 100 units per search (10,000 units/day free).
 
-### `/seo google youtube-video <video_id>`
+### `$ctk-seo google youtube-video <video_id>`
 
 Detailed video info + tags + top 10 comments.
 
@@ -228,7 +226,7 @@ Detailed video info + tags + top 10 comments.
 
 Google's own entity/sentiment analysis. Enhances E-E-A-T scoring.
 
-### `/seo google nlp <url-or-text>`
+### `$ctk-seo google nlp <url-or-text>`
 
 Full NLP analysis: entities, sentiment, content classification.
 
@@ -236,7 +234,7 @@ Full NLP analysis: entities, sentiment, content classification.
 **Reference:** `references/nlp-api.md`
 **Free tier:** 5,000 units/month. Requires billing enabled on GCP project.
 
-### `/seo google entities <url-or-text>`
+### `$ctk-seo google entities <url-or-text>`
 
 Entity extraction only (faster, less quota).
 
@@ -248,7 +246,7 @@ Entity extraction only (faster, less quota).
 
 Gold-standard keyword volume data. Requires Google Ads account.
 
-### `/seo google keywords <seed>`
+### `$ctk-seo google keywords <seed>`
 
 Generate keyword ideas from seed terms.
 
@@ -256,7 +254,7 @@ Generate keyword ideas from seed terms.
 **Reference:** `references/keyword-planner-api.md`
 **Requires:** Ads developer token + customer ID in config (Tier 3).
 
-### `/seo google volume <keywords>`
+### `$ctk-seo google volume <keywords>`
 
 Search volume for specific keywords (comma-separated).
 
@@ -266,20 +264,20 @@ Search volume for specific keywords (comma-separated).
 
 ## Supplementary
 
-### `/seo google entity <query>`
+### `$ctk-seo google entity <query>`
 
 Knowledge Graph entity check. Verifies brand presence.
 
 **Reference:** `references/supplementary-apis.md`
 Uses Knowledge Graph Search API with API key.
 
-### `/seo google safety <url>`
+### `$ctk-seo google safety <url>`
 
 Web Risk API check for malware/social engineering flags.
 
 **Reference:** `references/supplementary-apis.md`
 
-### `/seo google quotas`
+### `$ctk-seo google quotas`
 
 Display rate limits table. Read `references/rate-limits-quotas.md`.
 
@@ -289,7 +287,7 @@ Display rate limits table. Read `references/rate-limits-quotas.md`.
 
 After any analysis command, offer to generate a PDF/HTML report.
 
-### `/seo google report <type>`
+### `$ctk-seo google report <type>`
 
 Generate a professional PDF report with charts and analytics.
 
@@ -307,7 +305,7 @@ Generate a professional PDF report with charts and analytics.
 2. Save JSON output to file: `python scripts/pagespeed_check.py <url> --json > data.json`
 3. Generate report: `python scripts/google_report.py --type cwv-audit --data data.json --domain <domain>`
 
-**Convention:** After completing analysis, suggest: "Generate a report? Use `/seo google report <type>`"
+**Convention:** After completing analysis, suggest: "Generate a report? Use `$ctk-seo google report <type>`"
 
 ---
 
@@ -352,7 +350,7 @@ Generate a professional PDF report with charts and analytics.
 
 | Scenario | Action |
 |----------|--------|
-| No credentials configured | Run `/seo google setup`. List Tier 0 commands that work with just an API key. |
+| No credentials configured | Run `$ctk-seo google setup`. List Tier 0 commands that work with just an API key. |
 | Service account lacks GSC access | Report error. Instruct: add `client_email` to GSC > Settings > Users > Add. |
 | CrUX data unavailable (404) | Report insufficient Chrome traffic. Suggest PSI lab data as fallback. |
 | GA4 property not found | Report error. Show how to find property ID in GA4 Admin > Property Details. |
@@ -361,5 +359,5 @@ Generate a professional PDF report with charts and analytics.
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.

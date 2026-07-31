@@ -63,33 +63,30 @@ cd codex-seo
 Windows:
 
 ```powershell
-git clone https://github.com/AgriciDaniel/codex-seo.git
+git clone https://github.com/ctkadvisors/codex-seo.git
 cd codex-seo
-powershell -ExecutionPolicy Bypass -File .\install.ps1
+.\install.ps1
 ```
 
-The installer copies the skill suite into `~/.codex/skills/`, installs TOML agents into `~/.codex/agents/`, creates a Python virtualenv at `~/.codex/skills/ctk-seo/.venv/`, installs core runtime dependencies, attempts optional capability groups, and verifies the runtime.
+The installer creates the owned local marketplace
+`~/.codex/marketplaces/ctk-advisors`, registers it through the official Codex
+CLI, and enables `ctk-codex-seo`. It does not alter shared skills, agents,
+hooks, legacy settings, or unrelated plugins.
 
 ### Installer Overrides
 
 ```bash
-CODEX_HOME=~/.codex \
-CODEX_SEO_REPO=https://github.com/AgriciDaniel/codex-seo \
-CODEX_SEO_REF=v1.9.6-codex.5 \
-bash install.sh
+CODEX_HOME=/alternate/codex/home ./install.sh
 ```
 
 | Variable | Purpose |
 |---|---|
 | `CODEX_HOME` | Alternate Codex home. Defaults to `~/.codex`. |
-| `CODEX_SEO_REPO` | Git URL, fork URL, or local repository path. |
-| `CODEX_SEO_REF` | Branch, tag, or commit. Defaults to `v1.9.6-codex.5`. |
-| `CODEX_SEO_SKIP_PLAYWRIGHT_BROWSER=1` | Skip Chromium install for visual/PDF workflows. |
-| `CODEX_SEO_PLAYWRIGHT_WITH_DEPS=1` | Ask Playwright to install system dependencies where supported. |
 
 ## Quick Start
 
-Restart Codex after installation. Then ask naturally; a `/ctk-seo` command is not required:
+Start a new Codex thread after installation. Then ask naturally or invoke
+`$ctk-seo` explicitly:
 
 ```text
 Do a full SEO check on https://example.com following best practices.
@@ -106,10 +103,10 @@ Create an SEO strategy and content roadmap for a local dental clinic.
 Command-style prompts also work:
 
 ```text
-/seo audit https://example.com
-/seo technical https://example.com
-/seo schema https://example.com
-/seo dataforseo serp "best seo tools"
+$ctk-seo audit https://example.com
+$ctk-seo technical https://example.com
+$ctk-seo schema https://example.com
+$ctk-seo dataforseo serp "best seo tools"
 ```
 
 ## Visual Overview
@@ -120,11 +117,11 @@ Codex SEO is designed as a Codex-first routing layer: the user can ask naturally
 %%{init: {"theme":"base","themeVariables":{"background":"#05080d","primaryColor":"#07131c","primaryTextColor":"#f5fbff","primaryBorderColor":"#00d7e6","lineColor":"#00d7e6","secondaryColor":"#06222a","tertiaryColor":"#ff9f1c","edgeLabelBackground":"#05080d","fontFamily":"Inter, ui-sans-serif, system-ui, sans-serif"}}}%%
 flowchart LR
   user["User prompt<br/>natural language or /ctk-seo"] --> orchestrator["skills/ctk-seo/SKILL.md<br/>main orchestrator"]
-  orchestrator --> cache[".ctk-seo-cache<br/>shared evidence"]
+  orchestrator --> cache["~/.cache/ctk-codex-seo<br/>shared evidence"]
   orchestrator --> skills["26 specialist<br/>SEO workflows"]
   skills --> agents["24 TOML agents<br/>parallel analysis slices"]
   skills --> scripts["scripts/<br/>deterministic runners"]
-  scripts --> output["output/<br/>Markdown, JSON, HTML, PDF"]
+  scripts --> output["XDG state directory<br/>Markdown, JSON, HTML, PDF"]
   cache --> skills
   class user,orchestrator accent
   class cache,scripts data
@@ -139,33 +136,33 @@ flowchart LR
 
 | Prompt | Purpose |
 |---|---|
-| `/seo audit <url>` | Full site audit with specialist routing and premium report support |
-| `/seo page <url>` | Deep single-page SEO analysis |
-| `/seo technical <url>` | Crawlability, indexability, security, JavaScript, CWV |
-| `/seo content <url>` | E-E-A-T, helpfulness, readability, AI citation readiness |
-| `/seo schema <url>` | Structured data detection, validation, and JSON-LD generation |
-| `/seo images <url>` | Alt text, image weight, formats, metadata, image SERP opportunities |
-| `/seo sitemap <url>` | XML sitemap discovery, quality gates, generation guidance |
-| `/seo geo <url>` | AI Overviews, ChatGPT, Perplexity, llms.txt, citability |
-| `/seo performance <url>` | Core Web Vitals, Lighthouse-oriented performance signals |
-| `/seo visual <url>` | Screenshots, mobile rendering, above-the-fold analysis |
-| `/seo plan <business-type>` | Strategic SEO roadmap and content plan |
-| `/seo programmatic <url>` | Programmatic SEO risk and scale planning |
-| `/seo competitor-pages <url>` | Comparison and alternatives page opportunities |
-| `/seo hreflang <url>` | International SEO, locale validation, content parity |
-| `/seo local <url>` | Local SEO, GBP signals, NAP, citations, reviews |
-| `/seo maps <command>` | Geo-grid, GBP audit, review intelligence, local maps signals |
-| `/seo google <command>` | GSC, PageSpeed, CrUX, Indexing API, GA4 workflows |
-| `/seo backlinks <url>` | Backlink profile summary and source-tier detection |
-| `/seo cluster <keyword>` | SERP-based topic clustering and hub-spoke planning |
-| `/seo sxo <url>` | Search Experience Optimization, intent/page-type fit |
-| `/seo drift baseline <url>` | Capture an SEO baseline before changes |
-| `/seo drift compare <url>` | Compare current SEO signals against a baseline |
-| `/seo ecommerce <url>` | Product SEO, marketplace visibility, product schema |
-| `/seo flow <stage>` | FLOW framework prompts for Find, Leverage, Optimize, Win |
-| `/seo dataforseo <command>` | Live SERP, keyword, backlink, content, and AI visibility data |
-| `/seo firecrawl <command>` | JS-rendered crawling and site mapping via Firecrawl |
-| `/seo image-gen <use-case>` | OG images, hero images, product visuals, infographics |
+| `$ctk-seo audit <url>` | Full site audit with specialist routing and premium report support |
+| `$ctk-seo page <url>` | Deep single-page SEO analysis |
+| `$ctk-seo technical <url>` | Crawlability, indexability, security, JavaScript, CWV |
+| `$ctk-seo content <url>` | E-E-A-T, helpfulness, readability, AI citation readiness |
+| `$ctk-seo schema <url>` | Structured data detection, validation, and JSON-LD generation |
+| `$ctk-seo images <url>` | Alt text, image weight, formats, metadata, image SERP opportunities |
+| `$ctk-seo sitemap <url>` | XML sitemap discovery, quality gates, generation guidance |
+| `$ctk-seo geo <url>` | AI Overviews, ChatGPT, Perplexity, llms.txt, citability |
+| `$ctk-seo performance <url>` | Core Web Vitals, Lighthouse-oriented performance signals |
+| `$ctk-seo visual <url>` | Screenshots, mobile rendering, above-the-fold analysis |
+| `$ctk-seo plan <business-type>` | Strategic SEO roadmap and content plan |
+| `$ctk-seo programmatic <url>` | Programmatic SEO risk and scale planning |
+| `$ctk-seo competitor-pages <url>` | Comparison and alternatives page opportunities |
+| `$ctk-seo hreflang <url>` | International SEO, locale validation, content parity |
+| `$ctk-seo local <url>` | Local SEO, GBP signals, NAP, citations, reviews |
+| `$ctk-seo maps <command>` | Geo-grid, GBP audit, review intelligence, local maps signals |
+| `$ctk-seo google <command>` | GSC, PageSpeed, CrUX, Indexing API, GA4 workflows |
+| `$ctk-seo backlinks <url>` | Backlink profile summary and source-tier detection |
+| `$ctk-seo cluster <keyword>` | SERP-based topic clustering and hub-spoke planning |
+| `$ctk-seo sxo <url>` | Search Experience Optimization, intent/page-type fit |
+| `$ctk-seo drift baseline <url>` | Capture an SEO baseline before changes |
+| `$ctk-seo drift compare <url>` | Compare current SEO signals against a baseline |
+| `$ctk-seo ecommerce <url>` | Product SEO, marketplace visibility, product schema |
+| `$ctk-seo flow <stage>` | FLOW framework prompts for Find, Leverage, Optimize, Win |
+| `$ctk-seo dataforseo <command>` | Live SERP, keyword, backlink, content, and AI visibility data |
+| `$ctk-seo firecrawl <command>` | JS-rendered crawling and site mapping via Firecrawl |
+| `$ctk-seo image-gen <use-case>` | OG images, hero images, product visuals, infographics |
 
 Full command details live in [docs/COMMANDS.md](docs/COMMANDS.md).
 
@@ -256,7 +253,7 @@ sequenceDiagram
   participant Before as Baseline
   participant Runner as Drift runner
   participant After as Current page
-  participant Cache as .ctk-seo-cache
+  participant Cache as ~/.cache/ctk-codex-seo
   participant Report as Drift report
   Before->>Runner: Capture titles, metas, canonicals, schema, headings
   Runner->>Cache: Store baseline snapshot
@@ -290,7 +287,7 @@ flowchart LR
   codex --> google["Google APIs<br/>GSC, PageSpeed, CrUX, GA4"]
   codex --> firecrawl["Firecrawl MCP<br/>JS crawl and site maps"]
   codex --> banana["Gemini / nanobanana<br/>SEO image assets"]
-  local --> artifacts["Reports and .ctk-seo-cache"]
+  local --> artifacts["Reports and ~/.cache/ctk-codex-seo"]
   dfs --> artifacts
   google --> artifacts
   firecrawl --> artifacts
@@ -341,23 +338,25 @@ python scripts/verify_environment.py --target https://example.com --json
 Bootstrap a clean runtime:
 
 ```bash
-python scripts/bootstrap_environment.py --venv .venv --json
+python scripts/bootstrap_environment.py --json
 ```
 
-Artifacts are written to `output/`. Shared project cache is written to `.ctk-seo-cache/`. Both are ignored by git.
+Artifacts are written to `~/.local/state/ctk-codex-seo/reports/`. Shared cache
+is written to `~/.cache/ctk-codex-seo/`; neither path mutates the active
+repository.
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#05080d","primaryColor":"#07131c","primaryTextColor":"#f5fbff","primaryBorderColor":"#00d7e6","lineColor":"#00d7e6","secondaryColor":"#06222a","tertiaryColor":"#ff9f1c","edgeLabelBackground":"#05080d","fontFamily":"Inter, ui-sans-serif, system-ui, sans-serif"}}}%%
 flowchart LR
   cli["run_skill_workflow.py<br/>single workflow"] --> json["JSON result"]
   cli --> markdown["Markdown report"]
-  cli --> cacheWrite[".ctk-seo-cache update"]
+  cli --> cacheWrite["~/.cache/ctk-codex-seo update"]
   suite["run_api_smoke_suite.py<br/>all workflows"] --> json
-  suite --> outputRoot["output/api-smoke-*"]
+  suite --> outputRoot["~/.local/state/ctk-codex-seo/reports/api-smoke-*"]
   verify["verify_environment.py"] --> readiness["ready / setup_required<br/>capability status"]
   markdown --> outputRoot
   json --> outputRoot
-  cacheWrite --> cache[".ctk-seo-cache"]
+  cacheWrite --> cache["~/.cache/ctk-codex-seo"]
   class cli,suite,verify accent
   class cacheWrite,readiness data
   class json,markdown,outputRoot,cache output
@@ -376,13 +375,13 @@ The repository separates Codex-facing instructions, deterministic runtime code, 
 flowchart TB
   manifest[".codex-plugin/plugin.json"] --> skillsRoot["skills/"]
   skillsRoot --> orchestrator["ctk-seo/SKILL.md<br/>routing and orchestration"]
-  skillsRoot --> specialists["seo-*/SKILL.md<br/>specialist workflows"]
-  agentsDir["agents/seo-*.toml"] --> specialists
+  skillsRoot --> specialists["ctk-seo-*/SKILL.md<br/>specialist workflows"]
+  agentsDir["agents/ctk-seo-*.toml"] --> specialists
   scriptsDir["scripts/<br/>deterministic runners"] --> specialists
   extensionsDir["extensions/<br/>optional MCP setup"] --> specialists
   references["skills/ctk-seo/references/<br/>thresholds and shared contracts"] --> specialists
-  specialists --> cacheDir[".ctk-seo-cache/<br/>cross-skill memory"]
-  specialists --> outputDir["output/<br/>reports and artifacts"]
+  specialists --> cacheDir["~/.cache/ctk-codex-seo/<br/>cross-skill memory"]
+  specialists --> outputDir["~/.local/state/ctk-codex-seo/reports/<br/>reports and artifacts"]
   testsDir["tests/<br/>contract and smoke coverage"] --> manifest
   testsDir --> skillsRoot
   testsDir --> scriptsDir
@@ -400,7 +399,7 @@ ctk-codex-seo/
 ├── .codex-plugin/plugin.json        # Codex plugin manifest
 ├── skills/
 │   ├── ctk-seo/SKILL.md                 # Main orchestrator
-│   └── seo-*/SKILL.md               # 26 specialist workflows
+│   └── ctk-seo-*/SKILL.md           # 26 specialist workflows
 ├── agents/                          # 24 Codex TOML agent profiles
 ├── scripts/                         # Deterministic runners and API helpers
 ├── extensions/
@@ -418,7 +417,8 @@ Design principles:
 - `skills/` is the source of truth.
 - `skills/ctk-seo/SKILL.md` routes natural-language SEO requests.
 - TOML agents are Codex-native and mirror specialist workflows.
-- Runtime credentials stay in `~/.config/ctk-codex-seo/` or `~/.codex/settings.json`.
+- Runtime credentials stay in `~/.config/ctk-codex-seo/` or explicit
+  environment variables.
 - Legacy `claude-seo` config/cache paths are read only as migration fallback.
 
 More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
@@ -470,12 +470,13 @@ Current GitHub CI runs:
 
 Codex SEO writes new local credentials and state to Codex-specific paths:
 
-- `~/.codex/settings.json` for MCP server configuration
 - `~/.config/ctk-codex-seo/` for API configs and cost ledgers
 - `~/.cache/ctk-codex-seo/` for runtime caches
-- `.ctk-seo-cache/` inside the active project for cross-skill summaries
+- `~/.local/state/ctk-codex-seo/reports/` for generated reports
 
-Legacy `~/.config/claude-seo/` and `~/.cache/claude-seo/` paths are read only as migration fallback. Do not commit `.ctk-seo-cache/`, `output/`, `.mcp.json`, `.env`, OAuth tokens, service accounts, or provider keys.
+Legacy `~/.config/claude-seo/` and `~/.cache/claude-seo/` paths are read only
+as migration fallback. Never place `.mcp.json`, `.env`, OAuth tokens, service
+accounts, or provider keys in a repository.
 
 ## Security
 

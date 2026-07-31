@@ -8,6 +8,11 @@ from urllib.parse import urljoin, urlparse
 
 import requests as _requests
 
+try:
+    from .security_redaction import safe_exception
+except ImportError:
+    from security_redaction import safe_exception
+
 
 DEFAULT_TIMEOUT = (5, 30)
 MAX_REDIRECTS = 5
@@ -87,6 +92,7 @@ class SafeRequests:
     """Small requests-compatible facade enforcing URL and redirect policy."""
 
     RequestException = _requests.RequestException
+    HTTPError = _requests.HTTPError
     exceptions = _requests.exceptions
     Session = _requests.Session
     Response = _requests.Response
@@ -94,6 +100,27 @@ class SafeRequests:
 
     def __init__(self) -> None:
         self._session = _requests.Session()
+
+    @staticmethod
+    def _enforce_stream_limit(response):
+        original = response.iter_content
+
+        def limited_iter_content(chunk_size=1, decode_unicode=False):
+            total = 0
+            for chunk in original(
+                chunk_size=chunk_size,
+                decode_unicode=decode_unicode,
+            ):
+                total += len(chunk.encode() if isinstance(chunk, str) else chunk)
+                if total > MAX_RESPONSE_BYTES:
+                    close = getattr(response, "close", None)
+                    if close:
+                        close()
+                    raise ValueError("response exceeds size limit")
+                yield chunk
+
+        response.iter_content = limited_iter_content
+        return response
 
     def request(self, method: str, url: str, **kwargs):
         sensitive = _contains_credentials(kwargs)
@@ -106,19 +133,33 @@ class SafeRequests:
         current = validate_public_url(url)
         initial_origin = urlparse(current).netloc.lower()
         for redirect_count in range(MAX_REDIRECTS + 1):
-            response = self._session.request(
-                method,
-                current,
-                headers=headers,
-                timeout=timeout,
-                allow_redirects=False,
-                **kwargs,
-            )
+            try:
+                response = self._session.request(
+                    method,
+                    current,
+                    headers=headers,
+                    timeout=timeout,
+                    allow_redirects=False,
+                    **kwargs,
+                )
+            except _requests.RequestException as exc:
+                exc.args = (safe_exception(exc),)
+                raise
             length = response.headers.get("Content-Length")
-            if length and int(length) > MAX_RESPONSE_BYTES:
+            try:
+                too_large = length is not None and int(length) > MAX_RESPONSE_BYTES
+            except ValueError:
+                response.close()
+                raise ValueError("invalid Content-Length response header")
+            if too_large:
                 response.close()
                 raise ValueError("response exceeds size limit")
             if response.status_code not in {301, 302, 303, 307, 308}:
+                if kwargs.get("stream"):
+                    return self._enforce_stream_limit(response)
+                if method.upper() != "HEAD" and len(response.content) > MAX_RESPONSE_BYTES:
+                    response.close()
+                    raise ValueError("response exceeds size limit")
                 return response
             if redirect_count == MAX_REDIRECTS:
                 response.close()
@@ -139,6 +180,9 @@ class SafeRequests:
 
     def post(self, url: str, **kwargs):
         return self.request("POST", url, **kwargs)
+
+    def head(self, url: str, **kwargs):
+        return self.request("HEAD", url, **kwargs)
 
 
 requests = SafeRequests()

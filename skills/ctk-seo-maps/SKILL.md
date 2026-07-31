@@ -10,10 +10,7 @@ description: >
   says "maps", "geo-grid", "rank tracking", "GBP audit", "review
   velocity", "competitor radius", "maps analysis", "local rank
   tracking", "Share of Local Voice", or "SoLV".
-user-invokable: true
-argument-hint: "[command] [url|keyword|location]"
 license: MIT
-compatibility: "DataForSEO MCP for Tier 1+, Google Maps API for Tier 2"
 metadata:
   author: AgriciDaniel
   version: "1.9.6"
@@ -25,13 +22,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -42,7 +39,7 @@ how a business appears on Google Maps, Bing Places, Apple Maps, and OpenStreetMa
 
 **Boundary with ctk-seo-local:** This skill analyzes the business on maps PLATFORMS
 (via APIs). ctk-seo-local analyzes local SEO signals on the WEBSITE (via HTML fetch).
-Do not duplicate ctk-seo-local on-page analysis. Recommend `/seo local <url>` for
+Do not duplicate ctk-seo-local on-page analysis. Recommend `$ctk-seo local <url>` for
 website-level checks.
 
 ---
@@ -51,13 +48,13 @@ website-level checks.
 
 | Command | What it does | Tier |
 |---------|-------------|------|
-| `/seo maps <url>` | Full maps presence audit (auto-selects tier) | 0+ |
-| `/seo maps grid <keyword> <location>` | Geo-grid rank scan (7x7, 1 keyword default) | 1+ |
-| `/seo maps reviews <business> <location>` | Cross-platform review intelligence | 1+ |
-| `/seo maps competitors <keyword> <location>` | Competitor radius mapping | 0+ |
-| `/seo maps nap <business-name>` | Cross-platform NAP verification | 0+ |
-| `/seo maps schema <business-name>` | Generate LocalBusiness JSON-LD from data | 0+ |
-| `/seo maps gbp <business> <location>` | GBP completeness audit | 1+ |
+| `$ctk-seo maps <url>` | Full maps presence audit (auto-selects tier) | 0+ |
+| `$ctk-seo maps grid <keyword> <location>` | Geo-grid rank scan (7x7, 1 keyword default) | 1+ |
+| `$ctk-seo maps reviews <business> <location>` | Cross-platform review intelligence | 1+ |
+| `$ctk-seo maps competitors <keyword> <location>` | Competitor radius mapping | 0+ |
+| `$ctk-seo maps nap <business-name>` | Cross-platform NAP verification | 0+ |
+| `$ctk-seo maps schema <business-name>` | Generate LocalBusiness JSON-LD from data | 0+ |
+| `$ctk-seo maps gbp <business> <location>` | GBP completeness audit | 1+ |
 
 ---
 
@@ -255,10 +252,10 @@ Generate `MAPS-ANALYSIS-{domain}.md` with:
 
 ## Cross-Skill Delegation
 
-- Website on-page local signals: recommend `/seo local <url>`
-- Full AI search visibility: recommend `/seo geo <url>`
-- Schema validation and fixes: recommend `/seo schema <url>`
-- Live SERP and keyword data: recommend `/seo dataforseo [command]`
+- Website on-page local signals: recommend `$ctk-seo local <url>`
+- Full AI search visibility: recommend `$ctk-seo geo <url>`
+- Schema validation and fixes: recommend `$ctk-seo schema <url>`
+- Live SERP and keyword data: recommend `$ctk-seo dataforseo [command]`
 
 ---
 
@@ -275,5 +272,5 @@ Generate `MAPS-ANALYSIS-{domain}.md` with:
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.

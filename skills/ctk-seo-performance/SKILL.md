@@ -11,7 +11,7 @@ Use this for the performance sub-track in full audits.
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for cached data from other skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for cached data from other skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 This specialist does not require upstream cache inputs before running fresh performance checks.
@@ -49,19 +49,14 @@ Prefer running `scripts/analyze_performance.py` for deterministic performance an
 
 ## Write to shared data cache
 
-After completing all work, write results to `.ctk-seo-cache/`.
+After completing all work, write results to `~/.cache/ctk-codex-seo/`.
 
 ```bash
-mkdir -p .ctk-seo-cache/pages/{url-slug}
+mkdir -p ~/.cache/ctk-codex-seo/pages/{url-slug}
 ```
 
-Write `.ctk-seo-cache/pages/{url-slug}/performance.json` using the schema in `../ctk-seo/references/shared-data-cache.md`.
+Write `~/.cache/ctk-codex-seo/pages/{url-slug}/performance.json` using the schema in `../ctk-seo/references/shared-data-cache.md`.
 At minimum, match the documented cache keys: `core_web_vitals` and `issues`. Add extra helpful fields only if they do not replace or rename the documented keys.
-
-Add `.ctk-seo-cache/` to `.gitignore` if not already present:
-```bash
-grep -qxF '.ctk-seo-cache/' .gitignore 2>/dev/null || echo '.ctk-seo-cache/' >> .gitignore
-```
 
 ### Premium Deliverable
 If the user requests a 'client report' or 'premium deliverable', automatically read `../ctk-seo-audit/assets/report-template.html` and `../ctk-seo/references/premium-report-standard.md`. Use that report standard as the default brief. Generate the HTML as an internal intermediate artifact, then produce the PDF as the public deliverable. Mention only the PDF in your final response unless the user explicitly asks for the HTML file.

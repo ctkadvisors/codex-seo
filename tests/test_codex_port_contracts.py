@@ -71,7 +71,7 @@ EXPECTED_AGENTS = {
 def test_codex_plugin_manifest_is_valid():
     manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
     assert manifest["name"] == "ctk-codex-seo"
-    assert manifest["version"] == "2.0.0"
+    assert manifest["version"] == "2.0.1"
     assert manifest["skills"] == "./skills/"
     assert "hooks" not in manifest
     assert manifest["repository"] == "https://github.com/ctkadvisors/codex-seo"
@@ -97,7 +97,23 @@ def test_skill_metadata_and_cache_contracts():
         assert re.search(r"^name:\s*", text, re.MULTILINE), f"{skill_file} missing name"
         assert re.search(r"^description:\s*", text, re.MULTILINE), f"{skill_file} missing description"
         if skill_dir.name != "ctk-seo":
-            assert ".ctk-seo-cache" in text, f"{skill_file} missing shared cache guidance"
+            assert "~/.cache/ctk-codex-seo" in text, f"{skill_file} missing shared cache guidance"
+
+
+def test_skill_frontmatter_uses_only_codex_supported_keys():
+    allowed = {"name", "description", "license", "metadata", "allowed-tools"}
+    skill_files = list(SKILLS.glob("ctk-seo*/SKILL.md"))
+    skill_files += list((ROOT / "extensions").glob("*/skills/ctk-seo*/SKILL.md"))
+    for skill_file in skill_files:
+        lines = skill_file.read_text(encoding="utf-8").splitlines()
+        assert lines[0] == "---"
+        top_level = set()
+        for line in lines[1:]:
+            if line == "---":
+                break
+            if line and not line.startswith((" ", "\t")) and ":" in line:
+                top_level.add(line.split(":", 1)[0])
+        assert top_level <= allowed, f"{skill_file}: {sorted(top_level - allowed)}"
 
 
 def test_shared_reference_links_exist():
@@ -120,7 +136,7 @@ def test_installers_delegate_to_owned_transaction():
     assert " install " in install_sh and " uninstall " in uninstall_sh
 
 
-def test_extension_installers_are_codex_first():
+def test_extension_wrappers_are_inert_and_direct_users_to_bundled_features():
     extension_files = [
         ROOT / "extensions" / "dataforseo" / "install.sh",
         ROOT / "extensions" / "dataforseo" / "install.ps1",
@@ -139,10 +155,10 @@ def test_extension_installers_are_codex_first():
         text = path.read_text(encoding="utf-8")
         assert ".claude" not in text, f"{path} still writes Claude paths"
         assert "Start Codex:  claude" not in text, f"{path} has a Claude CLI start instruction"
-        assert "CODEX_HOME" in text or path.suffix == ".ps1", f"{path} should honor CODEX_HOME"
     for path in extension_files[:10]:
         text = path.read_text(encoding="utf-8")
-        assert ".toml" in text, f"{path} should install/remove Codex TOML agents where applicable"
+        assert "ctk-codex-seo" in text
+        assert "settings.json" not in text
 
 
 def test_packaged_license_links_point_to_codex_repo():

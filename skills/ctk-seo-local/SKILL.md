@@ -10,8 +10,6 @@ description: >
   Business Profile", "GBP", "map pack", "local pack", "citations",
   "NAP consistency", "local rankings", "service area", "multi-location",
   or "local search".
-user-invokable: true
-argument-hint: "[url]"
 license: MIT
 metadata:
   author: AgriciDaniel
@@ -24,13 +22,13 @@ metadata:
 
 **Step 0 -- Check shared data cache:**
 
-Before gathering, check `.ctk-seo-cache/` for reusable context from related SEO skills.
+Before gathering, check `~/.cache/ctk-codex-seo/` for reusable context from related SEO skills.
 Reference: `../ctk-seo/references/shared-data-cache.md` for schemas and dependency map.
 
 Check these cache files when present:
-- `.ctk-seo-cache/site-meta.json` for domain, business type, industry, and crawl context
-- `.ctk-seo-cache/audit-scores.json` for prior full-audit priorities
-- `.ctk-seo-cache/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
+- `~/.cache/ctk-codex-seo/site-meta.json` for domain, business type, industry, and crawl context
+- `~/.cache/ctk-codex-seo/audit-scores.json` for prior full-audit priorities
+- `~/.cache/ctk-codex-seo/pages/{url-slug}/page-analysis.json` for page-level context when a URL is provided
 
 - If found: parse and use clearly valid fields (note "Using cached [X] from [date]")
 - If missing, corrupt, or irrelevant: continue with fresh evidence
@@ -242,7 +240,7 @@ Links declining for local pack but remain **~26% of local organic ranking** (Whi
 
 ## AI Search Impact on Local
 
-**Do not duplicate ctk-seo-geo analysis.** Provide local-specific AI context and recommend `/seo geo <url>` for full analysis.
+**Do not duplicate ctk-seo-geo analysis.** Provide local-specific AI context and recommend `$ctk-seo geo <url>` for full analysis.
 
 Key local AI facts:
 - AI Overviews appear on up to 68% of local searches (Whitespark Q2 2025)
@@ -252,7 +250,7 @@ Key local AI facts:
 - Bing Places is critical: powers ChatGPT, Copilot, Alexa
 - AI-powered local packs (mobile US) show only 1-2 businesses, 32% fewer shown (Sterling Sky)
 
-**Recommendation**: Run `/seo geo <url>` for comprehensive AI search visibility analysis including citability scoring, llms.txt check, and brand mention audit.
+**Recommendation**: Run `$ctk-seo geo <url>` for comprehensive AI search visibility analysis including citability scoring, llms.txt check, and brand mention audit.
 
 ---
 
@@ -329,9 +327,9 @@ If DataForSEO MCP tools are available, use `local_business_data` for live GBP da
 
 ## FLOW Framework Integration
 
-For prompt-guided local optimization, use `/seo flow local <url>` — FLOW's 11 local-stage prompts cover GBP optimization, meta descriptions, title tags, and structured local audit workflows.
+For prompt-guided local optimization, use `$ctk-seo flow local <url>` — FLOW's 11 local-stage prompts cover GBP optimization, meta descriptions, title tags, and structured local audit workflows.
 
 ## Write to shared data cache
 
-After completing all work, write a concise JSON summary to `.ctk-seo-cache/` when the workflow produced durable findings.
-Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations. Add `.ctk-seo-cache/` to `.gitignore` if it is missing.
+After completing all work, write a concise JSON summary to `~/.cache/ctk-codex-seo/` when the workflow produced durable findings.
+Use the schemas and naming rules in `../ctk-seo/references/shared-data-cache.md`; include at least `cache_type`, `analyzed_at`, source URL/domain, key findings, issues, recommendations, and tool limitations.
